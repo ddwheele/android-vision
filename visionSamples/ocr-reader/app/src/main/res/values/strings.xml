@@ -17,4 +17,5 @@
     <string name="names_button">"Add"</string>
     <string name="names_list">"Name List"</string>
     <string name="names_prompt">"Enter name"</string>
+    <string name="names_delete">"Delete"</string>
 </resources>
