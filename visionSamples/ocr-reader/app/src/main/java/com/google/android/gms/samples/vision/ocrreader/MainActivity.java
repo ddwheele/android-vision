@@ -54,7 +54,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         useFlash = (CompoundButton) findViewById(R.id.use_flash);
 
         findViewById(R.id.read_text).setOnClickListener(this);
-        findViewById(R.id.names_button  ).setOnClickListener(this);
+        findViewById(R.id.to_names_button).setOnClickListener(this);
     }
 
     /**
@@ -72,7 +72,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
             startActivityForResult(intent, RC_OCR_CAPTURE);
         }
-        else if (v.getId() == R.id.names_button) {
+        else if (v.getId() == R.id.to_names_button) {
             // launch Names activity.
             Intent intent = new Intent(this, NameList.class);
 

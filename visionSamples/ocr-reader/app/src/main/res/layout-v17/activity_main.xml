@@ -30,19 +30,19 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="v17"
+        android:text="@string/read_text"
         android:id="@+id/read_text"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:id="@+id/names_button"
+        android:id="@+id/to_names_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="81dp"
-        android:text="@string/names_button" />
+        android:text="@string/to_names_button" />
 
     <Switch
         android:layout_width="wrap_content"

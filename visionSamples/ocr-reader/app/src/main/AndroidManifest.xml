@@ -34,7 +34,7 @@
         <activity
             android:name=".NameList"
             android:label="Name List"
-            android:parentActivityName=".MainActivity"/>
+            android:windowSoftInputMode="adjustNothing"/>
     </application>
 
 </manifest>
