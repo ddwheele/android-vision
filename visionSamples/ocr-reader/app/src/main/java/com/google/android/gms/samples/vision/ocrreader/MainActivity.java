@@ -39,6 +39,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private TextView textValue;
 
     private static final int RC_OCR_CAPTURE = 9003;
+    private static final int RC_THINGY = 9004;
     private static final String TAG = "MainActivity";
 
     @Override
@@ -69,6 +70,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
             intent.putExtra(OcrCaptureActivity.UseFlash, useFlash.isChecked());
 
             startActivityForResult(intent, RC_OCR_CAPTURE);
+        }
+        else if (v.getId() == R.id.names_button) {
+            // launch Names activity.
+            Intent intent = new Intent(this, NameList.class);
+
+            startActivityForResult(intent, RC_THINGY);
         }
     }
 

@@ -30,9 +30,18 @@
         android:layout_alignEnd="@+id/status_message" />
 
     <Button
+        android:id="@+id/names_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/read_text"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="81dp"
+        android:text="@string/names_button" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="land"
         android:id="@+id/read_text"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
