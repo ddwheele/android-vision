@@ -54,12 +54,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:text="@string/names_delete"
         android:textOff="@string/names_delete"
         android:textOn="@string/names_delete"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/names_done"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/names_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/names_done"
+        app:layout_constraintBaseline_toBaselineOf="@+id/names_delete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/names_delete" />
 </android.support.constraint.ConstraintLayout>

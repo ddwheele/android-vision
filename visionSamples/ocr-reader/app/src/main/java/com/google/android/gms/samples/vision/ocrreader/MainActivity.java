@@ -26,6 +26,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 
+import java.util.ArrayList;
+
 /**
  * Main activity demonstrating how to pass extra parameters to an activity that
  * recognizes text.
@@ -39,7 +41,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private TextView textValue;
 
     private static final int RC_OCR_CAPTURE = 9003;
-    private static final int RC_THINGY = 9004;
+    private static final int RC_GET_NAMES = 9004;
     private static final String TAG = "MainActivity";
 
     @Override
@@ -75,8 +77,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         else if (v.getId() == R.id.to_names_button) {
             // launch Names activity.
             Intent intent = new Intent(this, NameList.class);
-
-            startActivityForResult(intent, RC_THINGY);
+            startActivityForResult(intent, RC_GET_NAMES);
         }
     }
 
@@ -96,18 +97,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
      *                    result came from.
      * @param resultCode  The integer result code returned by the child activity
      *                    through its setResult().
-     * @param data        An Intent, which can return result data to the caller
+     * @param intent        An Intent, which can return result data to the caller
      *                    (various data can be attached to Intent "extras").
      * @see #startActivityForResult
      * @see #createPendingResult
      * @see #setResult(int)
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if(requestCode == RC_OCR_CAPTURE) {
             if (resultCode == CommonStatusCodes.SUCCESS) {
-                if (data != null) {
-                    String text = data.getStringExtra(OcrCaptureActivity.TextBlockObject);
+                if (intent != null) {
+                    String text = intent.getStringExtra(OcrCaptureActivity.TextBlockObject);
                     statusMessage.setText(R.string.ocr_success);
                     textValue.setText(text);
                     Log.d(TAG, "Text read: " + text);
@@ -120,8 +121,27 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         CommonStatusCodes.getStatusCodeString(resultCode)));
             }
         }
+        else if(requestCode == RC_GET_NAMES) {
+            Log.e("MAIN","You have returned, my liege");
+            Bundle bundle = intent.getExtras();
+
+            ArrayList<String> namesList =
+                    (ArrayList<String>)bundle.getSerializable("names");
+            Log.e("MAIN","retrieved the bundle");
+
+            if(namesList != null) {
+                Log.e("MAIN","it is not null");
+                if(namesList.isEmpty()) {
+                    Log.e("MAIN","Empty list");
+                } else {
+                    Log.e("MAIN","I have data! It is beautiful! Starts with "+namesList.get(0));
+                }
+            } else {
+                Log.e("MAIN","it was null");
+            }
+        }
         else {
-            super.onActivityResult(requestCode, resultCode, data);
+            super.onActivityResult(requestCode, resultCode, intent);
         }
     }
 }
