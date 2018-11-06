@@ -48,14 +48,18 @@ import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Activity for the multi-tracker app.  This app detects text and displays the value with the
  * rear facing camera. During detection overlay graphics are drawn to indicate the position,
  * size, and contents of each TextBlock.
  */
-public final class OcrCaptureActivity extends AppCompatActivity {
+public final class OcrCaptureActivity extends AppCompatActivity implements CameraSource.PictureCallback {
     private static final String TAG = "OcrCaptureActivity";
 
     // Intent request code to handle updating play services if needed.
@@ -72,6 +76,7 @@ public final class OcrCaptureActivity extends AppCompatActivity {
     private CameraSource mCameraSource;
     private CameraSourcePreview mPreview;
     private GraphicOverlay<OcrGraphic> mGraphicOverlay;
+    private OcrDetectorProcessor mOcrDetectorProcessor;
 
     // Helper objects for detecting taps and pinches.
     private ScaleGestureDetector scaleGestureDetector;
@@ -166,7 +171,8 @@ public final class OcrCaptureActivity extends AppCompatActivity {
         // is set to receive the text recognition results and display graphics for each text block
         // on screen.
         TextRecognizer textRecognizer = new TextRecognizer.Builder(context).build();
-        textRecognizer.setProcessor(new OcrDetectorProcessor(mGraphicOverlay));
+        mOcrDetectorProcessor = new OcrDetectorProcessor(mGraphicOverlay);
+        textRecognizer.setProcessor(mOcrDetectorProcessor);
 
         if (!textRecognizer.isOperational()) {
             // Note: The first time that an app using a Vision API is installed on a
@@ -209,6 +215,9 @@ public final class OcrCaptureActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(mOcrDetectorProcessor != null) {
+            mOcrDetectorProcessor.unlock();
+        }
         startCameraSource();
     }
 
@@ -312,6 +321,38 @@ public final class OcrCaptureActivity extends AppCompatActivity {
         }
     }
 
+
+
+
+    /**
+     * Called when image data is available after a picture is taken.  The format of the data
+     * is a jpeg binary.
+     */
+    @Override
+    public void onPictureTaken(byte[] data) {
+        // parcel the OcrGraphics
+        ArrayList<ParcelableOcrGraphic> textList = mGraphicOverlay.getParcelableList();
+
+        File file;
+        try {
+            String fileName = "rcp";
+            file = File.createTempFile(fileName, null, getApplicationContext().getCacheDir());
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(data);
+            fos.close();
+            String tempName = file.getPath();
+            // launch Correct activity.
+            Intent intent = new Intent(this, CorrectTextActivity.class);
+            intent.putExtra("image", tempName);
+            intent.putParcelableArrayListExtra("graphics", textList);
+            startActivity(intent);
+        } catch (IOException e) {
+            // Error while creating file
+            Log.e(TAG, "Could not save receipt image to temporary file");
+        }
+    }
+
+
     /**
      * onTap is called to capture the first TextBlock under the tap location and return it to
      * the Initializing Activity.
@@ -321,24 +362,27 @@ public final class OcrCaptureActivity extends AppCompatActivity {
      * @return true if the activity is ending.
      */
     private boolean onTap(float rawX, float rawY) {
-        OcrGraphic graphic = mGraphicOverlay.getGraphicAtLocation(rawX, rawY);
-        TextBlock text = null;
-        if (graphic != null) {
-            text = graphic.getTextBlock();
-            if (text != null && text.getValue() != null) {
-                Intent data = new Intent();
-                data.putExtra(TextBlockObject, text.getValue());
-                setResult(CommonStatusCodes.SUCCESS, data);
-                finish();
-            }
-            else {
-                Log.d(TAG, "text data is null");
-            }
-        }
-        else {
-            Log.d(TAG,"no text detected");
-        }
-        return text != null;
+        mCameraSource.takePicture(null, this);
+        mOcrDetectorProcessor.lock();
+//        OcrGraphic graphic = mGraphicOverlay.getGraphicAtLocation(rawX, rawY);
+//        TextBlock text = null;
+//        if (graphic != null) {
+//            text = graphic.getTextBlock();
+//            if (text != null && text.getValue() != null) {
+//                Intent data = new Intent();
+//                data.putExtra(TextBlockObject, text.getValue());
+//                setResult(CommonStatusCodes.SUCCESS, data);
+//                finish();
+//            }
+//            else {
+//                Log.d(TAG, "text data is null");
+//            }
+//        }
+//        else {
+//            Log.d(TAG,"no text detected");
+//        }
+//        return text != null;
+        return true;
     }
 
     private class CaptureGestureListener extends GestureDetector.SimpleOnGestureListener {

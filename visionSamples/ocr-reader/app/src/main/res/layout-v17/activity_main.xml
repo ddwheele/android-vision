@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -28,21 +29,32 @@
         android:layout_alignEnd="@+id/status_message" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/read_text"
-        android:id="@+id/read_text"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
-    <Button
         android:id="@+id/to_names_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="81dp"
-        android:text="@string/to_names_button" />
+        android:layout_marginEnd="56dp"
+        android:layout_marginBottom="63dp"
+        android:text="@string/to_names_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/read_text"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/read_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/to_names_button"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="226dp"
+        android:layout_marginBottom="68dp"
+        android:text="@string/read_text"
+        app:layout_constraintBaseline_toBaselineOf="@+id/to_names_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/to_names_button" />
+
+
 
     <Switch
         android:layout_width="wrap_content"
@@ -62,5 +74,13 @@
         android:layout_alignTop="@+id/auto_focus"
         android:layout_alignEnd="@+id/text_value"
         android:checked="false" />
+
+    <Button
+        android:id="@+id/to_correct_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="59dp"
+        android:text="@string/to_correct_button" />
 
 </RelativeLayout>

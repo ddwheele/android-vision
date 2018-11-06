@@ -17,12 +17,18 @@ package com.google.android.gms.samples.vision.ocrreader.ui.camera;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.google.android.gms.samples.vision.ocrreader.OcrGraphic;
+import com.google.android.gms.samples.vision.ocrreader.ParcelableOcrGraphic;
 import com.google.android.gms.vision.CameraSource;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -51,6 +57,18 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     private float mHeightScaleFactor = 1.0f;
     private int mFacing = CameraSource.CAMERA_FACING_BACK;
     private Set<T> mGraphics = new HashSet<>();
+
+    public GraphicOverlay(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public ArrayList<ParcelableOcrGraphic> getParcelableList() {
+        ArrayList<ParcelableOcrGraphic> retList = new ArrayList<>();
+        for (Graphic graphic : mGraphics) {
+            retList.add(new ParcelableOcrGraphic((OcrGraphic)graphic));
+        }
+        return retList;
+    }
 
     /**
      * Base class for a custom graphics object to be rendered within the graphic overlay.  Subclass
@@ -121,10 +139,6 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
         public void postInvalidate() {
             mOverlay.postInvalidate();
         }
-    }
-
-    public GraphicOverlay(Context context, AttributeSet attrs) {
-        super(context, attrs);
     }
 
     /**

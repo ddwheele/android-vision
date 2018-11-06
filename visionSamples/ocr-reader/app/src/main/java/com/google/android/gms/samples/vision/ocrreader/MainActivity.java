@@ -57,6 +57,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         findViewById(R.id.read_text).setOnClickListener(this);
         findViewById(R.id.to_names_button).setOnClickListener(this);
+        findViewById(R.id.to_correct_button).setOnClickListener(this);
     }
 
     /**
@@ -76,8 +77,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
         else if (v.getId() == R.id.to_names_button) {
             // launch Names activity.
-            Intent intent = new Intent(this, NameList.class);
+            Intent intent = new Intent(this, NameListActivity.class);
             startActivityForResult(intent, RC_GET_NAMES);
+        }
+        else if (v.getId() == R.id.to_correct_button) {
+            // launch Correct activity.
+            Intent intent = new Intent(this, CorrectTextActivity.class);
+            startActivity(intent);
         }
     }
 

@@ -14,7 +14,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class NameList extends AppCompatActivity implements View.OnClickListener {
+public class NameListActivity extends AppCompatActivity implements View.OnClickListener {
     private ListView listView;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> namesList;

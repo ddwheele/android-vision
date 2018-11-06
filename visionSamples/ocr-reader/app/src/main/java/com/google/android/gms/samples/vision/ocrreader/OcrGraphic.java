@@ -73,6 +73,10 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
         return mText;
     }
 
+    public ParcelableOcrGraphic getParcelable() {
+        return new ParcelableOcrGraphic(this);
+    }
+
     /**
      * Checks whether a point is within the bounding box of this graphic.
      * The provided point should be relative to this graphic's containing overlay.

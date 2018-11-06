@@ -14,9 +14,12 @@
     <string name="ocr_error">"Error reading text: %1$s"</string>
     <string name="names_text">"Add Name"</string>
     <string name="to_names_button">"Add Names"</string>
+    <string name="to_correct_button">"Correct Text"</string>
     <string name="names_button">"Add"</string>
     <string name="names_list">"Name List"</string>
     <string name="names_prompt">"Enter name"</string>
     <string name="names_delete">"Delete"</string>
     <string name="names_done">"Done"</string>
+    <string name="correct_activity_title">Correct Text</string>
+
 </resources>
