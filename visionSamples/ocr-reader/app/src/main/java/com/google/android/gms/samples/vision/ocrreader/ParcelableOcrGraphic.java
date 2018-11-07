@@ -9,6 +9,10 @@ import android.os.Parcelable;
 
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.text.Text;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ParcelableOcrGraphic extends GraphicOverlay.Graphic implements Parcelable {
     private int id;
@@ -16,12 +20,54 @@ public class ParcelableOcrGraphic extends GraphicOverlay.Graphic implements Parc
     private float top;
     private float right;
     private float bottom;
-    private String text;
+    private List<TextCoord> texts;
 
-    private static final int TEXT_COLOR = Color.MAGENTA;
+    private static final int TEXT_COLOR = Color.WHITE;
 
     private static Paint sRectPaint;
     private static Paint sTextPaint;
+
+    public static class TextCoord implements Parcelable {
+        String text;
+        float left;
+        float bottom;
+
+        public TextCoord(String text, float left, float bottom) {
+            this.text = text;
+            this.left = left;
+            this.bottom = bottom;
+        }
+
+        protected TextCoord(Parcel in) {
+            text = in.readString();
+            left = in.readFloat();
+            bottom = in.readFloat();
+        }
+
+        public static final Creator<TextCoord> CREATOR = new Creator<TextCoord>() {
+            @Override
+            public TextCoord createFromParcel(Parcel in) {
+                return new TextCoord(in);
+            }
+
+            @Override
+            public TextCoord[] newArray(int size) {
+                return new TextCoord[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(text);
+            dest.writeFloat(left);
+            dest.writeFloat(bottom);
+        }
+    }
 
     public ParcelableOcrGraphic(OcrGraphic og) {
         super(null);
@@ -31,7 +77,14 @@ public class ParcelableOcrGraphic extends GraphicOverlay.Graphic implements Parc
         top = rect.top;
         right = rect.right;
         bottom = rect.bottom;
-        text = og.getTextBlock().getValue();
+
+        List<? extends Text> textComponents = og.getTextBlock().getComponents();
+        texts = new ArrayList<>();
+        for(Text currentText : textComponents) {
+            float left = currentText.getBoundingBox().left;
+            float bottom = currentText.getBoundingBox().bottom;
+            texts.add(new TextCoord(currentText.getValue(), left, bottom));
+        }
 
         if (sRectPaint == null) {
             sRectPaint = new Paint();
@@ -43,7 +96,7 @@ public class ParcelableOcrGraphic extends GraphicOverlay.Graphic implements Parc
         if (sTextPaint == null) {
             sTextPaint = new Paint();
             sTextPaint.setColor(TEXT_COLOR);
-            sTextPaint.setTextSize(54.0f);
+            sTextPaint.setTextSize(30.0f);
         }
         // Redraw the overlay, as this graphic has been added.
         postInvalidate();
@@ -56,7 +109,8 @@ public class ParcelableOcrGraphic extends GraphicOverlay.Graphic implements Parc
         top = in.readFloat();
         right = in.readFloat();
         bottom = in.readFloat();
-        text = in.readString();
+        texts = new ArrayList<>();
+        in.readTypedList(texts, TextCoord.CREATOR);
     }
 
     void setGraphicOverlay(GraphicOverlay overlay) {
@@ -70,7 +124,7 @@ public class ParcelableOcrGraphic extends GraphicOverlay.Graphic implements Parc
         dest.writeFloat(top);
         dest.writeFloat(right);
         dest.writeFloat(bottom);
-        dest.writeString(text);
+        dest.writeTypedList(texts);
     }
 
     @Override
@@ -92,7 +146,7 @@ public class ParcelableOcrGraphic extends GraphicOverlay.Graphic implements Parc
 
     @Override
     public void draw(Canvas canvas) {
-        if (text == null) {
+        if (texts == null) {
             return;
         }
 
@@ -104,24 +158,16 @@ public class ParcelableOcrGraphic extends GraphicOverlay.Graphic implements Parc
         rect.bottom = translateY(bottom);
         canvas.drawRect(rect, sRectPaint);
 
-        // Break the text into multiple lines and draw each one according to its own bounding box.
-        // Wha??? may need to recursively break up the TextBlock ... agh.
-//        List<? extends Text> textComponents = text.getComponents();
-//        for(Text currentText : textComponents) {
-//            float left = translateX(currentText.getBoundingBox().left);
-//            float bottom = translateY(currentText.getBoundingBox().bottom);
-//            canvas.drawText(currentText.getValue(), left, bottom, sTextPaint);
-//        }
-
-        // Just draw the one thing for now and see if it works
-        float m_left = translateX(left);
-        float m_bottom = translateY(bottom);
-        canvas.drawText(text, m_left, m_bottom, sTextPaint);
+        for(TextCoord t : texts) {
+            float l = translateX(t.left);
+            float b = translateY(t.bottom);
+            canvas.drawText(t.text, l, b, sTextPaint);
+        }
     }
 
     @Override
     public boolean contains(float x, float y) {
-        if (text == null) {
+        if (texts == null) {
             return false;
         }
         float t_left = translateX(left);
