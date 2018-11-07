@@ -36,8 +36,7 @@
             android:label="Name List"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".CorrectTextActivity"
-            android:label="@string/correct_activity_title"
-            android:parentActivityName=".MainActivity" >
+            android:label="@string/correct_activity_title" >
         </activity>
     </application>
 

@@ -6,20 +6,90 @@
     android:layout_height="match_parent"
     tools:context=".CorrectTextActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="383dp"
-        android:layout_height="433dp"
-        android:layout_marginTop="76dp"
+
+    <com.google.android.gms.samples.vision.ocrreader.ImageWithOverlay
+        android:id="@+id/imageWithOverlay"
+        android:layout_width="0dp"
+        android:layout_height="334dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        tools:srcCompat="@tools:sample/backgrounds/scenic">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay
+            android:id="@+id/graphicOverlayCorrect"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.google.android.gms.samples.vision.ocrreader.ImageWithOverlay>
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textView2"
+        android:layout_width="96dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/correct_prices"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageWithOverlay" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="257dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/prices_read"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="numberDecimal"
+                android:singleLine="true"
+                android:textSize="12sp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/names_button" />
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/correct_add_prices"
+        android:layout_width="94dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/correct_add_prices"
+        app:layout_constraintBottom_toTopOf="@+id/correct_continue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/scrollView2"
+        app:layout_constraintTop_toBottomOf="@+id/imageWithOverlay" />
+
+    <Button
+        android:id="@+id/correct_continue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello"
-        tools:layout_editor_absoluteX="101dp"
-        tools:layout_editor_absoluteY="35dp" />
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/correct_continue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/scrollView2" />
+
 </android.support.constraint.ConstraintLayout>

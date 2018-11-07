@@ -21,5 +21,7 @@
     <string name="names_delete">"Delete"</string>
     <string name="names_done">"Done"</string>
     <string name="correct_activity_title">Correct Text</string>
-
+    <string name="correct_prices">Prices</string>
+    <string name="correct_add_prices">Add Prices</string>
+    <string name="correct_continue">Continue</string>
 </resources>

@@ -17,8 +17,6 @@ package com.google.android.gms.samples.vision.ocrreader.ui.camera;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -28,7 +26,6 @@ import com.google.android.gms.vision.CameraSource;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -70,13 +67,21 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
         return retList;
     }
 
+    public float getWidthScaleFactor() { return mWidthScaleFactor; }
+
+    public float getHeightScaleFactor() { return mHeightScaleFactor; }
+
+    public int getFacing() { return mFacing; }
+
     /**
      * Base class for a custom graphics object to be rendered within the graphic overlay.  Subclass
      * this and implement the {@link Graphic#draw(Canvas)} method to define the
      * graphics element.  Add instances to the overlay using {@link GraphicOverlay#add(Graphic)}.
      */
     public static abstract class Graphic {
-        private GraphicOverlay mOverlay;
+        protected GraphicOverlay mOverlay;
+
+
 
         public Graphic(GraphicOverlay overlay) {
             mOverlay = overlay;
