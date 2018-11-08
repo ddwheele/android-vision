@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CorrectTextActivity">
+    tools:context=".correct.CorrectTextActivity">
 
 
-    <com.google.android.gms.samples.vision.ocrreader.ImageWithOverlay
+    <com.google.android.gms.samples.vision.ocrreader.correct.ImageWithOverlay
         android:id="@+id/imageWithOverlay"
         android:layout_width="0dp"
         android:layout_height="334dp"
@@ -25,7 +25,7 @@
             android:id="@+id/graphicOverlayCorrect"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </com.google.android.gms.samples.vision.ocrreader.ImageWithOverlay>
+    </com.google.android.gms.samples.vision.ocrreader.correct.ImageWithOverlay>
 
     <TextView
         android:id="@+id/textView2"
@@ -66,7 +66,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <Button
+    <ToggleButton
         android:id="@+id/correct_add_prices"
         android:layout_width="94dp"
         android:layout_height="wrap_content"

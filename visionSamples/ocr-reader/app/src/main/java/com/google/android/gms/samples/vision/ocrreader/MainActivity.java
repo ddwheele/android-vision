@@ -25,6 +25,8 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.samples.vision.ocrreader.namelist.NameListActivity;
+import com.google.android.gms.samples.vision.ocrreader.correct.CorrectTextActivity;
 
 import java.util.ArrayList;
 

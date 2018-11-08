@@ -21,7 +21,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.google.android.gms.samples.vision.ocrreader.OcrGraphic;
-import com.google.android.gms.samples.vision.ocrreader.ParcelableOcrGraphic;
+import com.google.android.gms.samples.vision.ocrreader.correct.ParcelableOcrGraphic;
 import com.google.android.gms.vision.CameraSource;
 
 import java.util.ArrayList;

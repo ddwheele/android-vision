@@ -32,10 +32,10 @@
             android:name=".OcrCaptureActivity"
             android:label="Read Text" />
         <activity
-            android:name=".NameListActivity"
+            android:name=".namelist.NameListActivity"
             android:label="Name List"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".CorrectTextActivity"
+        <activity android:name=".correct.CorrectTextActivity"
             android:label="@string/correct_activity_title" >
         </activity>
     </application>

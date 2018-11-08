@@ -1,13 +1,13 @@
-package com.google.android.gms.samples.vision.ocrreader;
+package com.google.android.gms.samples.vision.ocrreader.correct;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.google.android.gms.samples.vision.ocrreader.R;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
 
 import java.util.List;
@@ -38,6 +38,14 @@ public class ImageWithOverlay extends ViewGroup {
             pog.setGraphicOverlay(mGraphicOverlay);
             mGraphicOverlay.add(pog);
         }
+    }
+
+    /**
+     * Pass through to GraphicOverlay getGraphicAtLocation() function
+     * @return First graphic containing the point, or null if no text is detected.
+     */
+    public ParcelableOcrGraphic getGraphicAtLocation(float rawX, float rawY) {
+        return mGraphicOverlay.getGraphicAtLocation(rawX, rawY);
     }
 
 

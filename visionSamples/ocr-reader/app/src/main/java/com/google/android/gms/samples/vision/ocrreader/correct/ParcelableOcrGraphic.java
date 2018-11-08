@@ -1,4 +1,4 @@
-package com.google.android.gms.samples.vision.ocrreader;
+package com.google.android.gms.samples.vision.ocrreader.correct;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,6 +7,7 @@ import android.graphics.RectF;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.samples.vision.ocrreader.OcrGraphic;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.text.Text;
@@ -23,9 +24,18 @@ public class ParcelableOcrGraphic extends GraphicOverlay.Graphic implements Parc
     private List<TextCoord> texts;
 
     private static final int TEXT_COLOR = Color.WHITE;
+    private static final int SELECTED_COLOR = Color.GREEN;
 
     private static Paint sRectPaint;
     private static Paint sTextPaint;
+
+    private static Paint sRectPaintSelected;
+    private static Paint sTextPaintSelected;
+
+    private Paint currentRectPaint = sRectPaint;
+    private Paint currentTextPaint = sTextPaint;
+
+    private boolean selected = false;
 
     public static class TextCoord implements Parcelable {
         String text;
@@ -98,6 +108,19 @@ public class ParcelableOcrGraphic extends GraphicOverlay.Graphic implements Parc
             sTextPaint.setColor(TEXT_COLOR);
             sTextPaint.setTextSize(30.0f);
         }
+
+        if (sRectPaintSelected == null) {
+            sRectPaintSelected = new Paint();
+            sRectPaintSelected.setColor(SELECTED_COLOR);
+            sRectPaintSelected.setStyle(Paint.Style.STROKE);
+            sRectPaintSelected.setStrokeWidth(4.0f);
+        }
+
+        if (sTextPaintSelected == null) {
+            sTextPaintSelected = new Paint();
+            sTextPaintSelected.setColor(SELECTED_COLOR);
+            sTextPaintSelected.setTextSize(30.0f);
+        }
         // Redraw the overlay, as this graphic has been added.
         postInvalidate();
     }
@@ -156,13 +179,28 @@ public class ParcelableOcrGraphic extends GraphicOverlay.Graphic implements Parc
         rect.top = translateY(top);
         rect.right = translateX(right);
         rect.bottom = translateY(bottom);
-        canvas.drawRect(rect, sRectPaint);
+        canvas.drawRect(rect, currentRectPaint);
 
         for(TextCoord t : texts) {
             float l = translateX(t.left);
             float b = translateY(t.bottom);
-            canvas.drawText(t.text, l, b, sTextPaint);
+            canvas.drawText(t.text, l, b, currentTextPaint);
         }
+    }
+
+    /**
+     * tries to return all the numbers in this block of text
+     * Maybe later could enforce that it adds only numbers with 2 decimal places
+     * Also could try to split the item name out from price if they are on same line
+     * @return
+     */
+    public List<Float> getNumbers() {
+        List<Float> ret = new ArrayList<>();
+        for(TextCoord t: texts) {
+            float x = Float.parseFloat(t.text);
+            ret.add(x);
+        }
+        return ret;
     }
 
     @Override
@@ -214,4 +252,21 @@ public class ParcelableOcrGraphic extends GraphicOverlay.Graphic implements Parc
             mOverlay.postInvalidate();
         }
     }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void toggleSelected() {
+        if(selected) {
+            selected = false;
+            currentRectPaint = sRectPaint;
+            currentTextPaint = sTextPaint;
+        } else {
+            selected = true;
+            currentRectPaint = sRectPaintSelected;
+            currentTextPaint = sTextPaintSelected;
+        }
+    }
+
 }
