@@ -35,9 +35,10 @@
             android:name=".namelist.NameListActivity"
             android:label="Name List"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".correct.CorrectTextActivity"
-            android:label="@string/correct_activity_title" >
-        </activity>
+        <activity
+            android:name=".correct.CorrectTextActivity"
+            android:label="@string/correct_activity_title"></activity>
+        <activity android:name=".VerifyActivity"></activity>
     </application>
 
 </manifest>

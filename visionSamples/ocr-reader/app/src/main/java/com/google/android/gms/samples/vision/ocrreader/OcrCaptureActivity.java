@@ -51,6 +51,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Activity for the multi-tracker app.  This app detects text and displays the value with the
@@ -333,7 +334,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements Camer
 
         File file;
         try {
-            String fileName = "rcp";
+            String fileName = "rcpt";
             file = File.createTempFile(fileName, null, getApplicationContext().getCacheDir());
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(data);
@@ -360,8 +361,14 @@ public final class OcrCaptureActivity extends AppCompatActivity implements Camer
      * @return true if the activity is ending.
      */
     private boolean onTap(float rawX, float rawY) {
-        mCameraSource.takePicture(null, this);
+       // mCameraSource.takePicture(null, this);
         mOcrDetectorProcessor.lock();
+        ArrayList<YAndPrice> priceList = mGraphicOverlay.getPriceList();
+        // and then we will Parcel it and give it to the new Verify activity
+        Intent intent = new Intent(this, VerifyActivity.class);
+        intent.putParcelableArrayListExtra("prices", priceList);
+        startActivity(intent);
+
 //        OcrGraphic graphic = mGraphicOverlay.getGraphicAtLocation(rawX, rawY);
 //        TextBlock text = null;
 //        if (graphic != null) {

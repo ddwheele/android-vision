@@ -26,6 +26,7 @@ import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,18 +42,18 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
 
     private static Paint sRectPaint;
     private static Paint sTextPaint;
-    private final TextBlock mText;
-
     private static Paint sRectPaintSelected;
     private static Paint sTextPaintSelected;
 
     private Paint currentRectPaint;
     private Paint currentTextPaint;
+    private final TextBlock mText;
 
     private boolean selected = false;
+    private List<YAndPrice> myPrices = new ArrayList<>();
 
+    // percentage across the screen where we start looking for prices
     private static float midpoint_scale = 0.65f;
-    private static float midpointx = 1000.0f;
 
     OcrGraphic(GraphicOverlay overlay, TextBlock text) {
         super(overlay);
@@ -72,7 +73,6 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
             sTextPaint.setTextSize(54.0f);
         }
 
-
         if (sRectPaintSelected == null) {
             sRectPaintSelected = new Paint();
             sRectPaintSelected.setColor(SELECTED_COLOR);
@@ -91,6 +91,10 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
 
         // Redraw the overlay, as this graphic has been added.
         postInvalidate();
+    }
+
+    public List<YAndPrice> getMyPrices() {
+        return myPrices;
     }
 
     public int getId() {
@@ -136,9 +140,21 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
      * @param w width of the image this graphic is overlaid on
      */
     public void setCanvasWidth(float w) {
-        midpointx = w * midpoint_scale;
+        float midpointx = w * midpoint_scale;
         if( translateX(mText.getBoundingBox().left) > midpointx ) {
-            selected = true;
+            List<? extends Text> textComponents = mText.getComponents();
+            for(Text t : textComponents) {
+                try {
+                    float bottom = translateY(t.getBoundingBox().bottom);
+                    float price = Float.valueOf(t.getValue());
+                    myPrices.add(new YAndPrice(bottom, price));
+                } catch(NumberFormatException e) {
+                    // abort mission
+                    return;
+                }
+            }
+            // if we got here, we're good
+            // TODO: betting on no mix of prices and non-prices in a block
             currentRectPaint = sRectPaintSelected;
             currentTextPaint = sTextPaintSelected;
         }
