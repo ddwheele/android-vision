@@ -54,6 +54,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     private float mHeightScaleFactor = 1.0f;
     private int mFacing = CameraSource.CAMERA_FACING_BACK;
     private Set<T> mGraphics = new HashSet<>();
+    private float width = 3000              ; // width of the image that this is on (to find prices)
 
     public GraphicOverlay(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -161,6 +162,9 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
      */
     public void add(T graphic) {
         synchronized (mLock) {
+            if(graphic instanceof OcrGraphic) {
+                ((OcrGraphic)graphic).setCanvasWidth(width);
+            }
             mGraphics.add(graphic);
         }
         postInvalidate();
@@ -174,6 +178,10 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
             mGraphics.remove(graphic);
         }
         postInvalidate();
+    }
+
+    public void setWidth(float w) {
+        width = w;
     }
 
     /**

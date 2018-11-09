@@ -19,6 +19,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.google.android.gms.samples.vision.ocrreader.correct.ParcelableOcrGraphic;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
@@ -32,14 +33,26 @@ import java.util.List;
  * overlay view.
  */
 public class OcrGraphic extends GraphicOverlay.Graphic {
-
+    private final String TAG = "OcrGraphic";
     private int mId;
 
     private static final int TEXT_COLOR = Color.WHITE;
+    private static final int SELECTED_COLOR = Color.GREEN;
 
     private static Paint sRectPaint;
     private static Paint sTextPaint;
     private final TextBlock mText;
+
+    private static Paint sRectPaintSelected;
+    private static Paint sTextPaintSelected;
+
+    private Paint currentRectPaint;
+    private Paint currentTextPaint;
+
+    private boolean selected = false;
+
+    private static float midpoint_scale = 0.65f;
+    private static float midpointx = 1000.0f;
 
     OcrGraphic(GraphicOverlay overlay, TextBlock text) {
         super(overlay);
@@ -58,6 +71,24 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
             sTextPaint.setColor(TEXT_COLOR);
             sTextPaint.setTextSize(54.0f);
         }
+
+
+        if (sRectPaintSelected == null) {
+            sRectPaintSelected = new Paint();
+            sRectPaintSelected.setColor(SELECTED_COLOR);
+            sRectPaintSelected.setStyle(Paint.Style.STROKE);
+            sRectPaintSelected.setStrokeWidth(4.0f);
+        }
+
+        if (sTextPaintSelected == null) {
+            sTextPaintSelected = new Paint();
+            sTextPaintSelected.setColor(SELECTED_COLOR);
+            sTextPaintSelected.setTextSize(54.0f);
+        }
+
+        currentRectPaint = sRectPaint;
+        currentTextPaint = sTextPaint;
+
         // Redraw the overlay, as this graphic has been added.
         postInvalidate();
     }
@@ -99,6 +130,21 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
     }
 
     /**
+     * Tell graphic the width of the canvas it is drawn on
+     * If graphic is right of the width*midpoint_scale, it will
+     * "select" itself and the app will include it in the list of prices
+     * @param w width of the image this graphic is overlaid on
+     */
+    public void setCanvasWidth(float w) {
+        midpointx = w * midpoint_scale;
+        if( translateX(mText.getBoundingBox().left) > midpointx ) {
+            selected = true;
+            currentRectPaint = sRectPaintSelected;
+            currentTextPaint = sTextPaintSelected;
+        }
+    }
+
+    /**
      * Draws the text block annotations for position, size, and raw value on the supplied canvas.
      */
     @Override
@@ -114,14 +160,15 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
         rect.top = translateY(rect.top);
         rect.right = translateX(rect.right);
         rect.bottom = translateY(rect.bottom);
-        canvas.drawRect(rect, sRectPaint);
+
+        canvas.drawRect(rect, currentRectPaint);
 
         // Break the text into multiple lines and draw each one according to its own bounding box.
         List<? extends Text> textComponents = text.getComponents();
         for(Text currentText : textComponents) {
             float left = translateX(currentText.getBoundingBox().left);
             float bottom = translateY(currentText.getBoundingBox().bottom);
-            canvas.drawText(currentText.getValue(), left, bottom, sTextPaint);
+            canvas.drawText(currentText.getValue(), left, bottom, currentTextPaint);
         }
     }
 }

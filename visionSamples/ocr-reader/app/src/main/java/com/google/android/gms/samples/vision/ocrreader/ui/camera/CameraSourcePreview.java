@@ -180,6 +180,7 @@ public class CameraSourcePreview extends ViewGroup {
         }
 
         try {
+            mOverlay.setWidth(childWidth - childXOffset);
             startIfReady();
         } catch (SecurityException se) {
             Log.e(TAG,"Do not have permission to start the camera", se);
