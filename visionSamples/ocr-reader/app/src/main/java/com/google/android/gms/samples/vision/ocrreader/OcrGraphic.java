@@ -140,16 +140,31 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
      * @param w width of the image this graphic is overlaid on
      */
     public void setCanvasWidth(float w) {
+        String priceRegex = "$?-?\\d+(\\.\\d+)?";
         float midpointx = w * midpoint_scale;
         if( translateX(mText.getBoundingBox().left) > midpointx ) {
             List<? extends Text> textComponents = mText.getComponents();
             for(Text t : textComponents) {
                 try {
                     float bottom = translateY(t.getBoundingBox().bottom);
-                    float price = Float.valueOf(t.getValue());
+                    String text = t.getValue();
+                    String numberString = new String();
+                    if(text.matches(priceRegex)) { // it's a number
+                        numberString = text;
+                    } else {
+                        String[] tokens = text.split(" ");
+                        for(String s : tokens) {
+                            if(s.matches(priceRegex)) {
+                                numberString = s;
+                                break;
+                            }
+                        }
+                    }
+
+                    float price = Float.valueOf(numberString);
                     myPrices.add(new YAndPrice(bottom, price));
                 } catch(NumberFormatException e) {
-                    // abort mission
+                    // abort
                     return;
                 }
             }

@@ -1,5 +1,6 @@
 package com.google.android.gms.samples.vision.ocrreader;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -19,9 +20,13 @@ public class VerifyActivity extends AppCompatActivity {
 
         // Unparcel the graphics data
         ArrayList<YAndPrice> pricesList = getIntent().getParcelableArrayListExtra("prices");
-        Collections.sort(pricesList);
+        boolean parsed = ComputeUtils.labelSubtotalTaxAndTotal(pricesList);
 
         TextView pricesToVerify = findViewById(R.id.prices_to_verify);
+        if(!parsed) {
+            pricesToVerify.setTextColor(Color.RED);
+        }
+
         pricesToVerify.setText("Prices detected:\n");
 
         for(YAndPrice yp : pricesList) {
