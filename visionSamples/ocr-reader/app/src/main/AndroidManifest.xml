@@ -39,8 +39,9 @@
         <activity
             android:name=".correct.CorrectTextActivity"
             android:label="@string/correct_activity_title" />
-        <activity android:name=".VerifyActivity" />
-        <activity android:name=".SelectDiners"></activity>
+        <activity android:name=".VerifyPricesActivity" />
+        <activity android:name=".SelectPayersActivity" />
+        <activity android:name=".SplitActivity"></activity>
     </application>
 
 </manifest>

@@ -25,7 +25,6 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.samples.vision.ocrreader.namelist.NameListActivity;
 import com.google.android.gms.samples.vision.ocrreader.correct.CorrectTextActivity;
 
 import java.util.ArrayList;
@@ -79,7 +78,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
         else if (v.getId() == R.id.to_names_button) {
             // launch Names activity.
-            Intent intent = new Intent(this, SelectDiners.class);
+            Intent intent = new Intent(this, SelectPayersActivity.class);
             startActivityForResult(intent, RC_GET_NAMES);
         }
         else if (v.getId() == R.id.to_correct_button) {

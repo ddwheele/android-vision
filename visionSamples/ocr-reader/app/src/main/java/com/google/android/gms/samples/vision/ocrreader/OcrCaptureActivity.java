@@ -51,7 +51,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Activity for the multi-tracker app.  This app detects text and displays the value with the
@@ -89,7 +88,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements Camer
         super.onCreate(icicle);
         setContentView(R.layout.ocr_capture);
 
-        mPreview = (CameraSourcePreview) findViewById(R.id.preview);
+        mPreview = findViewById(R.id.preview);
         mGraphicOverlay = findViewById(R.id.graphicOverlay);
 
         // read parameters from the intent used to launch the activity.
@@ -108,7 +107,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements Camer
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
-        Snackbar.make(mGraphicOverlay, "Tap to capture. Pinch/Stretch to zoom",
+        Snackbar.make(mGraphicOverlay, "Tap to capture when prices are green.",
                 Snackbar.LENGTH_LONG)
                 .show();
     }
@@ -360,30 +359,11 @@ public final class OcrCaptureActivity extends AppCompatActivity implements Camer
     private boolean onTap(float rawX, float rawY) {
        // mCameraSource.takePicture(null, this);
         mOcrDetectorProcessor.lock();
-        ArrayList<YAndPrice> priceList = mGraphicOverlay.getPriceList();
+        ArrayList<AllocatedPrice> priceList = mGraphicOverlay.getPriceList();
         // and then we will Parcel it and give it to the new Verify activity
-        Intent intent = new Intent(this, VerifyActivity.class);
+        Intent intent = new Intent(this, VerifyPricesActivity.class);
         intent.putParcelableArrayListExtra("prices", priceList);
         startActivity(intent);
-
-//        OcrGraphic graphic = mGraphicOverlay.getGraphicAtLocation(rawX, rawY);
-//        TextBlock text = null;
-//        if (graphic != null) {
-//            text = graphic.getTextBlock();
-//            if (text != null && text.getValue() != null) {
-//                Intent data = new Intent();
-//                data.putExtra(TextBlockObject, text.getValue());
-//                setResult(CommonStatusCodes.SUCCESS, data);
-//                finish();
-//            }
-//            else {
-//                Log.d(TAG, "text data is null");
-//            }
-//        }
-//        else {
-//            Log.d(TAG,"no text detected");
-//        }
-//        return text != null;
         return true;
     }
 

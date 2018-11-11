@@ -19,7 +19,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.google.android.gms.samples.vision.ocrreader.correct.ParcelableOcrGraphic;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
@@ -50,10 +49,10 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
     private final TextBlock mText;
 
     private boolean selected = false;
-    private List<YAndPrice> myPrices = new ArrayList<>();
+    private List<AllocatedPrice> myPrices = new ArrayList<>();
 
     // percentage across the screen where we start looking for prices
-    private static float midpoint_scale = 0.65f;
+    private static float midpoint_scale = 0.5f;
 
     OcrGraphic(GraphicOverlay overlay, TextBlock text) {
         super(overlay);
@@ -93,7 +92,7 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
         postInvalidate();
     }
 
-    public List<YAndPrice> getMyPrices() {
+    public List<AllocatedPrice> getMyPrices() {
         return myPrices;
     }
 
@@ -162,7 +161,7 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
                     }
 
                     float price = Float.valueOf(numberString);
-                    myPrices.add(new YAndPrice(bottom, price));
+                    myPrices.add(new AllocatedPrice(bottom, price));
                 } catch(NumberFormatException e) {
                     // abort
                     return;

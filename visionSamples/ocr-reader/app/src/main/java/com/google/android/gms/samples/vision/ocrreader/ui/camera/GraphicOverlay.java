@@ -18,16 +18,16 @@ package com.google.android.gms.samples.vision.ocrreader.ui.camera;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.samples.vision.ocrreader.OcrGraphic;
-import com.google.android.gms.samples.vision.ocrreader.YAndPrice;
+import com.google.android.gms.samples.vision.ocrreader.AllocatedPrice;
 import com.google.android.gms.samples.vision.ocrreader.correct.ParcelableOcrGraphic;
 import com.google.android.gms.vision.CameraSource;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -67,11 +67,12 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
         for (Graphic graphic : mGraphics) {
             retList.add(new ParcelableOcrGraphic((OcrGraphic)graphic));
         }
+        Log.e("GOOOOO", "((((((((((((((((( size of parcelable Graphics list is " + retList.size());
         return retList;
     }
 
-    public ArrayList<YAndPrice> getPriceList() {
-        ArrayList<YAndPrice> ret = new ArrayList<>();
+    public ArrayList<AllocatedPrice> getPriceList() {
+        ArrayList<AllocatedPrice> ret = new ArrayList<>();
         for(T g : mGraphics) {
             ret.addAll(((OcrGraphic)g).getMyPrices());
         }
