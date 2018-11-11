@@ -1,5 +1,6 @@
 package com.google.android.gms.samples.vision.ocrreader;
 
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -57,12 +58,12 @@ enum Category implements Parcelable
  * - if it is subtotal, tax, and total
  * - list of who's paying for it
  */
-public class AllocatedPrice implements Parcelable, Comparable, ThreeColumnProvider{
+public class AllocatedPrice implements Parcelable, Comparable {
     final String TAG = "Allocated Price";
     final private float yValue;
     final private float price;
     private Category category;
-    private List<String> payers;
+    private ArrayList<String> payers;
 
     public AllocatedPrice(float yValue, float price) {
         this.yValue = yValue;
@@ -107,7 +108,8 @@ public class AllocatedPrice implements Parcelable, Comparable, ThreeColumnProvid
     }
 
     public void addPayer(String payer) {
-        if(category.equals(Category.ITEM)) {
+        // don't add somebody twice
+        if(isItem() && !payers.contains(payer)) {
             payers.add(payer);
         }
         else {
@@ -117,7 +119,10 @@ public class AllocatedPrice implements Parcelable, Comparable, ThreeColumnProvid
 
     // for now, just assume that the last payer entered was the mistake
     public String removePayer() {
-        return payers.remove(payers.size()-1);
+        if(payers.size() > 0) {
+            return payers.remove(payers.size() - 1);
+        }
+        return null;
     }
 
     // for later ...
@@ -133,27 +138,36 @@ public class AllocatedPrice implements Parcelable, Comparable, ThreeColumnProvid
         return Float.toString(price);
     }
 
+    public ArrayList<String> getPayers() {
+        return payers;
+    }
+
     public String getPayerString() {
-        if(payers.isEmpty()) {
-            return "";
+        if(isItem()) {
+            if(payers.isEmpty()) {
+                return "?";
+            }
+            if (payers.size() == 1) {
+                return payers.get(0);
+            } else if (payers.size() == 2) {
+                return payers.get(0) + ", " + payers.get(1);
+            }
+            return "Many people";
         }
-        else if(payers.size() == 1) {
-            return payers.get(0);
-        }
-        else if(payers.size() == 2) {
-            return payers.get(0) + ", " + payers.get(1);
-        }
-        return "Many people";
+        return "-";
     }
 
     public float getPricePerPayer() {
-        int splitBy = payers.size();
-        return price / (float) splitBy;
+        if(isItem()) {
+            int splitBy = payers.size();
+            return price / (float) splitBy;
+        }
+        return 0;
     }
 
     @Override
     public String toString() {
-        if(category != Category.ITEM) {
+        if(!isItem()) {
             return category.toString() + " " + Float.toString(price);
         }
         return "__________" + Float.toString(price);
@@ -185,18 +199,34 @@ public class AllocatedPrice implements Parcelable, Comparable, ThreeColumnProvid
         dest.writeStringList(payers);
     }
 
-    @Override
     public String getFirstColumnString() {
         return category.toString();
     }
 
-    @Override
     public String getSecondColumnString() {
         return getPriceString();
     }
 
-    @Override
     public String getThirdColumnString() {
         return getPayerString();
+    }
+
+//    public int getFirstColumnBackgroundColor() {
+//
+//    }
+//
+//    public int getSecondColumnBackgroundColor() {
+//
+//    }
+
+    public int getThirdColumnBackgroundColor() {
+        if(!isItem()) {
+            return Color.BLACK;
+        }
+        return Color.DKGRAY;
+    }
+
+    boolean isItem() {
+        return category == Category.ITEM;
     }
 }

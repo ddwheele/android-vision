@@ -6,16 +6,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SplitActivity extends AppCompatActivity {
     ArrayList<AllocatedPrice> priceList;
     ListView priceListView;
     ThreeColumnArrayAdapter priceAdapter;
 
-    ArrayList<PayerDebt> payerDebtList;
+    PayerDebtCoordinator payerCoordinator;
     ListView payerListView;
     ArrayAdapter<PayerDebt> payerAdapter;
     PayerDebt selectedPayer;
@@ -39,13 +39,12 @@ public class SplitActivity extends AppCompatActivity {
                                     int position, long id) {
                 AllocatedPrice item =  (AllocatedPrice)parent.getItemAtPosition(position);
                 if(selectedPayer != null) {
-                    item.addPayer(selectedPayer.name);
-                    selectedPayer.addItem(item);
+                    payerCoordinator.addPayerToItem(selectedPayer, item);
                     priceAdapter.notifyDataSetChanged();
                     payerAdapter.notifyDataSetChanged();
                 }
                 else if(!item.getPayerString().isEmpty()){
-                    removePayer(item);
+                    payerCoordinator.removeLastPayerFromItem(item);
                     priceAdapter.notifyDataSetChanged();
                     payerAdapter.notifyDataSetChanged();
                 }
@@ -56,11 +55,23 @@ public class SplitActivity extends AppCompatActivity {
         });
 
         ArrayList<String> payerList = getIntent().getStringArrayListExtra("payers");
-        payerDebtList = ComputeUtils.createPayerDebtList(payerList);
+        payerCoordinator = new PayerDebtCoordinator(payerList);
 
-        payerAdapter = new ThreeColumnPayerAdapter(this, payerDebtList);
+        payerAdapter = new ThreeColumnPayerAdapter(this, payerCoordinator.getPayerDebtList());
 
         payerListView = findViewById(R.id.split_payer_list);
+        View header = getLayoutInflater().inflate(R.layout.column_view, null);
+        TextView header1 = header.findViewById(R.id.first_column);
+        TextView header2 = header.findViewById(R.id.second_column);
+        TextView header3 = header.findViewById(R.id.third_column);
+
+        header1.setText("Name");
+        header2.setText("W/ Tax");
+        header3.setText("W/ Tip");
+
+      //  View footer = getLayoutInflater().inflate(R.layout.footer, null);
+        payerListView.addHeaderView(header);
+       // listView.addFooterView(footer);
         payerListView.setAdapter(payerAdapter);
 
         payerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -69,27 +80,20 @@ public class SplitActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
                 final PayerDebt tappedPayer = (PayerDebt) parent.getItemAtPosition(position);
-                if(selectedPayer != null && selectedPayer.equals(tappedPayer.name)) {
+                if(selectedPayer != null) {
+                    selectedPayer.toggleSelected();
                     // deselect if second tap
                     selectedPayer = null;
                 } else {
                     // select on first tap
                     selectedPayer = tappedPayer;
+                    selectedPayer.toggleSelected();
                 }
+
+                // recolor
+                payerAdapter.notifyDataSetChanged();
             }
 
         });
-    }
-
-    private void removePayer(AllocatedPrice item) {
-        // remove payer from item
-        String payer = item.removePayer();
-        // see who it is, find him, tell him to delete item
-        // TODO do this a better way, like make payerDebtList into a HashMap. But request is rare
-        for(PayerDebt pd : payerDebtList) {
-            if(pd.name.equals(payer)) {
-                pd.removeItem(item);
-            }
-        }
     }
 }

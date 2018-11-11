@@ -1,13 +1,19 @@
 package com.google.android.gms.samples.vision.ocrreader;
 
+import android.graphics.Color;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class PayerDebt implements ThreeColumnProvider {
+public class PayerDebt  {
     final String name;
     ArrayList<AllocatedPrice> items;
     float subtotal;
     float total;
-    boolean calculated = false;
+    boolean calculated = false; // have we calculated what he owes
+    boolean selected = false; // is this person selected in the Activity
+
+    DecimalFormat twoDForm = new DecimalFormat("#.##");
 
     public PayerDebt(String name) {
         this.name = name;
@@ -15,7 +21,9 @@ public class PayerDebt implements ThreeColumnProvider {
     }
 
     public void addItem(AllocatedPrice ap) {
-        items.add(ap);
+        if(!items.contains(ap)) {
+            items.add(ap);
+        }
         calculated = false;
     }
 
@@ -65,6 +73,11 @@ public class PayerDebt implements ThreeColumnProvider {
         return getTotal() + getTip(tipPercent);
     }
 
+    public void recalculate() {
+        // for when someone else is sharing an item now
+        calculate();
+    }
+
     // add to get subtotal, and add tax for total
     private void calculate() {
         subtotal = 0;
@@ -75,18 +88,31 @@ public class PayerDebt implements ThreeColumnProvider {
         calculated = true;
     }
 
-    @Override
     public String getFirstColumnString() {
         return name;
     }
 
-    @Override
     public String getSecondColumnString() {
-        return Float.toString(getTotal());
+        return twoDForm.format(getTotal());
     }
 
-    @Override
     public String getThirdColumnString() {
-        return Float.toString(getTotalAndTip());
+        return twoDForm.format(getTotalAndTip());
+    }
+
+    public int getThirdColumnBackgroundColor() {
+        if(selected) {
+            return Color.GREEN;
+        }
+        return Color.DKGRAY;
+    }
+
+    public void toggleSelected() {
+        if(selected) {
+            selected = false;
+        }
+        else {
+            selected = true;
+        }
     }
 }

@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 // TODO WHY DOESN'T THIS RECOGNIZE POLYMORPHISM AAAAAAHHHHHH
 public class ThreeColumnArrayAdapter extends ArrayAdapter<AllocatedPrice> {
@@ -32,6 +31,9 @@ public class ThreeColumnArrayAdapter extends ArrayAdapter<AllocatedPrice> {
         text1.setText(values.get(position).getFirstColumnString());
         text2.setText(values.get(position).getSecondColumnString());
         text3.setText(values.get(position).getThirdColumnString());
+
+        text1.setBackgroundColor(values.get(position).getThirdColumnBackgroundColor());
+
         return rowView;
     }
 }
