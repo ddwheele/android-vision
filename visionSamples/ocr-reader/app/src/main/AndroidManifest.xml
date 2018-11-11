@@ -6,6 +6,7 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
@@ -37,8 +38,9 @@
             android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".correct.CorrectTextActivity"
-            android:label="@string/correct_activity_title"></activity>
-        <activity android:name=".VerifyActivity"></activity>
+            android:label="@string/correct_activity_title" />
+        <activity android:name=".VerifyActivity" />
+        <activity android:name=".SelectDiners"></activity>
     </application>
 
 </manifest>
