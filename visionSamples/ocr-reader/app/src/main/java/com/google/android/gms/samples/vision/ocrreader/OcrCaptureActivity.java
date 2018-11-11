@@ -320,9 +320,6 @@ public final class OcrCaptureActivity extends AppCompatActivity implements Camer
         }
     }
 
-
-
-
     /**
      * Called when image data is available after a picture is taken.  The format of the data
      * is a jpeg binary.

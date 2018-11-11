@@ -25,4 +25,7 @@
     <string name="correct_add_prices">Add Prices</string>
     <string name="correct_continue">Continue</string>
     <string name="verify_continue">Add Diners</string>
+    <string name="select_contact_button">Select From Contacts</string>
+    <string name="select_manually">Add Diner Manually</string>
+    <string name="select_continue">Split Check</string>
 </resources>

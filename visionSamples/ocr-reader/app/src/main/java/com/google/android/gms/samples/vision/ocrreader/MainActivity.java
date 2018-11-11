@@ -79,7 +79,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
         else if (v.getId() == R.id.to_names_button) {
             // launch Names activity.
-            Intent intent = new Intent(this, NameListActivity.class);
+            Intent intent = new Intent(this, SelectDiners.class);
             startActivityForResult(intent, RC_GET_NAMES);
         }
         else if (v.getId() == R.id.to_correct_button) {
@@ -130,25 +130,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
         }
         else if(requestCode == RC_GET_NAMES) {
-            Log.e("MAIN","You have returned, my liege");
             Bundle bundle = intent.getExtras();
 
             ArrayList<String> namesList =
-                    (ArrayList<String>)bundle.getSerializable("names");
-            Log.e("MAIN","retrieved the bundle");
+                    (ArrayList<String>) bundle.getSerializable("names");
 
-            if(namesList != null) {
-                Log.e("MAIN","it is not null");
-                if(namesList.isEmpty()) {
-                    Log.e("MAIN","Empty list");
-                } else {
-                    Log.e("MAIN","I have data! It is beautiful! Starts with "+namesList.get(0));
-                }
-            } else {
-                Log.e("MAIN","it was null");
-            }
-        }
-        else {
+        } else {
             super.onActivityResult(requestCode, resultCode, intent);
         }
     }

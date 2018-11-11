@@ -18,44 +18,52 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class SelectDiners extends AppCompatActivity {
-    String TAG_ANDROID_CONTACTS = "Select Diners";
-    TextView  txtname,txtphno;
+    String TAG = "Select Diners";
     static final int PICK_CONTACT = 1;
     String st;
     final private int REQUEST_MULTIPLE_PERMISSIONS = 124;
+    Vector<String> diners = new Vector<>();
+    ListView listView;
+    ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_diners);
-
-        setTitle("Select diners.");
-
+        setTitle("Select diners");
         AccessContact();
-        txtname=(TextView) findViewById(R.id.txtname);
-        txtphno=(TextView) findViewById(R.id.txtphno);
 
-
-        // Load all contacts, and print each contact as log debug info.
-        Button loadButton = (Button) findViewById(R.id.contact_operate_load);
+        // select contact
+        Button loadButton = findViewById(R.id.select_contact_button);
         loadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 startActivityForResult(intent, PICK_CONTACT);
             }
         });
-    }
 
+        Button manualButton = findViewById(R.id.select_manually);
+        manualButton.setEnabled(false);
+
+        adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, diners);
+
+        listView = findViewById(R.id.diner_list);
+        listView.setAdapter(adapter);
+
+    }
 
     public void onActivityResult(int reqCode, int resultCode, Intent data) {
         super.onActivityResult(reqCode, resultCode, data);
@@ -65,21 +73,10 @@ public class SelectDiners extends AppCompatActivity {
                     Uri contactData = data.getData();
                     Cursor c = managedQuery(contactData, null, null, null, null);
                     if (c.moveToFirst()) {
-                        String id = c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
-                        String hasPhone = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
                         try {
-                            if (hasPhone.equalsIgnoreCase("1")) {
-                                Cursor phones = getContentResolver().query(
-                                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id,
-                                        null, null);
-                                phones.moveToFirst();
-                                String cNumber = phones.getString(phones.getColumnIndex("data1"));
-                                System.out.println("number is:" + cNumber);
-                                txtphno.setText("Phone Number is: "+cNumber);
-                            }
                             String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                            txtname.setText("Name is: "+name);
+                            diners.add(name);
+                            adapter.notifyDataSetChanged();
                         }
                         catch (Exception ex)
                         {
@@ -97,11 +94,9 @@ public class SelectDiners extends AppCompatActivity {
         final List<String> permissionsList = new ArrayList<String>();
         if (!addPermission(permissionsList, Manifest.permission.READ_CONTACTS))
             permissionsNeeded.add("Read Contacts");
-        if (!addPermission(permissionsList, Manifest.permission.WRITE_CONTACTS))
-            permissionsNeeded.add("Write Contacts");
         if (permissionsList.size() > 0) {
             if (permissionsNeeded.size() > 0) {
-                String message = "You need to grant access to " + permissionsNeeded.get(0);
+                String message = "Do you want to grant access to " + permissionsNeeded.get(0);
                 for (int i = 1; i < permissionsNeeded.size(); i++)
                     message = message + ", " + permissionsNeeded.get(i);
                 showMessageOKCancel(message,
@@ -119,7 +114,6 @@ public class SelectDiners extends AppCompatActivity {
             return;
         }
     }
-
 
     private boolean addPermission(List<String> permissionsList, String permission) {
         if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
