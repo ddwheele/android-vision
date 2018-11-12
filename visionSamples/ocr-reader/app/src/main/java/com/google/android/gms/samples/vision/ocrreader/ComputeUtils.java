@@ -10,6 +10,10 @@ public class ComputeUtils {
     static float epsilon = 0.00001f;
     static float taxRate = 0.0925f;
 
+    static final String PRICES = "prices";
+    static final String PAYERS = "payers";
+    static final String OFFSET = "offset";
+
     static boolean floatEquals(float f1, float f2) {
         if(Math.abs(f1 - f2) < epsilon) {
             return true;
@@ -84,7 +88,12 @@ public class ComputeUtils {
             taxRate = tax / subtotal;
             return true;
         }
-        return false;
 
+        // reset all the labels back to item
+        for(AllocatedPrice p : prices) {
+            Log.e(TAG, "price y was " + p.getYValue());
+            p.labelAsItem();
+        }
+        return false;
     }
 }

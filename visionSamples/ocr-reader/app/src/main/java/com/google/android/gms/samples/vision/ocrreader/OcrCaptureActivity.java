@@ -79,6 +79,8 @@ public final class OcrCaptureActivity extends AppCompatActivity implements Camer
     // Helper objects for detecting taps and pinches.
     private ScaleGestureDetector scaleGestureDetector;
     private GestureDetector gestureDetector;
+    private float yOffset = 0f; // for later pages, add height of previous pages
+    // to text y values, so the order of the items will stay correct when sorted
 
     /**
      * Initializes the UI and creates the detector pipeline.
@@ -92,8 +94,9 @@ public final class OcrCaptureActivity extends AppCompatActivity implements Camer
         mGraphicOverlay = findViewById(R.id.graphicOverlay);
 
         // read parameters from the intent used to launch the activity.
-        boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, false);
+        boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, true);
         boolean useFlash = getIntent().getBooleanExtra(UseFlash, false);
+
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
@@ -110,6 +113,13 @@ public final class OcrCaptureActivity extends AppCompatActivity implements Camer
         Snackbar.make(mGraphicOverlay, "Tap to capture when prices are green.",
                 Snackbar.LENGTH_LONG)
                 .show();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        yOffset = getIntent().getFloatExtra(ComputeUtils.OFFSET, 0);
+        mGraphicOverlay.setYOffset(yOffset);
     }
 
     /**
@@ -357,14 +367,24 @@ public final class OcrCaptureActivity extends AppCompatActivity implements Camer
      * @return true if the activity is ending.
      */
     private boolean onTap(float rawX, float rawY) {
-       // mCameraSource.takePicture(null, this);
         mOcrDetectorProcessor.lock();
         ArrayList<AllocatedPrice> priceList = mGraphicOverlay.getPriceList();
-        // and then we will Parcel it and give it to the new Verify activity
-        Intent intent = new Intent(this, VerifyPricesActivity.class);
-        intent.putParcelableArrayListExtra("prices", priceList);
-        startActivity(intent);
-        return true;
+
+        // we are first screen
+        if(getCallingActivity() == null) {
+            // and then we will Parcel it and give it to the new Verify activity
+            Intent intent = new Intent(this, VerifyPricesActivity.class);
+            intent.putParcelableArrayListExtra(ComputeUtils.PRICES, priceList);
+            startActivity(intent);
+            return true;
+        }
+        else { // we were called from VerifyPricesActivity
+            Intent returnIntent = new Intent();
+            returnIntent.putParcelableArrayListExtra(ComputeUtils.PRICES, priceList);
+            setResult(Activity.RESULT_OK,returnIntent);
+            finish();
+        }
+        return false;
     }
 
     private class CaptureGestureListener extends GestureDetector.SimpleOnGestureListener {

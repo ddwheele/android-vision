@@ -74,7 +74,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             intent.putExtra(OcrCaptureActivity.AutoFocus, autoFocus.isChecked());
             intent.putExtra(OcrCaptureActivity.UseFlash, useFlash.isChecked());
 
-            startActivityForResult(intent, RC_OCR_CAPTURE);
+            startActivity(intent);
         }
         else if (v.getId() == R.id.to_names_button) {
             // launch Names activity.

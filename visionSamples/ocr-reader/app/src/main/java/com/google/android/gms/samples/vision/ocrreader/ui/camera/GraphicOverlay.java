@@ -56,7 +56,8 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     private float mHeightScaleFactor = 1.0f;
     private int mFacing = CameraSource.CAMERA_FACING_BACK;
     private Set<T> mGraphics = new HashSet<>();
-    private float width = 3000              ; // width of the image that this is on (to find prices)
+    private float width = 3000; // width of the image that this is on (to find prices)
+    private float yOffset = 0; // if this is the second page or more, offset the y value
 
     public GraphicOverlay(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -67,7 +68,6 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
         for (Graphic graphic : mGraphics) {
             retList.add(new ParcelableOcrGraphic((OcrGraphic)graphic));
         }
-        Log.e("GOOOOO", "((((((((((((((((( size of parcelable Graphics list is " + retList.size());
         return retList;
     }
 
@@ -77,6 +77,10 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
             ret.addAll(((OcrGraphic)g).getMyPrices());
         }
         return ret;
+    }
+
+    public void setYOffset(float offset) {
+        yOffset = offset;
     }
 
     public float getWidthScaleFactor() { return mWidthScaleFactor; }
@@ -174,7 +178,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     public void add(T graphic) {
         synchronized (mLock) {
             if(graphic instanceof OcrGraphic) {
-                ((OcrGraphic)graphic).setCanvasWidth(width);
+                ((OcrGraphic)graphic).setCanvasWidth(width, yOffset);
             }
             mGraphics.add(graphic);
         }

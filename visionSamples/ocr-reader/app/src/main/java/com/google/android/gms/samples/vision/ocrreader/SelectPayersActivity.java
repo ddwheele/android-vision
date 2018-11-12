@@ -141,15 +141,14 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.select_contact_button) {
-            Log.e(TAG, "Going to pick contact now");
             Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
             startActivityForResult(intent, PICK_CONTACT);
         }
         else if(v.getId() == R.id.select_continue) {
             Intent intent = new Intent(this, SplitActivity.class);
-            ArrayList<AllocatedPrice> pricesList = getIntent().getParcelableArrayListExtra("prices");
-            intent.putParcelableArrayListExtra("prices", pricesList);
-            intent.putStringArrayListExtra("payers", payers);
+            ArrayList<AllocatedPrice> pricesList = getIntent().getParcelableArrayListExtra(ComputeUtils.PRICES);
+            intent.putParcelableArrayListExtra(ComputeUtils.PRICES, pricesList);
+            intent.putStringArrayListExtra(ComputeUtils.PAYERS, payers);
             startActivity(intent);
         }
     }

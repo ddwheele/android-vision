@@ -95,6 +95,12 @@ public class AllocatedPrice implements Parcelable, Comparable {
         return price;
     }
 
+    public float getYValue() { return yValue; }
+
+    public void labelAsItem() {
+        category = Category.ITEM;
+    }
+
     public void labelAsTotal() {
         category = Category.TOTAL;
     }

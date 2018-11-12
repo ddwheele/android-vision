@@ -26,7 +26,7 @@ public class SplitActivity extends AppCompatActivity {
         setContentView(R.layout.activity_split);
         setTitle("Assign Items to Payers");
 
-        priceList = getIntent().getParcelableArrayListExtra("prices");
+        priceList = getIntent().getParcelableArrayListExtra(ComputeUtils.PRICES);
         priceAdapter = new ThreeColumnArrayAdapter(this, priceList);
 
         priceListView = findViewById(R.id.split_prices_list);
@@ -54,7 +54,7 @@ public class SplitActivity extends AppCompatActivity {
             }
         });
 
-        ArrayList<String> payerList = getIntent().getStringArrayListExtra("payers");
+        ArrayList<String> payerList = getIntent().getStringArrayListExtra(ComputeUtils.PAYERS);
         payerCoordinator = new PayerDebtCoordinator(payerList);
 
         payerAdapter = new ThreeColumnPayerAdapter(this, payerCoordinator.getPayerDebtList());
@@ -66,12 +66,10 @@ public class SplitActivity extends AppCompatActivity {
         TextView header3 = header.findViewById(R.id.third_column);
 
         header1.setText("Name");
-        header2.setText("W/ Tax");
-        header3.setText("W/ Tip");
+        header2.setText("+Tax");
+        header3.setText("+Tip");
 
-      //  View footer = getLayoutInflater().inflate(R.layout.footer, null);
         payerListView.addHeaderView(header);
-       // listView.addFooterView(footer);
         payerListView.setAdapter(payerAdapter);
 
         payerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
