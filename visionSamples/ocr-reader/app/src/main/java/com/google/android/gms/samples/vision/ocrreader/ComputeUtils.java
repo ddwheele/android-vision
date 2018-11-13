@@ -1,5 +1,6 @@
 package com.google.android.gms.samples.vision.ocrreader;
 
+import android.graphics.Color;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ public class ComputeUtils {
     static final String PRICES = "prices";
     static final String PAYERS = "payers";
     static final String OFFSET = "offset";
+
+    static final int BACKGROUND = Color.rgb(48, 48, 48);
 
     static boolean floatEquals(float f1, float f2) {
         if(Math.abs(f1 - f2) < epsilon) {
@@ -91,7 +94,6 @@ public class ComputeUtils {
 
         // reset all the labels back to item
         for(AllocatedPrice p : prices) {
-            Log.e(TAG, "price y was " + p.getYValue());
             p.labelAsItem();
         }
         return false;

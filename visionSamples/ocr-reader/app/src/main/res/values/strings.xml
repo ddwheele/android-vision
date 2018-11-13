@@ -29,6 +29,7 @@
     <string name="verify_append_prices">Add More Prices</string>
     <string name="verify_continue">Add Payers</string>
     <string name="select_contact_button">Select From Contacts</string>
-    <string name="select_manually">Add Payer Manually</string>
+    <string name="select_manual_add">Add</string>
+    <string name="select_manual_type">Type Payer Name</string>
     <string name="select_continue">Split Check</string>
 </resources>

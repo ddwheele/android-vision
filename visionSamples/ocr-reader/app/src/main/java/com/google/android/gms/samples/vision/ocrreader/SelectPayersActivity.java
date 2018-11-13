@@ -11,11 +11,11 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -28,6 +28,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     ArrayList<String> payers = new ArrayList<>();
     ListView listView;
     ArrayAdapter<String> adapter;
+    Button continueButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +36,6 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_select_payers);
         setTitle("Select Payers");
         AccessContact();
-
-        Button manualButton = findViewById(R.id.select_manually);
-        manualButton.setEnabled(false);
 
         adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, payers);
@@ -57,6 +55,9 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                                 payers.remove(item);
                                 adapter.notifyDataSetChanged();
                                 view.setAlpha(1);
+                                if(payers.isEmpty()) {
+                                    continueButton.setEnabled(false);
+                                }
                             }
                         });
             }
@@ -64,8 +65,11 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
         });
 
         findViewById(R.id.select_contact_button).setOnClickListener(this);
-        findViewById(R.id.select_manually).setOnClickListener(this);
-        findViewById(R.id.select_continue).setOnClickListener(this);
+        findViewById(R.id.select_add_button).setOnClickListener(this);
+
+        continueButton = findViewById(R.id.select_continue);
+        continueButton.setEnabled(false);
+        continueButton.setOnClickListener(this);
     }
 
     public void onActivityResult(int reqCode, int resultCode, Intent data) {
@@ -80,6 +84,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                             String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                             payers.add(name);
                             adapter.notifyDataSetChanged();
+                            continueButton.setEnabled(true);
                         }
                         catch (Exception ex)
                         {
@@ -143,6 +148,14 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
         if(v.getId() == R.id.select_contact_button) {
             Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
             startActivityForResult(intent, PICK_CONTACT);
+        }
+        else if (v.getId() == R.id.select_add_button) {
+            EditText et = findViewById(R.id.editText);
+            String newName = et.getText().toString();
+            payers.add(newName);
+            adapter.notifyDataSetChanged();
+            et.setText("");
+            continueButton.setEnabled(true);
         }
         else if(v.getId() == R.id.select_continue) {
             Intent intent = new Intent(this, SplitActivity.class);

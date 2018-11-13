@@ -10,11 +10,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 // TODO WHY DOESN'T THIS RECOGNIZE POLYMORPHISM AAAAAAHHHHHH
-public class ThreeColumnArrayAdapter extends ArrayAdapter<AllocatedPrice> {
+public class ThreeColumnPricesAdapter extends ArrayAdapter<AllocatedPrice> {
     private final Context context;
     private final ArrayList<AllocatedPrice> values;
 
-    public ThreeColumnArrayAdapter(Context context, ArrayList<AllocatedPrice> values) {
+    public ThreeColumnPricesAdapter(Context context, ArrayList<AllocatedPrice> values) {
         super(context, -1, values);
         this.context = context;
         this.values = values;
@@ -32,7 +32,10 @@ public class ThreeColumnArrayAdapter extends ArrayAdapter<AllocatedPrice> {
         text2.setText(values.get(position).getSecondColumnString());
         text3.setText(values.get(position).getThirdColumnString());
 
-        text1.setBackgroundColor(values.get(position).getThirdColumnBackgroundColor());
+        text1.setTextColor(values.get(position).getFirstColumnTextColor());
+        text2.setTextColor(values.get(position).getSecondColumnTextColor());
+
+        text3.setBackgroundColor(values.get(position).getThirdColumnBackgroundColor());
 
         return rowView;
     }

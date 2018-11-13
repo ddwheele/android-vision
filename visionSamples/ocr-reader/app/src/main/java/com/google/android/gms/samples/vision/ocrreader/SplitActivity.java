@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class SplitActivity extends AppCompatActivity {
     ArrayList<AllocatedPrice> priceList;
     ListView priceListView;
-    ThreeColumnArrayAdapter priceAdapter;
+    ThreeColumnPricesAdapter priceAdapter;
 
     PayerDebtCoordinator payerCoordinator;
     ListView payerListView;
@@ -21,13 +21,13 @@ public class SplitActivity extends AppCompatActivity {
     PayerDebt selectedPayer;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_split);
         setTitle("Assign Items to Payers");
 
         priceList = getIntent().getParcelableArrayListExtra(ComputeUtils.PRICES);
-        priceAdapter = new ThreeColumnArrayAdapter(this, priceList);
+        priceAdapter = new ThreeColumnPricesAdapter(this, priceList);
 
         priceListView = findViewById(R.id.split_prices_list);
         priceListView.setAdapter(priceAdapter);
@@ -78,14 +78,21 @@ public class SplitActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
                 final PayerDebt tappedPayer = (PayerDebt) parent.getItemAtPosition(position);
-                if(selectedPayer != null) {
-                    selectedPayer.toggleSelected();
-                    // deselect if second tap
-                    selectedPayer = null;
-                } else {
+                if(selectedPayer == null) {
                     // select on first tap
                     selectedPayer = tappedPayer;
                     selectedPayer.toggleSelected();
+                } else {
+                    // if it's second tap, deselect it
+                    if(selectedPayer.equals(tappedPayer)) {
+                        selectedPayer.toggleSelected();
+                        selectedPayer = null;
+                    }
+                    else { // change to select the new tapped player
+                        selectedPayer.toggleSelected();
+                        selectedPayer = tappedPayer;
+                        selectedPayer.toggleSelected();
+                    }
                 }
 
                 // recolor

@@ -1,8 +1,11 @@
 package com.google.android.gms.samples.vision.ocrreader;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class PayerDebtCoordinator {
+    final String TAG = "PayerDebtCoordinator";
     ArrayList<PayerDebt> payerDebtList;
 
     public PayerDebtCoordinator(ArrayList<String> payerList) {

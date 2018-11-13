@@ -42,7 +42,9 @@
             android:name=".correct.CorrectTextActivity"
             android:label="@string/correct_activity_title" />
         <activity android:name=".VerifyPricesActivity" />
-        <activity android:name=".SelectPayersActivity" />
+        <activity
+            android:name=".SelectPayersActivity"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".SplitActivity"></activity>
     </application>
 

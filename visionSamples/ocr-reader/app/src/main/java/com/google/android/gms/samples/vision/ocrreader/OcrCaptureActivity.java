@@ -370,6 +370,11 @@ public final class OcrCaptureActivity extends AppCompatActivity implements Camer
         mOcrDetectorProcessor.lock();
         ArrayList<AllocatedPrice> priceList = mGraphicOverlay.getPriceList();
 
+        if(priceList.isEmpty()) {
+            mOcrDetectorProcessor.unlock();
+            return false; // don't waste our time, they will have to do it again
+        }
+
         // we are first screen
         if(getCallingActivity() == null) {
             // and then we will Parcel it and give it to the new Verify activity

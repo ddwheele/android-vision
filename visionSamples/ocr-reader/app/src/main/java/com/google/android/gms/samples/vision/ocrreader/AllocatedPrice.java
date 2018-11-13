@@ -16,7 +16,7 @@ import java.util.List;
  * TODO: handle if tip is computed
  */
 enum Category implements Parcelable
-{   ITEM("Item______"), SUBTOTAL("Subtotal__"), TAX("Tax_______"), TOTAL("Total_____");
+{   ITEM("Item"), SUBTOTAL("Subtotal"), TAX("Tax"), TOTAL("Total");
 
     private final String label;
 
@@ -153,12 +153,15 @@ public class AllocatedPrice implements Parcelable, Comparable {
             if(payers.isEmpty()) {
                 return "?";
             }
-            if (payers.size() == 1) {
-                return payers.get(0);
-            } else if (payers.size() == 2) {
-                return payers.get(0) + ", " + payers.get(1);
+            else {
+                StringBuilder sb = new StringBuilder();
+                for(String p : payers) {
+                    sb.append(p + ", ");
+                }
+                sb.deleteCharAt(sb.length()-1); // remove last space
+                sb.deleteCharAt(sb.length()-1); // remove last comma
+                return sb.toString();
             }
-            return "Many people";
         }
         return "-";
     }
@@ -176,7 +179,7 @@ public class AllocatedPrice implements Parcelable, Comparable {
         if(!isItem()) {
             return category.toString() + " " + Float.toString(price);
         }
-        return "__________" + Float.toString(price);
+        return Float.toString(price);
     }
 
     @Override
@@ -217,19 +220,32 @@ public class AllocatedPrice implements Parcelable, Comparable {
         return getPayerString();
     }
 
-//    public int getFirstColumnBackgroundColor() {
-//
-//    }
+    public int getFirstColumnTextColor() {
+        if(isItem()) {
+            if(payers.isEmpty()) {
+                return Color.RED;
+            } else {
+                return Color.GREEN;
+            }
+        }
+        return Color.WHITE;
+
+    }
 //
 //    public int getSecondColumnBackgroundColor() {
 //
 //    }
 
+    public int getSecondColumnTextColor() {
+        return getFirstColumnTextColor();
+    }
+
+
     public int getThirdColumnBackgroundColor() {
-        if(!isItem()) {
+        if(isItem() && payers.isEmpty()) {
             return Color.BLACK;
         }
-        return Color.DKGRAY;
+        return ComputeUtils.BACKGROUND;
     }
 
     boolean isItem() {

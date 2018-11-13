@@ -29,6 +29,7 @@ public class PayerDebt  {
 
     public void removeItem(AllocatedPrice ap) {
         items.remove(ap);
+        calculate();
     }
 
     public float getSubtotal() {
@@ -104,7 +105,7 @@ public class PayerDebt  {
         if(selected) {
             return Color.GREEN;
         }
-        return Color.DKGRAY;
+        return ComputeUtils.BACKGROUND;
     }
 
     public void toggleSelected() {
