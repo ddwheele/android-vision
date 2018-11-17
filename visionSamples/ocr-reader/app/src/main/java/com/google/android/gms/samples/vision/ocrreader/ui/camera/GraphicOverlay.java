@@ -17,7 +17,9 @@ package com.google.android.gms.samples.vision.ocrreader.ui.camera;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.samples.vision.ocrreader.ComputeUtils;
@@ -49,6 +51,7 @@ import java.util.Set;
  * </ol>
  */
 public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
+    private final String TAG = "Graphic Overlay";
     private final Object mLock = new Object();
     private int mPreviewWidth;
     private float mWidthScaleFactor = 1.0f;
@@ -56,12 +59,16 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     private float mHeightScaleFactor = 1.0f;
     private int mFacing = CameraSource.CAMERA_FACING_BACK;
     private Set<T> mGraphics = new HashSet<>();
+    private Set<RectangleGraphic> otherGraphics = new HashSet<>();
     private float width = 3000; // width of the image that this is on (to find prices)
     private float yOffset = 0; // if this is the second page or more, offset the y value
     private ArrayList<AllocatedPrice> precomputedPriceList;
 
     public GraphicOverlay(Context context, AttributeSet attrs) {
         super(context, attrs);
+        synchronized (mLock) {
+            otherGraphics.add(new RectangleGraphic(this, 300, 250, 700, 1100, "Prices"));
+        }
     }
 
     public ArrayList<ParcelableOcrGraphic> getParcelableList() {
@@ -119,6 +126,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
      * graphics element.  Add instances to the overlay using {@link GraphicOverlay#add(Graphic)}.
      */
     public static abstract class Graphic {
+        private final String TAG = "Graphic";
         protected GraphicOverlay mOverlay;
 
 
@@ -269,6 +277,10 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
             }
 
             for (Graphic graphic : mGraphics) {
+                graphic.draw(canvas);
+            }
+
+            for (Graphic graphic : otherGraphics) {
                 graphic.draw(canvas);
             }
         }
