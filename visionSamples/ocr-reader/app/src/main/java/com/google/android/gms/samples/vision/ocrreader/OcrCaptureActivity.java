@@ -45,6 +45,7 @@ import com.google.android.gms.samples.vision.ocrreader.correct.ParcelableOcrGrap
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.CameraSource;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.CameraSourcePreview;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
+import com.google.android.gms.samples.vision.ocrreader.ui.camera.IPictureTrigger;
 import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.File;
@@ -57,7 +58,7 @@ import java.util.ArrayList;
  * rear facing camera. During detection overlay graphics are drawn to indicate the position,
  * size, and contents of each TextBlock.
  */
-public final class OcrCaptureActivity extends AppCompatActivity implements CameraSource.PictureCallback {
+public final class OcrCaptureActivity extends AppCompatActivity implements IPictureTrigger, CameraSource.PictureCallback {
     private static final String TAG = "OcrCaptureActivity";
 
     // Intent request code to handle updating play services if needed.
@@ -180,6 +181,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements Camer
         // on screen.
         TextRecognizer textRecognizer = new TextRecognizer.Builder(context).build();
         mOcrDetectorProcessor = new OcrDetectorProcessor(mGraphicOverlay);
+        mOcrDetectorProcessor.setPictureTrigger(this);
         textRecognizer.setProcessor(mOcrDetectorProcessor);
 
         if (!textRecognizer.isOperational()) {
@@ -378,9 +380,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements Camer
         // we are first screen
         if(getCallingActivity() == null) {
             // and then we will Parcel it and give it to the new Verify activity
-            Intent intent = new Intent(this, VerifyPricesActivity.class);
-            intent.putParcelableArrayListExtra(ComputeUtils.PRICES, priceList);
-            startActivity(intent);
+            triggerPicture();
             return true;
         }
         else { // we were called from VerifyPricesActivity
@@ -390,6 +390,14 @@ public final class OcrCaptureActivity extends AppCompatActivity implements Camer
             finish();
         }
         return false;
+    }
+
+    @Override
+    public void triggerPicture() {
+        ArrayList<AllocatedPrice> priceList = mGraphicOverlay.getPriceList();
+        Intent intent = new Intent(this, VerifyPricesActivity.class);
+        intent.putParcelableArrayListExtra(ComputeUtils.PRICES, priceList);
+        startActivity(intent);
     }
 
     private class CaptureGestureListener extends GestureDetector.SimpleOnGestureListener {

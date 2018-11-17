@@ -119,7 +119,7 @@ public class AllocatedPrice implements Parcelable, Comparable {
             payers.add(payer);
         }
         else {
-            Log.e(TAG, "Trying to assign payer to " + category.toString() + "!");
+            Log.v(TAG, "Trying to assign payer to " + category.toString() + "!");
         }
     }
 

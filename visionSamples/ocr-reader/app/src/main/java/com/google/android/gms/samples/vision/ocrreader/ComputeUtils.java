@@ -17,7 +17,7 @@ public class ComputeUtils {
 
     static final int BACKGROUND = Color.rgb(48, 48, 48);
 
-    static boolean floatEquals(float f1, float f2) {
+    static public boolean floatEquals(float f1, float f2) {
         if(Math.abs(f1 - f2) < epsilon) {
             return true;
         }
@@ -33,7 +33,7 @@ public class ComputeUtils {
         return ret;
     }
 
-    static boolean labelSubtotalTaxAndTotal(ArrayList<AllocatedPrice> prices) {
+    static public boolean labelSubtotalTaxAndTotal(ArrayList<AllocatedPrice> prices) {
         if(prices.size() < 1) {
             return false;
         }

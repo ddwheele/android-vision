@@ -92,6 +92,10 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
         postInvalidate();
     }
 
+    /**
+     *
+     * @return List of AllocatedPrices
+     */
     public List<AllocatedPrice> getMyPrices() {
         return myPrices;
     }

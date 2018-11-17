@@ -18,9 +18,9 @@ package com.google.android.gms.samples.vision.ocrreader.ui.camera;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.samples.vision.ocrreader.ComputeUtils;
 import com.google.android.gms.samples.vision.ocrreader.OcrGraphic;
 import com.google.android.gms.samples.vision.ocrreader.AllocatedPrice;
 import com.google.android.gms.samples.vision.ocrreader.correct.ParcelableOcrGraphic;
@@ -58,6 +58,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     private Set<T> mGraphics = new HashSet<>();
     private float width = 3000; // width of the image that this is on (to find prices)
     private float yOffset = 0; // if this is the second page or more, offset the y value
+    private ArrayList<AllocatedPrice> precomputedPriceList;
 
     public GraphicOverlay(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -71,7 +72,19 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
         return retList;
     }
 
-    public ArrayList<AllocatedPrice> getPriceList() {
+    /**
+     * Checks if selected text makes well-formed receipt
+     * @return true if currently selected text has items that add to subtotal and total
+     */
+    public boolean isConsistent() {
+        precomputedPriceList = flattenPriceList();
+        return ComputeUtils.labelSubtotalTaxAndTotal(precomputedPriceList);
+    }
+
+    /**
+     * @return all prices in mGraphics in a flat list instead of hierarchy
+     */
+    private ArrayList<AllocatedPrice> flattenPriceList() {
         ArrayList<AllocatedPrice> ret = new ArrayList<>();
         for(T g : mGraphics) {
             ret.addAll(((OcrGraphic)g).getMyPrices());
@@ -79,6 +92,17 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
         return ret;
     }
 
+    public ArrayList<AllocatedPrice> getPriceList() {
+        return precomputedPriceList;
+    }
+
+    /**
+     * If this is not the first page of the receipt, offset to add to
+     * y values from this page so the items will still be in order when
+     * sorted by y value.
+     * TODO this really should be the height of the screen
+     * @param offset lowest y value of the prices on the preceeding page
+     */
     public void setYOffset(float offset) {
         yOffset = offset;
     }

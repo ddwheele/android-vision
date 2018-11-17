@@ -15,9 +15,11 @@
  */
 package com.google.android.gms.samples.vision.ocrreader;
 
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
+import com.google.android.gms.samples.vision.ocrreader.ui.camera.IPictureTrigger;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.text.TextBlock;
 
@@ -26,12 +28,17 @@ import com.google.android.gms.vision.text.TextBlock;
  * as OcrGraphics.
  */
 public class OcrDetectorProcessor implements Detector.Processor<TextBlock> {
-
+    private final String TAG = "OcrDetectorProcessor";
     private GraphicOverlay<OcrGraphic> mGraphicOverlay;
     private boolean mLocked = false;
+    private IPictureTrigger pictureTrigger;
 
     OcrDetectorProcessor(GraphicOverlay<OcrGraphic> ocrGraphicOverlay) {
         mGraphicOverlay = ocrGraphicOverlay;
+    }
+
+    public void setPictureTrigger(IPictureTrigger pictureTrigger) {
+        this.pictureTrigger = pictureTrigger;
     }
 
     public void lock() {
@@ -60,6 +67,13 @@ public class OcrDetectorProcessor implements Detector.Processor<TextBlock> {
             TextBlock item = items.valueAt(i);
             OcrGraphic graphic = new OcrGraphic(mGraphicOverlay, item);
             mGraphicOverlay.add(graphic);
+        }
+        if(mGraphicOverlay.isConsistent()) {
+            lock();
+            Log.e(TAG, "It was consistent, I locked it");
+            if(pictureTrigger != null) {
+                pictureTrigger.triggerPicture();
+            }
         }
     }
 
