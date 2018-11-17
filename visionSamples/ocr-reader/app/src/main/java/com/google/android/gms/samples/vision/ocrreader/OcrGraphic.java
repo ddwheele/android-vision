@@ -142,8 +142,8 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
      * "select" itself and the app will include it in the list of prices
      * @param w width of the image this graphic is overlaid on
      */
-    public void setCanvasWidth(float w, float offset) {
-        String priceRegex = "-?\\d+(\\.\\d+)?";
+    public void calculatePriceList(float w, float offset) {
+        String priceRegex = "-?\\d+(\\.\\d{2})?";
         float midpointx = w * midpoint_scale;
         if( translateX(mText.getBoundingBox().left) > midpointx ) {
             List<? extends Text> textComponents = mText.getComponents();

@@ -202,7 +202,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     public void add(T graphic) {
         synchronized (mLock) {
             if(graphic instanceof OcrGraphic) {
-                ((OcrGraphic)graphic).setCanvasWidth(width, yOffset);
+                ((OcrGraphic)graphic).calculatePriceList(width, yOffset);
             }
             mGraphics.add(graphic);
         }
