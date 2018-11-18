@@ -53,7 +53,8 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
     private List<AllocatedPrice> myPrices = new ArrayList<>();
 
     // percentage across the screen where we start looking for prices
-    private static float midpoint_scale = 0.5f;
+    private static float midpoint_scale_left = 0.25f;
+    private static float midpoint_scale_right = 0.75f;
 
     OcrGraphic(GraphicOverlay overlay, TextBlock text) {
         super(overlay);
@@ -145,8 +146,11 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
      */
     public void calculatePriceList(float w, float offset) {
         String priceRegex = "-?\\d+(\\.\\d{2})?";
-        float midpointx = w * midpoint_scale;
-        if( translateX(mText.getBoundingBox().left) > midpointx ) {
+        float midLeft = w * midpoint_scale_left;
+        float midRight = w * midpoint_scale_right;
+        float textLeft = translateX(mText.getBoundingBox().left);
+        float textRight = translateX(mText.getBoundingBox().right);
+        if( midLeft < textLeft && textRight < midRight ) {
             List<? extends Text> textComponents = mText.getComponents();
             for(Text t : textComponents) {
                 try {
@@ -158,7 +162,7 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
                     } else {
                         String[] tokens = text.split(" ");
                         for(String s : tokens) {
-                            if(s.startsWith("$")) {
+                            if(s.startsWith("$") && s.length() > 2) {
                                 s = s.substring(1, s.length()-1);
                             }
                             if(s.matches(priceRegex)) {
@@ -189,6 +193,11 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
     public void draw(Canvas canvas) {
         TextBlock text = mText;
         if (text == null) {
+            return;
+        }
+
+        // don't draw non-prices, they are just clutter
+        if(currentRectPaint != sRectPaintSelected) {
             return;
         }
 

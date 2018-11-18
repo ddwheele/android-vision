@@ -81,7 +81,9 @@ public class SplitActivity extends AppCompatActivity {
                 if(selectedPayer == null) {
                     // select on first tap
                     selectedPayer = tappedPayer;
-                    selectedPayer.toggleSelected();
+                    if(selectedPayer != null) {
+                        selectedPayer.toggleSelected();
+                    }
                 } else {
                     // if it's second tap, deselect it
                     if(selectedPayer.equals(tappedPayer)) {
@@ -91,7 +93,9 @@ public class SplitActivity extends AppCompatActivity {
                     else { // change to select the new tapped player
                         selectedPayer.toggleSelected();
                         selectedPayer = tappedPayer;
-                        selectedPayer.toggleSelected();
+                        if(selectedPayer != null) {
+                            selectedPayer.toggleSelected();
+                        }
                     }
                 }
 

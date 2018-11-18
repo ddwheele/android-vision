@@ -67,7 +67,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     public GraphicOverlay(Context context, AttributeSet attrs) {
         super(context, attrs);
         synchronized (mLock) {
-            otherGraphics.add(new RectangleGraphic(this, 300, 250, 700, 1100, "Prices"));
+            otherGraphics.add(new RectangleGraphic(this, 0.33f, 250, 0.66f, 1100, "Prices"));
         }
     }
 
@@ -281,6 +281,9 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
             }
 
             for (Graphic graphic : otherGraphics) {
+                if(graphic instanceof RectangleGraphic) {
+                    ((RectangleGraphic) graphic).setCanvasWidth((float)canvas.getWidth());
+                }
                 graphic.draw(canvas);
             }
         }
