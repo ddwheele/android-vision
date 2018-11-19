@@ -156,9 +156,6 @@ public class CameraSourcePreview extends ViewGroup {
         int childYOffset = 0;
         float widthRatio = (float) viewWidth / (float) previewWidth;
         float heightRatio = (float) viewHeight / (float) previewHeight;
-        Log.e(TAG, "view w x h = " + viewWidth + ", " + viewHeight);
-        Log.e(TAG, "preview w x h = " + previewWidth + ", " + previewHeight);
-        Log.e(TAG, "wR = " + widthRatio + ", hR = " + heightRatio);
 
         // To fill the view with the camera preview, while also preserving the correct aspect ratio,
         // it is usually necessary to slightly oversize the child and to crop off portions along one

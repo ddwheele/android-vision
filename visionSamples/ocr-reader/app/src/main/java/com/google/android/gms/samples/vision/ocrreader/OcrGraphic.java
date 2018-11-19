@@ -28,6 +28,8 @@ import com.google.android.gms.vision.text.TextBlock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Graphic instance for rendering TextBlock position, size, and ID within an associated graphic
@@ -39,11 +41,14 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
 
     private static final int TEXT_COLOR = Color.WHITE;
     private static final int SELECTED_COLOR = Color.GREEN;
+    private static final int OUT_OF_RANGE_COLOR = Color.BLACK;
 
     private static Paint sRectPaint;
     private static Paint sTextPaint;
     private static Paint sRectPaintSelected;
     private static Paint sTextPaintSelected;
+    private static Paint sRectPaintOutOfRange;
+    private static Paint sTextPaintOutOfRange;
 
     private Paint currentRectPaint;
     private Paint currentTextPaint;
@@ -53,8 +58,8 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
     private List<AllocatedPrice> myPrices = new ArrayList<>();
 
     // percentage across the screen where we start looking for prices
-    private static float midpoint_scale_left = 0.25f;
-    private static float midpoint_scale_right = 0.75f;
+    private static float midpoint_scale_left = 0.33f;
+    private static float midpoint_scale_right = 0.66f;
 
     OcrGraphic(GraphicOverlay overlay, TextBlock text) {
         super(overlay);
@@ -85,6 +90,20 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
             sTextPaintSelected = new Paint();
             sTextPaintSelected.setColor(SELECTED_COLOR);
             sTextPaintSelected.setTextSize(54.0f);
+        }
+
+
+        if (sRectPaintOutOfRange == null) {
+            sRectPaintOutOfRange = new Paint();
+            sRectPaintOutOfRange.setColor(OUT_OF_RANGE_COLOR);
+            sRectPaintOutOfRange.setStyle(Paint.Style.STROKE);
+            sRectPaintOutOfRange.setStrokeWidth(4.0f);
+        }
+
+        if (sTextPaintOutOfRange == null) {
+            sTextPaintOutOfRange = new Paint();
+            sTextPaintOutOfRange.setColor(OUT_OF_RANGE_COLOR);
+            sTextPaintOutOfRange.setTextSize(54.0f);
         }
 
         currentRectPaint = sRectPaint;
@@ -145,7 +164,10 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
      * @param w width of the image this graphic is overlaid on
      */
     public void calculatePriceList(float w, float offset) {
-        String priceRegex = "-?\\d+(\\.\\d{2})?";
+        String priceRegex = "-?[\\$|S]?(?<dollars>\\d+)[\\.| |,](?<cents>\\d{2}).*";
+        // Create a Pattern object
+        Pattern r = Pattern.compile(priceRegex);
+
         float midLeft = w * midpoint_scale_left;
         float midRight = w * midpoint_scale_right;
         float textLeft = translateX(mText.getBoundingBox().left);
@@ -156,33 +178,37 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
                 try {
                     float bottom = translateY(t.getBoundingBox().bottom);
                     String text = t.getValue();
-                    String numberString = new String();
-                    if(text.matches(priceRegex)) { // it's a number
-                        numberString = text;
+                    //String numberString = new String();
+                    // Now create matcher object.
+                    Matcher m = r.matcher(text);
+
+                    if(m.find()) {
+
+                        String d = m.group("dollars");
+                        String c = m.group("cents");
+                        String numberString = d + "." + c;
+                        Log.e(TAG, "MATCHED " + numberString);
+                        float price = Float.valueOf(numberString);
+                        myPrices.add(new AllocatedPrice(bottom + offset, price));
+                        Log.e(TAG, "Price " + price + " added SUCCESSFULLY");
+                        // if we got here, we're good
+                        // TODO: betting on no mix of prices and non-prices in a block
+                        currentRectPaint = sRectPaintSelected;
+                        currentTextPaint = sTextPaintSelected;
                     } else {
-                        String[] tokens = text.split(" ");
-                        for(String s : tokens) {
-                            if(s.startsWith("$") && s.length() > 2) {
-                                s = s.substring(1, s.length()-1);
-                            }
-                            if(s.matches(priceRegex)) {
-                                numberString = s;
-                                break;
-                            }
-                        }
+                        Log.e(TAG, text + " did not match regex");
                     }
 
-                    float price = Float.valueOf(numberString);
-                    myPrices.add(new AllocatedPrice(bottom + offset, price));
                 } catch(NumberFormatException e) {
+                    Log.e(TAG, e.getMessage());
                     // abort
                     return;
                 }
             }
-            // if we got here, we're good
-            // TODO: betting on no mix of prices and non-prices in a block
-            currentRectPaint = sRectPaintSelected;
-            currentTextPaint = sTextPaintSelected;
+
+        } else {
+            currentRectPaint = sRectPaintOutOfRange;
+            currentTextPaint = sTextPaintOutOfRange;
         }
     }
 
@@ -196,10 +222,10 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
             return;
         }
 
-        // don't draw non-prices, they are just clutter
-        if(currentRectPaint != sRectPaintSelected) {
-            return;
-        }
+//        // don't draw non-prices, they are just clutter
+//        if(currentRectPaint != sRectPaintSelected) {
+//            return;
+//        }
 
         // Draws the bounding box around the TextBlock.
         RectF rect = new RectF(text.getBoundingBox());
