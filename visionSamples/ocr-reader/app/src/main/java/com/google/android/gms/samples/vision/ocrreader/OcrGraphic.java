@@ -58,8 +58,8 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
     private List<AllocatedPrice> myPrices = new ArrayList<>();
 
     // percentage across the screen where we start looking for prices
-    private static float midpoint_scale_left = 0.33f;
-    private static float midpoint_scale_right = 0.66f;
+    private static float midpoint_scale_left = 0f;
+    private static float midpoint_scale_right = 1f;
 
     OcrGraphic(GraphicOverlay overlay, TextBlock text) {
         super(overlay);
@@ -164,7 +164,7 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
      * @param w width of the image this graphic is overlaid on
      */
     public void calculatePriceList(float w, float offset) {
-        String priceRegex = "-?[\\$|S]?(?<dollars>\\d+)[\\.| |,](?<cents>\\d{2}).*";
+        String priceRegex = ".*?(?<neg>-?)[\\$|S]?(?<dollars>\\d*)[\\.| |,](?<cents>\\d{2}).*";
         // Create a Pattern object
         Pattern r = Pattern.compile(priceRegex);
 
@@ -189,6 +189,9 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
                         String numberString = d + "." + c;
                         Log.e(TAG, "MATCHED " + numberString);
                         float price = Float.valueOf(numberString);
+                        if("-".equals(m.group("neg"))) {
+                            price = -price;
+                        }
                         myPrices.add(new AllocatedPrice(bottom + offset, price));
                         Log.e(TAG, "Price " + price + " added SUCCESSFULLY");
                         // if we got here, we're good

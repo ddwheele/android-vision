@@ -7,10 +7,14 @@ import java.util.ArrayList;
 public class PayerDebtCoordinator {
     final String TAG = "PayerDebtCoordinator";
     ArrayList<PayerDebt> payerDebtList;
+    PayerDebt totals;
 
     public PayerDebtCoordinator(ArrayList<String> payerList) {
         payerDebtList = ComputeUtils.createPayerDebtList(payerList);
+        totals = payerDebtList.get(payerDebtList.size()-1);
     }
+
+    public PayerDebt getTotals() { return totals; }
 
     ArrayList<PayerDebt> getPayerDebtList() {
         return payerDebtList;
@@ -25,6 +29,7 @@ public class PayerDebtCoordinator {
         // add the new dude to the item, and the item to the dude
         item.addPayer(payer.name);
         payer.addItem(item);
+        totals.addItem(item);
 
         // tell everybody else to recalculate bc they're sharing now
         for(String oldPayer : otherPayers) {
@@ -50,6 +55,9 @@ public class PayerDebtCoordinator {
         // remove the dude from the item, and the item from the dude
         item.removePayer(payer.name);
         payer.removeItem(item);
+        if(item.getPayers().isEmpty()) {
+            totals.removeItem(item);
+        }
 
         // tell everybody else to recalculate to take over his cost
         for(String oldPayer : otherPayers) {

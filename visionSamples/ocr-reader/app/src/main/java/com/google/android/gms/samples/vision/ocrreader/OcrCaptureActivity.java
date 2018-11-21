@@ -52,6 +52,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Activity for the multi-tracker app.  This app detects text and displays the value with the
@@ -96,7 +97,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
 
         // read parameters from the intent used to launch the activity.
         boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, true);
-        boolean useFlash = getIntent().getBooleanExtra(UseFlash, false);
+        boolean useFlash = getIntent().getBooleanExtra(UseFlash, true);
 
 
         // Check for the camera permission before accessing the camera.  If the

@@ -65,6 +65,11 @@ public class AllocatedPrice implements Parcelable, Comparable {
     private Category category;
     private ArrayList<String> payers;
 
+    @Override
+    public String toString() {
+        return yValue + ", " + getCategoryString() + ": $" + price + ", "+getPayerString();
+    }
+
     public AllocatedPrice(float yValue, float price) {
         this.yValue = yValue;
         this.price = price;
@@ -174,15 +179,6 @@ public class AllocatedPrice implements Parcelable, Comparable {
         return 0;
     }
 
-    @Override
-    public String toString() {
-        if(!isItem()) {
-            return category.toString() + " " + Float.toString(price);
-        }
-        return Float.toString(price);
-    }
-
-    @Override
     public int compareTo(Object o) {
         if(o instanceof AllocatedPrice) {
             if (((AllocatedPrice) o).yValue < yValue) {
@@ -229,8 +225,8 @@ public class AllocatedPrice implements Parcelable, Comparable {
             }
         }
         return Color.WHITE;
-
     }
+
 //
 //    public int getSecondColumnBackgroundColor() {
 //

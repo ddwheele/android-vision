@@ -19,6 +19,7 @@ public class SplitActivity extends AppCompatActivity {
     ListView payerListView;
     ArrayAdapter<PayerDebt> payerAdapter;
     PayerDebt selectedPayer;
+    PayerDebt totals;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -56,6 +57,7 @@ public class SplitActivity extends AppCompatActivity {
 
         ArrayList<String> payerList = getIntent().getStringArrayListExtra(ComputeUtils.PAYERS);
         payerCoordinator = new PayerDebtCoordinator(payerList);
+        totals = payerCoordinator.getTotals();
 
         payerAdapter = new ThreeColumnPayerAdapter(this, payerCoordinator.getPayerDebtList());
 
@@ -78,6 +80,10 @@ public class SplitActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
                 final PayerDebt tappedPayer = (PayerDebt) parent.getItemAtPosition(position);
+                if(totals.equals(tappedPayer)) {
+                    // never select the totals row, nothing can be assigned to it
+                    return;
+                }
                 if(selectedPayer == null) {
                     // select on first tap
                     selectedPayer = tappedPayer;

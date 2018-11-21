@@ -16,6 +16,7 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class VerifyPricesActivity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = "Verify Prices";
@@ -116,8 +117,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
         appendButton.setEnabled(true);
         flashButton.setEnabled(true);
         continueButton.setEnabled(false);
-        Log.e(TAG, "not successs ");
-
+        Log.e(TAG, "not success ");
     }
 
     private void parseSuccessful() {
