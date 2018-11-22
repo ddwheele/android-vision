@@ -62,21 +62,16 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     private Set<RectangleGraphic> otherGraphics = new HashSet<>();
     private float width = 3000; // width of the image that this is on (to find prices)
     private float yOffset = 0; // if this is the second page or more, offset the y value
-    private ArrayList<AllocatedPrice> precomputedPriceList;
+    private ArrayList<AllocatedPrice> previousPriceList; // from previous pics of receipt
+    private ArrayList<AllocatedPrice> precomputedPriceList = new ArrayList<>();
 
     public GraphicOverlay(Context context, AttributeSet attrs) {
         super(context, attrs);
         synchronized (mLock) {
-            otherGraphics.add(new RectangleGraphic(this, 0.33f, 250, 0.66f, 1100, "Prices"));
+            otherGraphics.add(new RectangleGraphic(this,
+                    0.33f, 250, 0.66f, 1100,
+                    "Prices"));
         }
-    }
-
-    public ArrayList<ParcelableOcrGraphic> getParcelableList() {
-        ArrayList<ParcelableOcrGraphic> retList = new ArrayList<>();
-        for (Graphic graphic : mGraphics) {
-            retList.add(new ParcelableOcrGraphic((OcrGraphic)graphic));
-        }
-        return retList;
     }
 
     /**
@@ -84,7 +79,12 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
      * @return true if currently selected text has items that add to subtotal and total
      */
     public boolean isConsistent() {
-        precomputedPriceList = flattenPriceList();
+        precomputedPriceList.clear();
+
+        if(previousPriceList != null) {
+            precomputedPriceList.addAll(previousPriceList);
+        }
+        precomputedPriceList.addAll(flattenPriceList());
         return ComputeUtils.labelSubtotalTaxAndTotal(precomputedPriceList);
     }
 
@@ -112,6 +112,10 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
      */
     public void setYOffset(float offset) {
         yOffset = offset;
+    }
+
+    public void setPreviousPriceList(ArrayList<AllocatedPrice> oldList) {
+        previousPriceList = oldList;
     }
 
     public float getWidthScaleFactor() { return mWidthScaleFactor; }

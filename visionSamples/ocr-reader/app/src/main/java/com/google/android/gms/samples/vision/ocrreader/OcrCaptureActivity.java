@@ -59,7 +59,7 @@ import java.util.Collections;
  * rear facing camera. During detection overlay graphics are drawn to indicate the position,
  * size, and contents of each TextBlock.
  */
-public final class OcrCaptureActivity extends AppCompatActivity implements IPictureTrigger, CameraSource.PictureCallback {
+public final class OcrCaptureActivity extends AppCompatActivity implements IPictureTrigger {
     private static final String TAG = "OcrCaptureActivity";
 
     // Intent request code to handle updating play services if needed.
@@ -122,6 +122,8 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
         super.onStart();
         yOffset = getIntent().getFloatExtra(ComputeUtils.OFFSET, 0);
         mGraphicOverlay.setYOffset(yOffset);
+        ArrayList<AllocatedPrice> priceList = getIntent().getParcelableArrayListExtra(ComputeUtils.PRICES);
+        mGraphicOverlay.setPreviousPriceList(priceList);
     }
 
     /**
@@ -329,34 +331,6 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
                 mCameraSource.release();
                 mCameraSource = null;
             }
-        }
-    }
-
-    /**
-     * Called when image data is available after a picture is taken.  The format of the data
-     * is a jpeg binary.
-     */
-    @Override
-    public void onPictureTaken(byte[] data) {
-        // parcel the OcrGraphics
-        ArrayList<ParcelableOcrGraphic> textList = mGraphicOverlay.getParcelableList();
-
-        File file;
-        try {
-            String fileName = "rcpt";
-            file = File.createTempFile(fileName, null, getApplicationContext().getCacheDir());
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(data);
-            fos.close();
-            String tempName = file.getPath();
-            // launch Correct activity.
-            Intent intent = new Intent(this, CorrectTextActivity.class);
-            intent.putExtra("image", tempName);
-            intent.putParcelableArrayListExtra("graphics", textList);
-            startActivity(intent);
-        } catch (IOException e) {
-            // Error while creating file
-            Log.e(TAG, "Could not save receipt image to temporary file");
         }
     }
 

@@ -93,8 +93,8 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
             float offset = priceList.get(priceList.size()-1).getYValue();
             Intent intent = new Intent(this, OcrCaptureActivity.class);
             intent.putExtra(ComputeUtils.OFFSET, offset);
-            //intent.putExtra(OcrCaptureActivity.AutoFocus, true); // useless w/o autofocus
             intent.putExtra(OcrCaptureActivity.UseFlash, flashButton.isChecked());
+            intent.putParcelableArrayListExtra(ComputeUtils.PRICES, priceList);
             startActivityForResult(intent, VF_OCR_CAPTURE);
         }
     }
