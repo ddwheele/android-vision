@@ -60,12 +60,11 @@ public class ComputeUtils {
         Log.e(TAG, "prices size is " + prices.size());
         for(int i=lastPriceIndex; i>=0; i--) {
             AllocatedPrice p = prices.get(i);
-            Log.e(TAG, "First price " + p);
+            Log.e(TAG, "Price " + p);
             float price = p.getPrice();
             if(floatEquals(price, total)) {
                 // they are repeating the total
                 p.labelAsTotal();
-//                continue;
             }
             else if(!foundTax) {
                 // tax is always right before total
@@ -73,13 +72,12 @@ public class ComputeUtils {
                 p.labelAsTax();
                 foundTax = true;
                 Log.e(TAG, "TAX = " + tax);
-//                continue;
             }
-            else if(floatEquals(price, tax)) { // must have found tax already
-                // they are repeating the tax
-                p.labelAsTax();
-//                continue;
-            }
+            // don't think they ever repeat tax, and what if tax happens to match an item price?
+//            else if(floatEquals(price, tax)) { // must have found tax already
+//                // they are repeating the tax
+//                p.labelAsTax();
+//            }
             else if(!foundSubtotal) {
                 // subtotal is always right before tax
                 subtotal = price;
@@ -88,9 +86,15 @@ public class ComputeUtils {
                 Log.e(TAG, "SUBTOTAL = " + subtotal);
             }
             else if(foundSubtotal && floatEquals(price, subtotal)) {  // must have found subtotal already
-                // they are repeating the subtotal
-                p.labelAsSubtotal();
-//                continue;
+                // unless this is the first and only item,
+                // in which case it equals the subtotal w/o being a subtotal
+                if(i==0) {
+                    Log.e(TAG, "normal ITEM = " + price);
+                    calcSubtotal += price;
+                } else {
+                    // they actually are repeating the subtotal
+                    p.labelAsSubtotal();
+                }
             } else {
                 Log.e(TAG, "normal ITEM = " + price);
                 calcSubtotal += price;

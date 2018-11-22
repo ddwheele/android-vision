@@ -67,7 +67,7 @@ public class AllocatedPrice implements Parcelable, Comparable {
 
     @Override
     public String toString() {
-        return yValue + ", " + getCategoryString() + ": $" + price + ", "+getPayerString();
+        return getCategoryString() + ": $" + price + ", "+getPayerString();
     }
 
     public AllocatedPrice(float yValue, float price) {

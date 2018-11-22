@@ -26,12 +26,17 @@ public class PayerDebtCoordinator {
         }
         ArrayList<String> otherPayers = item.getPayers();
 
-        // add the new dude to the item, and the item to the dude
+        if(otherPayers.isEmpty()) {
+            // this item is getting paid for, for the first time
+            totals.addItem(item);
+        }
+
+        // add the new payer to the item, and the item to the payer
         item.addPayer(payer.name);
         payer.addItem(item);
-        totals.addItem(item);
 
-        // tell everybody else to recalculate bc they're sharing now
+
+        // if anybody else, tell to recalculate bc they're sharing now
         for(String oldPayer : otherPayers) {
             findPayerDebt(oldPayer).recalculate();
         }
@@ -50,17 +55,19 @@ public class PayerDebtCoordinator {
         if(payer == null || item == null) {
             return;
         }
-        ArrayList<String> otherPayers = item.getPayers();
-
-        // remove the dude from the item, and the item from the dude
         item.removePayer(payer.name);
         payer.removeItem(item);
-        if(item.getPayers().isEmpty()) {
+
+        ArrayList<String> payersLeft = item.getPayers();
+
+
+        if(payersLeft.isEmpty()) {
+            // nobody left to pay for it
             totals.removeItem(item);
         }
 
         // tell everybody else to recalculate to take over his cost
-        for(String oldPayer : otherPayers) {
+        for(String oldPayer : payersLeft) {
             findPayerDebt(oldPayer).recalculate();
         }
     }
