@@ -15,7 +15,8 @@ public class ComputeUtils {
     static final String PAYERS = "payers";
     static final String OFFSET = "offset";
 
-    static final int BACKGROUND = Color.rgb(48, 48, 48);
+//    static final int BACKGROUND = Color.rgb(48, 48, 48);
+    static final int BACKGROUND = Color.WHITE;
 
     static public boolean floatEquals(float f1, float f2) {
         if(Math.abs(f1 - f2) < epsilon) {

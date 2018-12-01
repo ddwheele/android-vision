@@ -3,6 +3,7 @@ package com.google.android.gms.samples.vision.ocrreader;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -27,40 +28,35 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
 
     Button continueButton;
 
-    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_split);
         setTitle("Assign Items to Payers");
 
-        priceList = getIntent().getParcelableArrayListExtra(ComputeUtils.PRICES);
-        priceAdapter = new ThreeColumnPricesAdapter(this, priceList);
+        setupPayerCloud();
+        setupPriceList();
 
-        priceListView = findViewById(R.id.split_prices_list);
-        priceListView.setAdapter(priceAdapter);
 
-        priceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        continueButton = findViewById(R.id.split_continue_button);
+        continueButton.setOnClickListener(this);
+        showToast();
+    }
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view,
-                                    int position, long id) {
-                AllocatedPrice item =  (AllocatedPrice)parent.getItemAtPosition(position);
-                if(selectedPayer != null) {
-                    payerCoordinator.addPayerToItem(selectedPayer, item);
-                    priceAdapter.notifyDataSetChanged();
-                    payerAdapter.notifyDataSetChanged();
-                }
-                else if(!item.getPayerString().isEmpty()){
-                    payerCoordinator.removeLastPayerFromItem(item);
-                    priceAdapter.notifyDataSetChanged();
-                    payerAdapter.notifyDataSetChanged();
-                }
-                else {
-                    // TODO give error message and instructions
-                }
-            }
-        });
+    protected void setupPayerCloud() {
+        TagLayout tagLayout = (TagLayout) findViewById(R.id.split_payer_list);
+        LayoutInflater layoutInflater = getLayoutInflater();
+        String tag;
+        for (int i = 0; i <= 20; i++) {
+            tag = "#tag" + i;
+            View tagView = layoutInflater.inflate(R.layout.tag_layout, null, false);
 
+            TextView tagTextView = (TextView) tagView.findViewById(R.id.tagTextView);
+            tagTextView.setText(tag);
+            tagLayout.addView(tagView);
+        }
+    }
+
+    protected void setupPayerList() {
         ArrayList<String> payerList = getIntent().getStringArrayListExtra(ComputeUtils.PAYERS);
         payerCoordinator = new PayerDebtCoordinator(payerList);
         totals = payerCoordinator.getTotals();
@@ -116,11 +112,41 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
             }
 
         });
-
-        continueButton = findViewById(R.id.split_continue_button);
-        continueButton.setOnClickListener(this);
-        showToast();
     }
+
+
+    protected void setupPriceList() {
+        priceList = getIntent().getParcelableArrayListExtra(ComputeUtils.PRICES);
+        priceAdapter = new ThreeColumnPricesAdapter(this, priceList);
+
+        priceListView = findViewById(R.id.split_prices_list);
+        priceListView.setAdapter(priceAdapter);
+
+        //priceListView.setOnDragListener();
+
+        priceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view,
+                                    int position, long id) {
+                AllocatedPrice item =  (AllocatedPrice)parent.getItemAtPosition(position);
+                if(selectedPayer != null) {
+                    payerCoordinator.addPayerToItem(selectedPayer, item);
+                    priceAdapter.notifyDataSetChanged();
+                    payerAdapter.notifyDataSetChanged();
+                }
+                else if(!item.getPayerString().isEmpty()){
+                    payerCoordinator.removeLastPayerFromItem(item);
+                    priceAdapter.notifyDataSetChanged();
+                    payerAdapter.notifyDataSetChanged();
+                }
+                else {
+                    // TODO give error message and instructions
+                }
+            }
+        });
+    }
+
 
     private void showToast() {
         Toast toast = Toast.makeText(getApplicationContext(),

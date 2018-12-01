@@ -35,7 +35,7 @@ public class ThreeColumnPricesAdapter extends ArrayAdapter<AllocatedPrice> {
         text1.setTextColor(values.get(position).getFirstColumnTextColor());
         text2.setTextColor(values.get(position).getSecondColumnTextColor());
 
-        text3.setBackgroundColor(values.get(position).getThirdColumnBackgroundColor());
+//        text3.setBackgroundColor(values.get(position).getThirdColumnBackgroundColor());
 
         return rowView;
     }

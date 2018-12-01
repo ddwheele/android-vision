@@ -32,7 +32,7 @@ public class ThreeColumnPayerAdapter extends ArrayAdapter<PayerDebt> {
         text2.setText(values.get(position).getSecondColumnString());
         text3.setText(values.get(position).getThirdColumnString());
 
-        text1.setBackgroundColor(values.get(position).getThirdColumnBackgroundColor());
+//        text1.setBackgroundColor(values.get(position).getThirdColumnBackgroundColor());
 
         return rowView;
     }

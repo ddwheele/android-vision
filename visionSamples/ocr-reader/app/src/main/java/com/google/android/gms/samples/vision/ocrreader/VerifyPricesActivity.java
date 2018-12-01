@@ -118,7 +118,6 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
 
     private void parseSuccessful() {
         setTitle("Verify Prices");
-        topMessage.setTextColor(Color.WHITE);
         topMessage.setText("Prices detected:\n");
         appendButton.setEnabled(false);
         continueButton.setEnabled(true);

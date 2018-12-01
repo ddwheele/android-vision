@@ -240,9 +240,9 @@ public class AllocatedPrice implements Parcelable, Comparable {
 
 
     public int getThirdColumnBackgroundColor() {
-        if(isItem() && payers.isEmpty()) {
-            return Color.BLACK;
-        }
+//        if(isItem() && payers.isEmpty()) {
+//            return Color.BLACK;
+//        }
         return ComputeUtils.BACKGROUND;
     }
 
