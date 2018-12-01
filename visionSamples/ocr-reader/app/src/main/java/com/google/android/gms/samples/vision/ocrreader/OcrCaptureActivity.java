@@ -97,7 +97,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
 
         // read parameters from the intent used to launch the activity.
         boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, true);
-        boolean useFlash = getIntent().getBooleanExtra(UseFlash, true);
+        boolean useFlash = true;
 
 
         // Check for the camera permission before accessing the camera.  If the
@@ -112,7 +112,8 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
-        Snackbar.make(mGraphicOverlay, "Tap to capture when prices are green.",
+        Snackbar.make(mGraphicOverlay, "If receipt doesn't fit on the screen," +
+                        " tap when first set of prices are green.",
                 Snackbar.LENGTH_LONG)
                 .show();
     }
@@ -287,7 +288,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
             Log.d(TAG, "Camera permission granted - initialize the camera source");
             // We have permission, so create the camerasource
             boolean autoFocus = getIntent().getBooleanExtra(AutoFocus,false);
-            boolean useFlash = getIntent().getBooleanExtra(UseFlash, false);
+            boolean useFlash = true;
             createCameraSource(autoFocus, useFlash);
             return;
         }

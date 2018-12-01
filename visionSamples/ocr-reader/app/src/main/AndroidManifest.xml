@@ -13,7 +13,7 @@
         android:fullBackupContent="false"
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
-        android:label="Dolphin Check Splitter"
+        android:label="Split Check"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat">
         <meta-data
@@ -22,17 +22,15 @@
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main">
-
-        </activity>
+            android:label="@string/title_activity_main"></activity>
         <activity
             android:name=".OcrCaptureActivity"
-            android:label="Read Text" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+            android:label="Split Check">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".namelist.NameListActivity"
@@ -44,8 +42,9 @@
         <activity android:name=".VerifyPricesActivity" />
         <activity
             android:name=".SelectPayersActivity"
-            android:windowSoftInputMode="adjustNothing"/>
-        <activity android:name=".SplitActivity"></activity>
+            android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".SplitActivity" />
+        <activity android:name=".DragActivity"></activity>
     </application>
 
 </manifest>

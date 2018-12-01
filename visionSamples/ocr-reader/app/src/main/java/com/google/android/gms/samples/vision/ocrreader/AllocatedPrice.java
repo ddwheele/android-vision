@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +65,7 @@ public class AllocatedPrice implements Parcelable, Comparable {
     final private float price;
     private Category category;
     private ArrayList<String> payers;
+    public static final DecimalFormat df2 = new DecimalFormat( "#.00" );
 
     @Override
     public String toString() {
@@ -146,7 +148,7 @@ public class AllocatedPrice implements Parcelable, Comparable {
     }
 
     public String getPriceString() {
-        return Float.toString(price);
+        return df2.format(price);
     }
 
     public ArrayList<String> getPayers() {

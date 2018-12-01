@@ -1,16 +1,20 @@
 package com.google.android.gms.samples.vision.ocrreader;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class SplitActivity extends AppCompatActivity {
+public class SplitActivity extends AppCompatActivity implements View.OnClickListener {
     ArrayList<AllocatedPrice> priceList;
     ListView priceListView;
     ThreeColumnPricesAdapter priceAdapter;
@@ -20,6 +24,8 @@ public class SplitActivity extends AppCompatActivity {
     ArrayAdapter<PayerDebt> payerAdapter;
     PayerDebt selectedPayer;
     PayerDebt totals;
+
+    Button continueButton;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -62,18 +68,18 @@ public class SplitActivity extends AppCompatActivity {
         payerAdapter = new ThreeColumnPayerAdapter(this, payerCoordinator.getPayerDebtList());
 
         payerListView = findViewById(R.id.split_payer_list);
-        View header = getLayoutInflater().inflate(R.layout.column_view, null);
-        TextView header1 = header.findViewById(R.id.first_column);
-        TextView header2 = header.findViewById(R.id.second_column);
-        TextView header3 = header.findViewById(R.id.third_column);
+//        View header = getLayoutInflater().inflate(R.layout.column_view, null);
+//        TextView header1 = header.findViewById(R.id.first_column);
+//        TextView header2 = header.findViewById(R.id.second_column);
+//        TextView header3 = header.findViewById(R.id.third_column);
+//
+//        header1.setText("Name");
+//        header2.setText("Subtotal");
+//        header3.setText("+Tax");
+//        payerListView.addHeaderView(header);
 
-        header1.setText("Name");
-        header2.setText("+Tax");
-        header3.setText("+Tip");
-
-        payerListView.addHeaderView(header);
         payerListView.setAdapter(payerAdapter);
-
+        payerListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
         payerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -110,5 +116,24 @@ public class SplitActivity extends AppCompatActivity {
             }
 
         });
+
+        continueButton = findViewById(R.id.split_continue_button);
+        continueButton.setOnClickListener(this);
+        showToast();
+    }
+
+    private void showToast() {
+        Toast toast = Toast.makeText(getApplicationContext(),
+                "Tap a payer and item to assign to assign payer to item.",
+                Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.split_continue_button) {
+            Intent intent = new Intent(this, DragActivity.class);
+            startActivity(intent);
+        }
     }
 }

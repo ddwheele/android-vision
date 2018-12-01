@@ -94,11 +94,11 @@ public class PayerDebt  {
     }
 
     public String getSecondColumnString() {
-        return twoDForm.format(getTotal());
+        return twoDForm.format(subtotal);
     }
 
     public String getThirdColumnString() {
-        return twoDForm.format(getTotalAndTip());
+        return twoDForm.format(getTotal());
     }
 
     public int getThirdColumnBackgroundColor() {

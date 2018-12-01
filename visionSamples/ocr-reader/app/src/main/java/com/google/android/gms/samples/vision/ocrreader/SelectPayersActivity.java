@@ -1,41 +1,39 @@
 package com.google.android.gms.samples.vision.ocrreader;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SelectPayersActivity extends AppCompatActivity implements View.OnClickListener {
     String TAG = "Select Payers";
     static final int PICK_CONTACT = 1;
-    final private int REQUEST_MULTIPLE_PERMISSIONS = 124;
     ArrayList<String> payers = new ArrayList<>();
     ListView listView;
     ArrayAdapter<String> adapter;
-    Button continueButton;
+    Button continueButton, addButton;
+    private boolean has_shown_toast = false;
+    EditText inputName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_payers);
         setTitle("Select Payers");
-        AccessContact();
 
         adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, payers);
@@ -65,7 +63,25 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
         });
 
         findViewById(R.id.select_contact_button).setOnClickListener(this);
-        findViewById(R.id.select_add_button).setOnClickListener(this);
+
+        inputName = findViewById(R.id.editText);
+        inputName.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                addButton.setEnabled(true);
+            }
+        });
+        addButton = findViewById(R.id.select_add_button);
+        addButton.setOnClickListener(this);
+        addButton.setEnabled(false);
+
 
         continueButton = findViewById(R.id.select_continue);
         continueButton.setEnabled(false);
@@ -85,6 +101,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                             payers.add(name);
                             adapter.notifyDataSetChanged();
                             continueButton.setEnabled(true);
+                            showToast();
                         }
                         catch (Exception ex)
                         {
@@ -96,52 +113,42 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    // TODO make this interaction suck less
-    private void AccessContact()
-    {
-        List<String> permissionsNeeded = new ArrayList<String>();
-        final List<String> permissionsList = new ArrayList<String>();
-        if (!addPermission(permissionsList, Manifest.permission.READ_CONTACTS))
-            permissionsNeeded.add("Read Contacts");
-        if (permissionsList.size() > 0) {
-            if (permissionsNeeded.size() > 0) {
-                String message = "Do you want to grant access to " + permissionsNeeded.get(0);
-                for (int i = 1; i < permissionsNeeded.size(); i++)
-                    message = message + ", " + permissionsNeeded.get(i);
-                showMessageOKCancel(message,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
-                                        REQUEST_MULTIPLE_PERMISSIONS);
-                            }
-                        });
-                return;
-            }
-            requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
-                    REQUEST_MULTIPLE_PERMISSIONS);
-            return;
-        }
-    }
+//    // TODO make this interaction suck less
+//    private void AccessContact()
+//    {
+//        List<String> permissionsNeeded = new ArrayList<String>();
+//        final List<String> permissionsList = new ArrayList<String>();
+//        if (!addPermission(permissionsList, Manifest.permission.READ_CONTACTS))
+//            permissionsNeeded.add("Read Contacts");
+//        if (permissionsList.size() > 0) {
+//            if (permissionsNeeded.size() > 0) {
+//                String message = "Do you want to grant access to " + permissionsNeeded.get(0);
+//                for (int i = 1; i < permissionsNeeded.size(); i++)
+//                    message = message + ", " + permissionsNeeded.get(i);
+//                showMessageOKCancel(message,
+//                        new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
+//                                        REQUEST_MULTIPLE_PERMISSIONS);
+//                            }
+//                        });
+//                return;
+//            }
+//            requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
+//                    REQUEST_MULTIPLE_PERMISSIONS);
+//            return;
+//        }
+//    }
 
-    private boolean addPermission(List<String> permissionsList, String permission) {
-        if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-            permissionsList.add(permission);
-
-            if (!shouldShowRequestPermissionRationale(permission))
-                return false;
-        }
-        return true;
-    }
-
-    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(SelectPayersActivity.this)
-                .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
-                .create()
-                .show();
-    }
+//    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+//        new AlertDialog.Builder(SelectPayersActivity.this)
+//                .setMessage(message)
+//                .setPositiveButton("OK", okListener)
+//                .setNegativeButton("Cancel", null)
+//                .create()
+//                .show();
+//    }
 
     @Override
     public void onClick(View v) {
@@ -150,12 +157,16 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
             startActivityForResult(intent, PICK_CONTACT);
         }
         else if (v.getId() == R.id.select_add_button) {
-            EditText et = findViewById(R.id.editText);
-            String newName = et.getText().toString();
+
+            String newName = inputName.getText().toString();
+            if(newName.isEmpty()) {
+                return; // don't add blanks
+            }
             payers.add(newName);
             adapter.notifyDataSetChanged();
-            et.setText("");
+            inputName.getText().clear();
             continueButton.setEnabled(true);
+            showToast();
         }
         else if(v.getId() == R.id.select_continue) {
             Intent intent = new Intent(this, SplitActivity.class);
@@ -163,6 +174,15 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
             intent.putParcelableArrayListExtra(ComputeUtils.PRICES, pricesList);
             intent.putStringArrayListExtra(ComputeUtils.PAYERS, payers);
             startActivity(intent);
+        }
+    }
+
+    private void showToast() {
+        // Show Toast message: "Long press on name to delete"
+        if(!has_shown_toast) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Long press on name to delete", Toast.LENGTH_LONG);
+            toast.show();
+            has_shown_toast = true;
         }
     }
 }

@@ -99,19 +99,20 @@ public class ComputeUtils {
                 Log.e(TAG, "normal ITEM = " + price);
                 calcSubtotal += price;
                 Log.e(TAG, "calcSubtotal = " + calcSubtotal);
-
             }
         }
 
         if(!floatEquals(subtotal, calcSubtotal)) {
             Log.e(TAG, "ABORT, subtotal != subtotal");
             Log.e(TAG, "============================");
+            resetLabelsToItem(prices);
             return false;
         }
 
         if(!floatEquals(calcSubtotal + tax, total)) {
             Log.e(TAG, "ABORT: subtotal+tax does not equal total");
             Log.e(TAG, "============================");
+            resetLabelsToItem(prices);
             return false;
         }
 
@@ -123,10 +124,13 @@ public class ComputeUtils {
         }
 
         // reset all the labels back to item
+        Log.e(TAG, "============================");
+        return false;
+    }
+
+    private static void resetLabelsToItem(ArrayList<AllocatedPrice> prices) {
         for(AllocatedPrice p : prices) {
             p.labelAsItem();
         }
-        Log.e(TAG, "============================");
-        return false;
     }
 }

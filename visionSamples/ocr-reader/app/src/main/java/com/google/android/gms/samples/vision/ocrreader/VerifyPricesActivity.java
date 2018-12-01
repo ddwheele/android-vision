@@ -24,7 +24,6 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
     ListView priceListView;
     TwoColumnArrayAdapter priceAdapter;
     Button continueButton, appendButton;
-    CompoundButton flashButton;
     TextView topMessage;
 
     private static final int VF_OCR_CAPTURE = 9016;
@@ -36,7 +35,6 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
 
         continueButton = findViewById(R.id.verify_continue_button);
         appendButton = findViewById(R.id.verify_append_prices_button);
-        flashButton = findViewById(R.id.verify_flash_switch);
         topMessage = findViewById(R.id.prices_to_verify);
 
         priceList = getIntent().getParcelableArrayListExtra(ComputeUtils.PRICES);
@@ -93,7 +91,6 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
             float offset = priceList.get(priceList.size()-1).getYValue();
             Intent intent = new Intent(this, OcrCaptureActivity.class);
             intent.putExtra(ComputeUtils.OFFSET, offset);
-            intent.putExtra(OcrCaptureActivity.UseFlash, flashButton.isChecked());
             intent.putParcelableArrayListExtra(ComputeUtils.PRICES, priceList);
             startActivityForResult(intent, VF_OCR_CAPTURE);
         }
@@ -115,7 +112,6 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
         topMessage.setText("Add more prices or try again.");
         topMessage.setTextColor(Color.CYAN);
         appendButton.setEnabled(true);
-        flashButton.setEnabled(true);
         continueButton.setEnabled(false);
         Log.e(TAG, "not success ");
     }
@@ -125,7 +121,6 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
         topMessage.setTextColor(Color.WHITE);
         topMessage.setText("Prices detected:\n");
         appendButton.setEnabled(false);
-        flashButton.setEnabled(false);
         continueButton.setEnabled(true);
         Log.e(TAG, "SUCCESS!!!!!!!!!!! " );
     }
