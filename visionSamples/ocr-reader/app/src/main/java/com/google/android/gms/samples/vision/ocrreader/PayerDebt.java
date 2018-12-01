@@ -108,6 +108,10 @@ public class PayerDebt  {
         return ComputeUtils.BACKGROUND;
     }
 
+    public boolean isSelected() {
+        return selected;
+    }
+
     public void toggleSelected() {
         if(selected) {
             selected = false;

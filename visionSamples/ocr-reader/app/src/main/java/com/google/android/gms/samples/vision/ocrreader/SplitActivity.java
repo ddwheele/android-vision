@@ -1,13 +1,13 @@
 package com.google.android.gms.samples.vision.ocrreader;
 
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -15,105 +15,109 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import static android.graphics.Color.*;
+
 public class SplitActivity extends AppCompatActivity implements View.OnClickListener {
+    final String TAG = "SplitActivity";
     ArrayList<AllocatedPrice> priceList;
+    ArrayList<PayerTagGraphic> payerTags;
     ListView priceListView;
     ThreeColumnPricesAdapter priceAdapter;
 
     PayerDebtCoordinator payerCoordinator;
     ListView payerListView;
-    ArrayAdapter<PayerDebt> payerAdapter;
     PayerDebt selectedPayer;
     PayerDebt totals;
 
     Button continueButton;
+    ArrayList<Integer> colorList;
+
 
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_split);
         setTitle("Assign Items to Payers");
 
-        setupPayerCloud();
+        setupColorList();
+        setupPayerTags();
         setupPriceList();
-
 
         continueButton = findViewById(R.id.split_continue_button);
         continueButton.setOnClickListener(this);
-        showToast();
+        showInfoToast();
     }
 
-    protected void setupPayerCloud() {
-        TagLayout tagLayout = (TagLayout) findViewById(R.id.split_payer_list);
-        LayoutInflater layoutInflater = getLayoutInflater();
-        String tag;
-        for (int i = 0; i <= 20; i++) {
-            tag = "#tag" + i;
-            View tagView = layoutInflater.inflate(R.layout.tag_layout, null, false);
-
-            TextView tagTextView = (TextView) tagView.findViewById(R.id.tagTextView);
-            tagTextView.setText(tag);
-            tagLayout.addView(tagView);
+    protected void toggleSelectedPayer() {
+        for(PayerTagGraphic g : payerTags) {
+            if(g.name.equals(selectedPayer.name)) {
+                g.togglePayerTag();
+            }
         }
+
+        selectedPayer.toggleSelected();
     }
 
-    protected void setupPayerList() {
+    protected void setupPayerTags() {
         ArrayList<String> payerList = getIntent().getStringArrayListExtra(ComputeUtils.PAYERS);
         payerCoordinator = new PayerDebtCoordinator(payerList);
         totals = payerCoordinator.getTotals();
+        payerTags = new ArrayList<>();
 
-        payerAdapter = new ThreeColumnPayerAdapter(this, payerCoordinator.getPayerDebtList());
 
-        payerListView = findViewById(R.id.split_payer_list);
-//        View header = getLayoutInflater().inflate(R.layout.column_view, null);
-//        TextView header1 = header.findViewById(R.id.first_column);
-//        TextView header2 = header.findViewById(R.id.second_column);
-//        TextView header3 = header.findViewById(R.id.third_column);
-//
-//        header1.setText("Name");
-//        header2.setText("Subtotal");
-//        header3.setText("+Tax");
-//        payerListView.addHeaderView(header);
+        TagLayout tagLayout = findViewById(R.id.split_payer_list);
+        LayoutInflater layoutInflater = getLayoutInflater();
+        int counter =0;
+        for (String name : payerList) {
+            View tagView = layoutInflater.inflate(R.layout.tag_layout, null, false);
 
-        payerListView.setAdapter(payerAdapter);
-        payerListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
-        payerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            final TextView tagTextView = tagView.findViewById(R.id.tagTextView);
+            final String payerName = name;
+            final int payerColor = getNumColor(counter);
+            tagTextView.setText(payerName);
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view,
-                                    int position, long id) {
-                final PayerDebt tappedPayer = (PayerDebt) parent.getItemAtPosition(position);
-                if(totals.equals(tappedPayer)) {
-                    // never select the totals row, nothing can be assigned to it
-                    return;
-                }
-                if(selectedPayer == null) {
-                    // select on first tap
-                    selectedPayer = tappedPayer;
-                    if(selectedPayer != null) {
-                        selectedPayer.toggleSelected();
-                    }
-                } else {
-                    // if it's second tap, deselect it
-                    if(selectedPayer.equals(tappedPayer)) {
-                        selectedPayer.toggleSelected();
-                        selectedPayer = null;
-                    }
-                    else { // change to select the new tapped player
-                        selectedPayer.toggleSelected();
+            GradientDrawable drawable = (GradientDrawable)tagTextView.getBackground();
+            drawable.setColor(payerColor); // set solid color
+
+            tagTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final PayerDebt tappedPayer = payerCoordinator.findPayerDebt(payerName);
+                    if(selectedPayer == null) {
+                        // select on first tap
                         selectedPayer = tappedPayer;
                         if(selectedPayer != null) {
-                            selectedPayer.toggleSelected();
+                            Log.e(TAG, "selecting on 1: " + selectedPayer);
+                            toggleSelectedPayer();
+                        }
+                    } else {
+                        // if it's second tap, deselect it
+                        if(selectedPayer.equals(tappedPayer)) {
+                            Log.e(TAG, "selecting on 2: " + selectedPayer);
+                            toggleSelectedPayer();
+                            selectedPayer = null;
+                        }
+                        else { // change to select the new tapped player
+                            Log.e(TAG, "selecting on 3: " + selectedPayer);
+                            toggleSelectedPayer();
+                            selectedPayer = tappedPayer;
+                            if(selectedPayer != null) {
+                                Log.e(TAG, "selecting on 4: " + selectedPayer);
+                                toggleSelectedPayer();
+                            }
                         }
                     }
+
+                    // recolor
+                    showToast("Tapped payer: " + payerName);
+                    //   payerAdapter.notifyDataSetChanged();
                 }
+            });
 
-                // recolor
-                payerAdapter.notifyDataSetChanged();
-            }
-
-        });
+            payerTags.add(new PayerTagGraphic(payerName, payerColor, tagTextView));
+            tagLayout.addView(tagView);
+            counter++;
+        }
     }
-
 
     protected void setupPriceList() {
         priceList = getIntent().getParcelableArrayListExtra(ComputeUtils.PRICES);
@@ -133,12 +137,10 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
                 if(selectedPayer != null) {
                     payerCoordinator.addPayerToItem(selectedPayer, item);
                     priceAdapter.notifyDataSetChanged();
-                    payerAdapter.notifyDataSetChanged();
                 }
                 else if(!item.getPayerString().isEmpty()){
                     payerCoordinator.removeLastPayerFromItem(item);
                     priceAdapter.notifyDataSetChanged();
-                    payerAdapter.notifyDataSetChanged();
                 }
                 else {
                     // TODO give error message and instructions
@@ -148,12 +150,20 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    private void showToast() {
+    private void showInfoToast() {
         Toast toast = Toast.makeText(getApplicationContext(),
                 "Tap a payer and item to assign to assign payer to item.",
                 Toast.LENGTH_LONG);
         toast.show();
     }
+
+    private void showToast(String msg) {
+        Toast toast = Toast.makeText(getApplicationContext(),
+                msg,
+                Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -162,4 +172,27 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
             startActivity(intent);
         }
     }
+
+    protected void setupColorList() {
+        colorList = new ArrayList<>();
+        colorList.add(rgb(33,97,140)); // dark blue
+        colorList.add(rgb(206, 97, 85)); // salmon
+        colorList.add(rgb(212, 172, 13)); // dark yellow
+
+        colorList.add(rgb(136, 78, 160)); // red purple
+        colorList.add(rgb(25, 111, 61)); // dark green
+        colorList.add(rgb(72, 201, 176)); // teal
+        colorList.add(rgb(230, 126, 34)); // orange
+        colorList.add(rgb(91,44, 111)); // dark purple
+
+        colorList.add(rgb(93,173, 226)); // cyan
+
+        colorList.add(rgb(133, 146, 158)); //gray
+
+    }
+
+    protected int getNumColor(int index) {
+        return colorList.get(index%(colorList.size()));
+    }
+
 }
