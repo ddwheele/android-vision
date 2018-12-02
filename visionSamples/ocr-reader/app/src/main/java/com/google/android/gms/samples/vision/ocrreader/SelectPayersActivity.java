@@ -113,43 +113,6 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-//    // TODO make this interaction suck less
-//    private void AccessContact()
-//    {
-//        List<String> permissionsNeeded = new ArrayList<String>();
-//        final List<String> permissionsList = new ArrayList<String>();
-//        if (!addPermission(permissionsList, Manifest.permission.READ_CONTACTS))
-//            permissionsNeeded.add("Read Contacts");
-//        if (permissionsList.size() > 0) {
-//            if (permissionsNeeded.size() > 0) {
-//                String message = "Do you want to grant access to " + permissionsNeeded.get(0);
-//                for (int i = 1; i < permissionsNeeded.size(); i++)
-//                    message = message + ", " + permissionsNeeded.get(i);
-//                showMessageOKCancel(message,
-//                        new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
-//                                        REQUEST_MULTIPLE_PERMISSIONS);
-//                            }
-//                        });
-//                return;
-//            }
-//            requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
-//                    REQUEST_MULTIPLE_PERMISSIONS);
-//            return;
-//        }
-//    }
-
-//    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-//        new AlertDialog.Builder(SelectPayersActivity.this)
-//                .setMessage(message)
-//                .setPositiveButton("OK", okListener)
-//                .setNegativeButton("Cancel", null)
-//                .create()
-//                .show();
-//    }
-
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.select_contact_button) {

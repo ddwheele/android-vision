@@ -1,11 +1,13 @@
 package com.google.android.gms.samples.vision.ocrreader;
 
 import android.graphics.Color;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class PayerDebt  {
+public class PayerDebt implements Parcelable {
     final String name;
     ArrayList<AllocatedPrice> items;
     float subtotal;
@@ -19,6 +21,42 @@ public class PayerDebt  {
         this.name = name;
         items = new ArrayList<>();
     }
+
+    protected PayerDebt(Parcel in) {
+        name = in.readString();
+        items = in.createTypedArrayList(AllocatedPrice.CREATOR);
+        subtotal = in.readFloat();
+        total = in.readFloat();
+        calculated = in.readByte() != 0;
+        selected = in.readByte() != 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeTypedList(items);
+        dest.writeFloat(subtotal);
+        dest.writeFloat(total);
+        dest.writeByte((byte) (calculated ? 1 : 0));
+        dest.writeByte((byte) (selected ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<PayerDebt> CREATOR = new Creator<PayerDebt>() {
+        @Override
+        public PayerDebt createFromParcel(Parcel in) {
+            return new PayerDebt(in);
+        }
+
+        @Override
+        public PayerDebt[] newArray(int size) {
+            return new PayerDebt[size];
+        }
+    };
 
     public void addItem(AllocatedPrice ap) {
         if(!items.contains(ap)) {
@@ -94,11 +132,11 @@ public class PayerDebt  {
     }
 
     public String getSecondColumnString() {
-        return twoDForm.format(subtotal);
+        return twoDForm.format(getTotal());
     }
 
     public String getThirdColumnString() {
-        return twoDForm.format(getTotal());
+        return twoDForm.format(getTotalAndTip());
     }
 
     public int getThirdColumnBackgroundColor() {

@@ -14,8 +14,8 @@ public class ComputeUtils {
     static final String PRICES = "prices";
     static final String PAYERS = "payers";
     static final String OFFSET = "offset";
+    static final String PAYER_COORDINATOR = "payer coordinator";
 
-//    static final int BACKGROUND = Color.rgb(48, 48, 48);
     static final int BACKGROUND = Color.WHITE;
 
     static public boolean floatEquals(float f1, float f2) {

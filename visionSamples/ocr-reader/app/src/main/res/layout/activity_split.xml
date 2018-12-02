@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.gms.samples.vision.ocrreader.TagLayout
-            android:id="@+id/split_payer_list"
+            android:id="@+id/split_payer_cloud"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,7 +24,6 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
     ThreeColumnPricesAdapter priceAdapter;
 
     PayerDebtCoordinator payerCoordinator;
-    ListView payerListView;
     PayerDebt selectedPayer;
     PayerDebt totals;
 
@@ -47,13 +45,15 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
         showInfoToast();
     }
 
+    /**
+     * Select or deselect payer, and change invert the colors on the tag
+     */
     protected void toggleSelectedPayer() {
         for(PayerTagGraphic g : payerTags) {
             if(g.name.equals(selectedPayer.name)) {
                 g.togglePayerTag();
             }
         }
-
         selectedPayer.toggleSelected();
     }
 
@@ -63,8 +63,7 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
         totals = payerCoordinator.getTotals();
         payerTags = new ArrayList<>();
 
-
-        TagLayout tagLayout = findViewById(R.id.split_payer_list);
+        TagLayout tagLayout = findViewById(R.id.split_payer_cloud);
         LayoutInflater layoutInflater = getLayoutInflater();
         int counter =0;
         for (String name : payerList) {
@@ -86,30 +85,22 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
                         // select on first tap
                         selectedPayer = tappedPayer;
                         if(selectedPayer != null) {
-                            Log.e(TAG, "selecting on 1: " + selectedPayer);
                             toggleSelectedPayer();
                         }
                     } else {
                         // if it's second tap, deselect it
                         if(selectedPayer.equals(tappedPayer)) {
-                            Log.e(TAG, "selecting on 2: " + selectedPayer);
                             toggleSelectedPayer();
                             selectedPayer = null;
                         }
                         else { // change to select the new tapped player
-                            Log.e(TAG, "selecting on 3: " + selectedPayer);
                             toggleSelectedPayer();
                             selectedPayer = tappedPayer;
                             if(selectedPayer != null) {
-                                Log.e(TAG, "selecting on 4: " + selectedPayer);
                                 toggleSelectedPayer();
                             }
                         }
                     }
-
-                    // recolor
-                    showToast("Tapped payer: " + payerName);
-                    //   payerAdapter.notifyDataSetChanged();
                 }
             });
 
@@ -125,8 +116,6 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
 
         priceListView = findViewById(R.id.split_prices_list);
         priceListView.setAdapter(priceAdapter);
-
-        //priceListView.setOnDragListener();
 
         priceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -168,7 +157,8 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.split_continue_button) {
-            Intent intent = new Intent(this, DragActivity.class);
+            Intent intent = new Intent(this, DisplayPayerTotalsActivity.class);
+            intent.putExtra(ComputeUtils.PAYER_COORDINATOR, payerCoordinator);
             startActivity(intent);
         }
     }

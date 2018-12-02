@@ -1,11 +1,13 @@
 package com.google.android.gms.samples.vision.ocrreader;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import java.util.ArrayList;
 
-public class PayerDebtCoordinator {
-    final String TAG = "PayerDebtCoordinator";
+public class PayerDebtCoordinator implements Parcelable {
+    //final String TAG = "PayerDebtCoordinator";
     ArrayList<PayerDebt> payerDebtList;
     PayerDebt totals;
 
@@ -13,6 +15,23 @@ public class PayerDebtCoordinator {
         payerDebtList = ComputeUtils.createPayerDebtList(payerList);
         totals = payerDebtList.get(payerDebtList.size()-1);
     }
+
+    protected PayerDebtCoordinator(Parcel in) {
+        payerDebtList = in.createTypedArrayList(PayerDebt.CREATOR);
+        totals = in.readParcelable(PayerDebt.class.getClassLoader());
+    }
+
+    public static final Creator<PayerDebtCoordinator> CREATOR = new Creator<PayerDebtCoordinator>() {
+        @Override
+        public PayerDebtCoordinator createFromParcel(Parcel in) {
+            return new PayerDebtCoordinator(in);
+        }
+
+        @Override
+        public PayerDebtCoordinator[] newArray(int size) {
+            return new PayerDebtCoordinator[size];
+        }
+    };
 
     public PayerDebt getTotals() { return totals; }
 
@@ -79,5 +98,16 @@ public class PayerDebtCoordinator {
             }
         }
         return null;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(payerDebtList);
+        dest.writeParcelable(totals, flags);
     }
 }
