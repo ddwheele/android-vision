@@ -60,6 +60,15 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
     // percentage across the screen where we start looking for prices
     private static float midpoint_scale_left = 0f;
     private static float midpoint_scale_right = 1f;
+// .*?(-?)[\$|S]?(\d*)[\.| |,](\d{2}).*
+    private String priceRegex = ".*?(?<neg>-?)[\\$|S]?(?<dollars>\\d*)[\\.| |,](?<cents>\\d{2}).*";
+    private Pattern priceRegexPattern = Pattern.compile(priceRegex);
+    private String zipCodeRegex = "[A-Z]{2} \\d{5}";
+    private Pattern zipCodeRegexPattern = Pattern.compile(zipCodeRegex);
+    private String timeRegex = "\\d{1,2}[.:, ]\\d{2}[.:, ]?[A|P]M";
+    private Pattern timeRegexPattern = Pattern.compile(timeRegex);
+    private String normalTextRegex = "[A-Za-z]+ \\d+";
+    private Pattern normalTextPattern = Pattern.compile(normalTextRegex);
 
     OcrGraphic(GraphicOverlay overlay, TextBlock text) {
         super(overlay);
@@ -159,15 +168,12 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
 
     /**
      * Tell graphic the width of the canvas it is drawn on
-     * If graphic is right of the width*midpoint_scale, it will
-     * "select" itself and the app will include it in the list of prices
+     * If graphic is right of the w * midpoint_scale, and
+     * if it matches the price regex and doesn't match the zipcode or other regexes,
+     * it will "select" itself and the app will include it in the list of prices
      * @param w width of the image this graphic is overlaid on
      */
     public void calculatePriceList(float w, float offset) {
-        String priceRegex = ".*?(?<neg>-?)[\\$|S]?(?<dollars>\\d*)[\\.| |,](?<cents>\\d{2}).*";
-        // Create a Pattern object
-        Pattern r = Pattern.compile(priceRegex);
-
         float midLeft = w * midpoint_scale_left;
         float midRight = w * midpoint_scale_right;
         float textLeft = translateX(mText.getBoundingBox().left);
@@ -180,9 +186,16 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
                     String text = t.getValue();
                     //String numberString = new String();
                     // Now create matcher object.
-                    Matcher m = r.matcher(text);
-
+                    Matcher m = priceRegexPattern.matcher(text);
                     if(m.find()) {
+                        // make sure it is not a zip code
+                        Matcher zip = zipCodeRegexPattern.matcher(text);
+                        Matcher time = timeRegexPattern.matcher(text);
+                        Matcher normal = normalTextPattern.matcher(text);
+                        if(zip.find() || time.find() || normal.find()) {
+                            Log.e(TAG, "Rejecting zip or time: " + text);
+                            continue;
+                        }
 
                         String d = m.group("dollars");
                         String c = m.group("cents");
@@ -193,13 +206,13 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
                             price = -price;
                         }
                         myPrices.add(new AllocatedPrice(bottom + offset, price));
-                        Log.e(TAG, "Price " + price + " added SUCCESSFULLY");
+                       // Log.e(TAG, "Price " + price + " added SUCCESSFULLY");
                         // if we got here, we're good
                         // TODO: betting on no mix of prices and non-prices in a block
                         currentRectPaint = sRectPaintSelected;
                         currentTextPaint = sTextPaintSelected;
                     } else {
-                        Log.e(TAG, text + " did not match regex");
+                       // Log.e(TAG, text + " did not match regex");
                     }
 
                 } catch(NumberFormatException e) {

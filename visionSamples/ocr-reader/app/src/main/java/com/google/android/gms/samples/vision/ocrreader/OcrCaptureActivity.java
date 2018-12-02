@@ -231,6 +231,8 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
         super.onResume();
         if(mOcrDetectorProcessor != null) {
             mOcrDetectorProcessor.unlock();
+            // clear so it won't read the screen from last time
+            mOcrDetectorProcessor.release();
         }
         startCameraSource();
     }

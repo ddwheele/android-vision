@@ -50,18 +50,18 @@ public class ComputeUtils {
         AllocatedPrice totalAllocatedPrice =  prices.get(lastPriceIndex);
         totalAllocatedPrice.labelAsTotal();
         float total = totalAllocatedPrice.getPrice(); // assume last item is total
-        Log.e(TAG, "============================");
-        Log.e(TAG, "TOTAL = " + total);
+        Log.d(TAG, "============================");
+        Log.d(TAG, "TOTAL = " + total);
         float calcSubtotal = 0; // from summing items
         float subtotal = 0; //  line that equals sum of other items
         float tax = 0; // line that comes after subtotal; total - subtotal
         boolean foundSubtotal = false;
         boolean foundTax = false;
 
-        Log.e(TAG, "prices size is " + prices.size());
+        Log.d(TAG, "prices size is " + prices.size());
         for(int i=lastPriceIndex; i>=0; i--) {
             AllocatedPrice p = prices.get(i);
-            Log.e(TAG, "Price " + p);
+            Log.d(TAG, "Price " + p);
             float price = p.getPrice();
             if(floatEquals(price, total)) {
                 // they are repeating the total
@@ -84,48 +84,48 @@ public class ComputeUtils {
                 subtotal = price;
                 p.labelAsSubtotal();
                 foundSubtotal = true;
-                Log.e(TAG, "SUBTOTAL = " + subtotal);
+                Log.d(TAG, "SUBTOTAL = " + subtotal);
             }
             else if(foundSubtotal && floatEquals(price, subtotal)) {  // must have found subtotal already
                 // unless this is the first and only item,
                 // in which case it equals the subtotal w/o being a subtotal
                 if(i==0) {
-                    Log.e(TAG, "normal ITEM = " + price);
+                    Log.d(TAG, "normal ITEM = " + price);
                     calcSubtotal += price;
                 } else {
                     // they actually are repeating the subtotal
                     p.labelAsSubtotal();
                 }
             } else {
-                Log.e(TAG, "normal ITEM = " + price);
+                Log.d(TAG, "normal ITEM = " + price);
                 calcSubtotal += price;
-                Log.e(TAG, "calcSubtotal = " + calcSubtotal);
+                Log.d(TAG, "calcSubtotal = " + calcSubtotal);
             }
         }
 
         if(!floatEquals(subtotal, calcSubtotal)) {
-            Log.e(TAG, "ABORT, subtotal != subtotal");
-            Log.e(TAG, "============================");
+            Log.d(TAG, "ABORT, subtotal != subtotal");
+            Log.d(TAG, "============================");
             resetLabelsToItem(prices);
             return false;
         }
 
         if(!floatEquals(calcSubtotal + tax, total)) {
-            Log.e(TAG, "ABORT: subtotal+tax does not equal total");
-            Log.e(TAG, "============================");
+            Log.d(TAG, "ABORT: subtotal+tax does not equal total");
+            Log.d(TAG, "============================");
             resetLabelsToItem(prices);
             return false;
         }
 
         if(foundSubtotal && foundTax && floatEquals(calcSubtotal + tax, total)) {
             taxRate = tax / subtotal;
-            Log.e(TAG, "subtotal+tax equals total, HAPPY ENDING");
-            Log.e(TAG, "============================");
+            Log.d(TAG, "subtotal+tax equals total, HAPPY ENDING");
+            Log.d(TAG, "============================");
             return true;
         }
 
         // reset all the labels back to item
-        Log.e(TAG, "============================");
+        Log.d(TAG, "============================");
         return false;
     }
 
