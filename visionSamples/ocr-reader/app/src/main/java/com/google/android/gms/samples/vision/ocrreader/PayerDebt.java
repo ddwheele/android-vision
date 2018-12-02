@@ -3,6 +3,7 @@ package com.google.android.gms.samples.vision.ocrreader;
 import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class PayerDebt implements Parcelable {
     boolean calculated = false; // have we calculated what he owes
     boolean selected = false; // is this person selected in the Activity
 
-    DecimalFormat twoDForm = new DecimalFormat("#.##");
+    DecimalFormat twoDecimalFormat = new DecimalFormat("#.00");
 
     public PayerDebt(String name) {
         this.name = name;
@@ -132,11 +133,14 @@ public class PayerDebt implements Parcelable {
     }
 
     public String getSecondColumnString() {
-        return twoDForm.format(getTotal());
+
+        Log.e("PayerDebt", "total = " + twoDecimalFormat.format(getTotal()));
+        return twoDecimalFormat.format(getTotal());
     }
 
     public String getThirdColumnString() {
-        return twoDForm.format(getTotalAndTip());
+        Log.e("PayerDebt", "Tip = " + twoDecimalFormat.format(getTotalAndTip()));
+        return twoDecimalFormat.format(getTotalAndTip());
     }
 
     public int getThirdColumnBackgroundColor() {

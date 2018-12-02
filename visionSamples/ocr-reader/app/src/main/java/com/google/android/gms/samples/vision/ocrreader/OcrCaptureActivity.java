@@ -99,7 +99,6 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
         boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, true);
         boolean useFlash = true;
 
-
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
@@ -245,6 +244,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
         super.onPause();
         if (mPreview != null) {
             mPreview.stop();
+            mOcrDetectorProcessor.release();
         }
     }
 

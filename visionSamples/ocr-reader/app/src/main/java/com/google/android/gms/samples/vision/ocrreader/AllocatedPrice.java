@@ -221,9 +221,9 @@ public class AllocatedPrice implements Parcelable, Comparable {
     public int getFirstColumnTextColor() {
         if(isItem()) {
             if(payers.isEmpty()) {
-                return Color.RED;
+                return Color.rgb(231, 76, 60);
             } else {
-                return Color.GREEN;
+                return Color.rgb(39, 174, 96);
             }
         }
         return Color.WHITE;

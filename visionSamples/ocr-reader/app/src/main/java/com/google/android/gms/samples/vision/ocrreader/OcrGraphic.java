@@ -63,12 +63,9 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
 // .*?(-?)[\$|S]?(\d*)[\.| |,](\d{2}).*
     private String priceRegex = ".*?(?<neg>-?)[\\$|S]?(?<dollars>\\d*)[\\.| |,](?<cents>\\d{2}).*";
     private Pattern priceRegexPattern = Pattern.compile(priceRegex);
-    private String zipCodeRegex = "[A-Z]{2} \\d{5}";
-    private Pattern zipCodeRegexPattern = Pattern.compile(zipCodeRegex);
-    private String timeRegex = "\\d{1,2}[.:, ]\\d{2}[.:, ]?[A|P]M";
-    private Pattern timeRegexPattern = Pattern.compile(timeRegex);
-    private String normalTextRegex = "[A-Za-z]+ \\d+";
-    private Pattern normalTextPattern = Pattern.compile(normalTextRegex);
+    // tip suggestion, telephone, normal text, time
+    private String rejectRegex = "\\d{2}%|\\)[ ]?\\d*|[A-Za-z]+ \\d+|\\d{1,2}[.:, ]\\d{2}[.:, ]?[A-Z]M";
+    private Pattern rejectRegexPattern = Pattern.compile(rejectRegex);
 
     OcrGraphic(GraphicOverlay overlay, TextBlock text) {
         super(overlay);
@@ -189,11 +186,9 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
                     Matcher m = priceRegexPattern.matcher(text);
                     if(m.find()) {
                         // make sure it is not a zip code
-                        Matcher zip = zipCodeRegexPattern.matcher(text);
-                        Matcher time = timeRegexPattern.matcher(text);
-                        Matcher normal = normalTextPattern.matcher(text);
-                        if(zip.find() || time.find() || normal.find()) {
-                            Log.e(TAG, "Rejecting zip or time: " + text);
+                        Matcher reject = rejectRegexPattern.matcher(text);
+                        if(reject.find()) {
+                            Log.e(TAG, "Rejecting: " + text);
                             continue;
                         }
 
