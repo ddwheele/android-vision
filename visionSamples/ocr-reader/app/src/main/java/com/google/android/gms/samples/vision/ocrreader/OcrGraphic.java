@@ -60,7 +60,7 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
     // percentage across the screen where we start looking for prices
     private static float midpoint_scale_left = 0f;
     private static float midpoint_scale_right = 1f;
-// .*?(-?)[\$|S]?(\d*)[\.| |,](\d{2}).*
+    // .*?(-?)[\$|S]?(\d*)[\.| |,](\d{2}).*
     private String priceRegex = ".*?(?<neg>-?)[\\$|S]?(?<dollars>\\d*)[\\.| |,](?<cents>\\d{2}).*";
     private Pattern priceRegexPattern = Pattern.compile(priceRegex);
     // tip suggestion, telephone, normal text, time

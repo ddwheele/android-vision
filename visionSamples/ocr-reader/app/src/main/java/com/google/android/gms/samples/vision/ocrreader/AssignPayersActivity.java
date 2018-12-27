@@ -16,8 +16,8 @@ import java.util.ArrayList;
 
 import static android.graphics.Color.*;
 
-public class SplitActivity extends AppCompatActivity implements View.OnClickListener {
-    final String TAG = "SplitActivity";
+public class AssignPayersActivity extends AppCompatActivity implements View.OnClickListener {
+    final String TAG = "AssignPayersActivity";
     ArrayList<AllocatedPrice> priceList;
     ArrayList<PayerTagGraphic> payerTags;
     ListView priceListView;
@@ -28,15 +28,12 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
     PayerDebt totals;
 
     Button continueButton;
-    ArrayList<Integer> colorList;
-
 
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_split);
-        setTitle("Assign Items to Payers");
+        setTitle("Assign Payers to Items");
 
-        setupColorList();
         setupPayerTags();
         setupPriceList();
 
@@ -58,7 +55,7 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
     }
 
     protected void setupPayerTags() {
-        ArrayList<String> payerList = getIntent().getStringArrayListExtra(ComputeUtils.PAYERS);
+        ArrayList<String> payerList = getIntent().getStringArrayListExtra(Utils.PAYERS);
         payerCoordinator = new PayerDebtCoordinator(payerList);
         totals = payerCoordinator.getTotals();
         payerTags = new ArrayList<>();
@@ -71,7 +68,7 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
 
             final TextView tagTextView = tagView.findViewById(R.id.tagTextView);
             final String payerName = name;
-            final int payerColor = getNumColor(counter);
+            final int payerColor = Utils.getNumColor(counter);
             tagTextView.setText(payerName);
 
             GradientDrawable drawable = (GradientDrawable)tagTextView.getBackground();
@@ -111,7 +108,7 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
     }
 
     protected void setupPriceList() {
-        priceList = getIntent().getParcelableArrayListExtra(ComputeUtils.PRICES);
+        priceList = getIntent().getParcelableArrayListExtra(Utils.PRICES);
         priceAdapter = new ThreeColumnPricesAdapter(this, priceList);
 
         priceListView = findViewById(R.id.split_prices_list);
@@ -138,10 +135,9 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-
     private void showInfoToast() {
         Toast toast = Toast.makeText(getApplicationContext(),
-                "Tap a payer and item to assign to assign payer to item.",
+                "Tap payer and item to assign to assign payer to item.",
                 Toast.LENGTH_LONG);
         toast.show();
     }
@@ -158,31 +154,8 @@ public class SplitActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         if(v.getId() == R.id.split_continue_button) {
             Intent intent = new Intent(this, DisplayPayerTotalsActivity.class);
-            intent.putExtra(ComputeUtils.PAYER_COORDINATOR, payerCoordinator);
+            intent.putExtra(Utils.PAYER_COORDINATOR, payerCoordinator);
             startActivity(intent);
         }
     }
-
-    protected void setupColorList() {
-        colorList = new ArrayList<>();
-        colorList.add(rgb(33,97,140)); // dark blue
-        colorList.add(rgb(206, 97, 85)); // salmon
-        colorList.add(rgb(212, 172, 13)); // dark yellow
-
-        colorList.add(rgb(136, 78, 160)); // red purple
-        colorList.add(rgb(25, 111, 61)); // dark green
-        colorList.add(rgb(72, 201, 176)); // teal
-        colorList.add(rgb(230, 126, 34)); // orange
-        colorList.add(rgb(91,44, 111)); // dark purple
-
-        colorList.add(rgb(93,173, 226)); // cyan
-
-        colorList.add(rgb(133, 146, 158)); //gray
-
-    }
-
-    protected int getNumColor(int index) {
-        return colorList.get(index%(colorList.size()));
-    }
-
 }

@@ -8,8 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 public class DisplayPayerTotalsActivity extends Activity {
     PayerDebtCoordinator payerCoordinator;
     ListView payerListView;
@@ -25,7 +23,7 @@ public class DisplayPayerTotalsActivity extends Activity {
         setContentView(R.layout.activity_display_payer_totals);
         setTitle("Complete Totals");
 
-        payerCoordinator = getIntent().getParcelableExtra(ComputeUtils.PAYER_COORDINATOR);
+        payerCoordinator = getIntent().getParcelableExtra(Utils.PAYER_COORDINATOR);
         totals = payerCoordinator.getTotals();
 
         payerAdapter = new ThreeColumnPayerAdapter(this, payerCoordinator.getPayerDebtList());

@@ -18,7 +18,7 @@ public class PayerDebt implements Parcelable {
 
     DecimalFormat twoDecimalFormat = new DecimalFormat("#.00");
 
-    public PayerDebt(String name) {
+    public PayerDebt(String name, int color) {
         this.name = name;
         items = new ArrayList<>();
     }
@@ -124,7 +124,7 @@ public class PayerDebt implements Parcelable {
         for(AllocatedPrice ap : items) {
             subtotal += ap.getPricePerPayer();
         }
-        total = subtotal * (1 + ComputeUtils.taxRate);
+        total = subtotal * (1 + Utils.taxRate);
         calculated = true;
     }
 
@@ -147,7 +147,7 @@ public class PayerDebt implements Parcelable {
         if(selected) {
             return Color.GREEN;
         }
-        return ComputeUtils.BACKGROUND;
+        return Utils.BACKGROUND;
     }
 
     public boolean isSelected() {

@@ -8,15 +8,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.CommonStatusCodes;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class VerifyPricesActivity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = "Verify Prices";
@@ -37,7 +33,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
         appendButton = findViewById(R.id.verify_append_prices_button);
         topMessage = findViewById(R.id.prices_to_verify);
 
-        priceList = getIntent().getParcelableArrayListExtra(ComputeUtils.PRICES);
+        priceList = getIntent().getParcelableArrayListExtra(Utils.PRICES);
         priceAdapter = new TwoColumnArrayAdapter(this, priceList);
 
         priceListView = findViewById(R.id.split_prices_list);
@@ -60,15 +56,15 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        Log.e(TAG, "I got a result");
+        Log.d(TAG, "I got a result");
         if(requestCode == VF_OCR_CAPTURE) {
-            Log.e(TAG, "with the right request code");
+            Log.d(TAG, "with the right request code");
             if (intent != null) {
-                Log.e(TAG, "intent is not null");
-                ArrayList<AllocatedPrice> p2 = intent.getParcelableArrayListExtra(ComputeUtils.PRICES);
-                Log.e(TAG, "prices has " + priceList.size() + " and p2 has " + p2.size());
+                Log.d(TAG, "intent is not null");
+                ArrayList<AllocatedPrice> p2 = intent.getParcelableArrayListExtra(Utils.PRICES);
+                Log.d(TAG, "prices has " + priceList.size() + " and p2 has " + p2.size());
                 priceList.addAll(p2);
-                Log.e(TAG, "NOW prices has " + priceList.size());
+                Log.d(TAG, "NOW prices has " + priceList.size());
                 parsePrices();
             }
         }
@@ -82,7 +78,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         if(v.getId() == R.id.verify_continue_button) {
             Intent intent = new Intent(this, SelectPayersActivity.class);
-            intent.putParcelableArrayListExtra(ComputeUtils.PRICES, priceList);
+            intent.putParcelableArrayListExtra(Utils.PRICES, priceList);
             startActivity(intent);
         } else if(v.getId() == R.id.verify_append_prices_button) {
             // get Y value of last price
@@ -90,14 +86,14 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
             Collections.sort(priceList);
             float offset = priceList.get(priceList.size()-1).getYValue();
             Intent intent = new Intent(this, OcrCaptureActivity.class);
-            intent.putExtra(ComputeUtils.OFFSET, offset);
-            intent.putParcelableArrayListExtra(ComputeUtils.PRICES, priceList);
+            intent.putExtra(Utils.OFFSET, offset);
+            intent.putParcelableArrayListExtra(Utils.PRICES, priceList);
             startActivityForResult(intent, VF_OCR_CAPTURE);
         }
     }
 
     private void parsePrices() {
-        boolean parsed = ComputeUtils.labelSubtotalTaxAndTotal(priceList);
+        boolean parsed = Utils.labelSubtotalTaxAndTotal(priceList);
 
         if(parsed) {
             parseSuccessful();
@@ -121,6 +117,6 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
         topMessage.setText("Prices detected:\n");
         appendButton.setEnabled(false);
         continueButton.setEnabled(true);
-        Log.e(TAG, "SUCCESS!!!!!!!!!!! " );
+        Log.d(TAG, "SUCCESS!!!!!!!!!!! " );
     }
 }

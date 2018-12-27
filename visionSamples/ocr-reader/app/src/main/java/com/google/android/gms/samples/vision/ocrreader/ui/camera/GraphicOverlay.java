@@ -17,15 +17,12 @@ package com.google.android.gms.samples.vision.ocrreader.ui.camera;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
-import com.google.android.gms.samples.vision.ocrreader.ComputeUtils;
+import com.google.android.gms.samples.vision.ocrreader.Utils;
 import com.google.android.gms.samples.vision.ocrreader.OcrGraphic;
 import com.google.android.gms.samples.vision.ocrreader.AllocatedPrice;
-import com.google.android.gms.samples.vision.ocrreader.correct.ParcelableOcrGraphic;
 import com.google.android.gms.vision.CameraSource;
 
 import java.util.ArrayList;
@@ -85,7 +82,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
             precomputedPriceList.addAll(previousPriceList);
         }
         precomputedPriceList.addAll(flattenPriceList());
-        return ComputeUtils.labelSubtotalTaxAndTotal(precomputedPriceList);
+        return Utils.labelSubtotalTaxAndTotal(precomputedPriceList);
     }
 
     /**

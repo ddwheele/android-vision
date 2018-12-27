@@ -40,19 +40,14 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.samples.vision.ocrreader.correct.CorrectTextActivity;
-import com.google.android.gms.samples.vision.ocrreader.correct.ParcelableOcrGraphic;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.CameraSource;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.CameraSourcePreview;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.IPictureTrigger;
 import com.google.android.gms.vision.text.TextRecognizer;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Activity for the multi-tracker app.  This app detects text and displays the value with the
@@ -120,9 +115,9 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
     @Override
     protected void onStart() {
         super.onStart();
-        yOffset = getIntent().getFloatExtra(ComputeUtils.OFFSET, 0);
+        yOffset = getIntent().getFloatExtra(Utils.OFFSET, 0);
         mGraphicOverlay.setYOffset(yOffset);
-        ArrayList<AllocatedPrice> priceList = getIntent().getParcelableArrayListExtra(ComputeUtils.PRICES);
+        ArrayList<AllocatedPrice> priceList = getIntent().getParcelableArrayListExtra(Utils.PRICES);
         mGraphicOverlay.setPreviousPriceList(priceList);
     }
 
@@ -363,7 +358,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
         }
         else { // we were called from VerifyPricesActivity
             Intent returnIntent = new Intent();
-            returnIntent.putParcelableArrayListExtra(ComputeUtils.PRICES, priceList);
+            returnIntent.putParcelableArrayListExtra(Utils.PRICES, priceList);
             setResult(Activity.RESULT_OK,returnIntent);
             finish();
         }
@@ -374,7 +369,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
     public void triggerPicture() {
         ArrayList<AllocatedPrice> priceList = mGraphicOverlay.getPriceList();
         Intent intent = new Intent(this, VerifyPricesActivity.class);
-        intent.putParcelableArrayListExtra(ComputeUtils.PRICES, priceList);
+        intent.putParcelableArrayListExtra(Utils.PRICES, priceList);
         startActivity(intent);
     }
 

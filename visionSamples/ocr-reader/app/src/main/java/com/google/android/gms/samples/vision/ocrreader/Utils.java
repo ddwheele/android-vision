@@ -6,8 +6,10 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ComputeUtils {
-    static final String TAG = "ComputeUtils";
+import static android.graphics.Color.rgb;
+
+public class Utils {
+    static final String TAG = "Utils";
     static float epsilon = 0.01f;
     static float taxRate = 0.0925f;
 
@@ -17,6 +19,10 @@ public class ComputeUtils {
     static final String PAYER_COORDINATOR = "payer coordinator";
 
     static final int BACKGROUND = Color.WHITE;
+
+    static ArrayList<Integer> colorList;
+    static boolean colorListSetup = false;
+
 
     static public boolean floatEquals(float f1, float f2) {
         if(Math.abs(f1 - f2) < epsilon) {
@@ -32,9 +38,11 @@ public class ComputeUtils {
      */
     static ArrayList<PayerDebt> createPayerDebtList(ArrayList<String> payers) {
         ArrayList<PayerDebt> ret = new ArrayList<>();
+        int payerCounter = 0;
         for(String p : payers) {
-            PayerDebt pd = new PayerDebt(p);
+            PayerDebt pd = new PayerDebt(p, getNumColor(payerCounter));
             ret.add(pd);
+            payerCounter++;
         }
         ret.add(new PayerDebtTotals("Total"));
         return ret;
@@ -134,4 +142,31 @@ public class ComputeUtils {
             p.labelAsItem();
         }
     }
+
+    protected static void setupColorList() {
+        colorList = new ArrayList<>();
+        colorList.add(rgb(33,97,140)); // dark blue
+        colorList.add(rgb(206, 97, 85)); // salmon
+        colorList.add(rgb(212, 172, 13)); // dark yellow
+
+        colorList.add(rgb(136, 78, 160)); // red purple
+        colorList.add(rgb(25, 111, 61)); // dark green
+        colorList.add(rgb(72, 201, 176)); // teal
+        colorList.add(rgb(230, 126, 34)); // orange
+        colorList.add(rgb(91,44, 111)); // dark purple
+
+        colorList.add(rgb(93,173, 226)); // cyan
+
+        colorList.add(rgb(133, 146, 158)); //gray
+
+    }
+
+    protected static int getNumColor(int index) {
+        if(!colorListSetup) {
+            setupColorList();
+            colorListSetup = true;
+        }
+        return colorList.get(index%(colorList.size()));
+    }
+
 }

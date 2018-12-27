@@ -2,7 +2,6 @@ package com.google.android.gms.samples.vision.ocrreader;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -12,7 +11,7 @@ public class PayerDebtCoordinator implements Parcelable {
     PayerDebt totals;
 
     public PayerDebtCoordinator(ArrayList<String> payerList) {
-        payerDebtList = ComputeUtils.createPayerDebtList(payerList);
+        payerDebtList = Utils.createPayerDebtList(payerList);
         totals = payerDebtList.get(payerDebtList.size()-1);
     }
 

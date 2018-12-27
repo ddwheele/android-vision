@@ -132,10 +132,10 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
             showToast();
         }
         else if(v.getId() == R.id.select_continue) {
-            Intent intent = new Intent(this, SplitActivity.class);
-            ArrayList<AllocatedPrice> pricesList = getIntent().getParcelableArrayListExtra(ComputeUtils.PRICES);
-            intent.putParcelableArrayListExtra(ComputeUtils.PRICES, pricesList);
-            intent.putStringArrayListExtra(ComputeUtils.PAYERS, payers);
+            Intent intent = new Intent(this, AssignPayersActivity.class);
+            ArrayList<AllocatedPrice> pricesList = getIntent().getParcelableArrayListExtra(Utils.PRICES);
+            intent.putParcelableArrayListExtra(Utils.PRICES, pricesList);
+            intent.putStringArrayListExtra(Utils.PAYERS, payers);
             startActivity(intent);
         }
     }

@@ -7,7 +7,6 @@ import android.util.Log;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class keeps track of which prices are:
@@ -243,7 +242,7 @@ public class AllocatedPrice implements Parcelable, Comparable {
 //        if(isItem() && payers.isEmpty()) {
 //            return Color.BLACK;
 //        }
-        return ComputeUtils.BACKGROUND;
+        return Utils.BACKGROUND;
     }
 
     boolean isItem() {
