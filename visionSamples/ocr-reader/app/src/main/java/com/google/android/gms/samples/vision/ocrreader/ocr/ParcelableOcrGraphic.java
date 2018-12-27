@@ -1,4 +1,4 @@
-package com.google.android.gms.samples.vision.ocrreader.correct;
+package com.google.android.gms.samples.vision.ocrreader.ocr;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,7 +7,6 @@ import android.graphics.RectF;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.android.gms.samples.vision.ocrreader.OcrGraphic;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.text.Text;

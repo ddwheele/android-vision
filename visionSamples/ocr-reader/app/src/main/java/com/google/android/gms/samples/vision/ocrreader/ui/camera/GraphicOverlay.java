@@ -20,9 +20,9 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.google.android.gms.samples.vision.ocrreader.Utils;
-import com.google.android.gms.samples.vision.ocrreader.OcrGraphic;
-import com.google.android.gms.samples.vision.ocrreader.AllocatedPrice;
+import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
+import com.google.android.gms.samples.vision.ocrreader.ocr.OcrGraphic;
+import com.google.android.gms.samples.vision.ocrreader.calculate.AllocatedPrice;
 import com.google.android.gms.vision.CameraSource;
 
 import java.util.ArrayList;

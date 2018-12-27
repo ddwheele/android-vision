@@ -1,4 +1,4 @@
-package com.google.android.gms.samples.vision.ocrreader;
+package com.google.android.gms.samples.vision.ocrreader.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,14 +7,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.google.android.gms.samples.vision.ocrreader.calculate.AllocatedPrice;
+import com.google.android.gms.samples.vision.ocrreader.R;
+
 import java.util.ArrayList;
 
-// TODO WHY DOESN'T THIS RECOGNIZE POLYMORPHISM AAAAAAHHHHHH
-public class ThreeColumnPayerAdapter extends ArrayAdapter<PayerDebt> {
+public class VerifyPricesAdapter extends ArrayAdapter {
     private final Context context;
-    private final ArrayList<PayerDebt> values;
+    private final ArrayList<AllocatedPrice> values;
 
-    public ThreeColumnPayerAdapter(Context context, ArrayList<PayerDebt> values) {
+    public VerifyPricesAdapter(Context context, ArrayList<AllocatedPrice> values) {
         super(context, -1, values);
         this.context = context;
         this.values = values;
@@ -27,12 +29,8 @@ public class ThreeColumnPayerAdapter extends ArrayAdapter<PayerDebt> {
         View rowView = inflater.inflate(R.layout.column_view, parent, false);
         TextView text1 = rowView.findViewById(R.id.first_column);
         TextView text2 = rowView.findViewById(R.id.second_column);
-        TextView text3 = rowView.findViewById(R.id.third_column);
         text1.setText(values.get(position).getFirstColumnString());
         text2.setText(values.get(position).getSecondColumnString());
-        text3.setText(values.get(position).getThirdColumnString());
-
-//        text1.setBackgroundColor(values.get(position).getThirdColumnBackgroundColor());
 
         return rowView;
     }

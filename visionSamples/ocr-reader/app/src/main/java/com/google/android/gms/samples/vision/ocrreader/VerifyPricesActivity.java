@@ -11,6 +11,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.samples.vision.ocrreader.adapters.VerifyPricesAdapter;
+import com.google.android.gms.samples.vision.ocrreader.calculate.AllocatedPrice;
+import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -18,7 +22,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
     private final String TAG = "Verify Prices";
     ArrayList<AllocatedPrice> priceList;
     ListView priceListView;
-    TwoColumnArrayAdapter priceAdapter;
+    VerifyPricesAdapter priceAdapter;
     Button continueButton, appendButton;
     TextView topMessage;
 
@@ -34,7 +38,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
         topMessage = findViewById(R.id.prices_to_verify);
 
         priceList = getIntent().getParcelableArrayListExtra(Utils.PRICES);
-        priceAdapter = new TwoColumnArrayAdapter(this, priceList);
+        priceAdapter = new VerifyPricesAdapter(this, priceList);
 
         priceListView = findViewById(R.id.split_prices_list);
         priceListView.setAdapter(priceAdapter);

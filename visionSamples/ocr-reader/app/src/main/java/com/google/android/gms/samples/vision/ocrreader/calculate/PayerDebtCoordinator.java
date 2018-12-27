@@ -1,4 +1,4 @@
-package com.google.android.gms.samples.vision.ocrreader;
+package com.google.android.gms.samples.vision.ocrreader.calculate;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -34,11 +34,11 @@ public class PayerDebtCoordinator implements Parcelable {
 
     public PayerDebt getTotals() { return totals; }
 
-    ArrayList<PayerDebt> getPayerDebtList() {
+    public ArrayList<PayerDebt> getPayerDebtList() {
         return payerDebtList;
     }
 
-    void addPayerToItem(PayerDebt payer, AllocatedPrice item) {
+    public void addPayerToItem(PayerDebt payer, AllocatedPrice item) {
         if(payer == null || item == null) {
             return;
         }
@@ -60,7 +60,7 @@ public class PayerDebtCoordinator implements Parcelable {
         }
     }
 
-    void removeLastPayerFromItem(AllocatedPrice item) {
+    public void removeLastPayerFromItem(AllocatedPrice item) {
         if(item == null) {
             return;
         }
@@ -69,7 +69,7 @@ public class PayerDebtCoordinator implements Parcelable {
     }
 
 
-    void removePayerFromItem(PayerDebt payer, AllocatedPrice item) {
+    public void removePayerFromItem(PayerDebt payer, AllocatedPrice item) {
         if(payer == null || item == null) {
             return;
         }
@@ -90,7 +90,7 @@ public class PayerDebtCoordinator implements Parcelable {
         }
     }
 
-    PayerDebt findPayerDebt(String payer) {
+    public PayerDebt findPayerDebt(String payer) {
         for (PayerDebt pd : payerDebtList) {
             if (pd.name.equals(payer)) {
                 return pd;

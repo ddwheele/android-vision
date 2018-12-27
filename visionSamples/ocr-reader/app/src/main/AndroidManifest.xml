@@ -37,7 +37,7 @@
             android:label="Name List"
             android:windowSoftInputMode="adjustNothing" />
         <activity
-            android:name=".correct.CorrectTextActivity"
+            android:name=".ocr.CorrectTextActivity"
             android:label="@string/correct_activity_title" />
         <activity android:name=".VerifyPricesActivity" />
         <activity

@@ -8,6 +8,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.samples.vision.ocrreader.adapters.DisplayPayerTotalsAdapter;
+import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebt;
+import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebtCoordinator;
+import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
+
 public class DisplayPayerTotalsActivity extends Activity {
     PayerDebtCoordinator payerCoordinator;
     ListView payerListView;
@@ -26,7 +31,7 @@ public class DisplayPayerTotalsActivity extends Activity {
         payerCoordinator = getIntent().getParcelableExtra(Utils.PAYER_COORDINATOR);
         totals = payerCoordinator.getTotals();
 
-        payerAdapter = new ThreeColumnPayerAdapter(this, payerCoordinator.getPayerDebtList());
+        payerAdapter = new DisplayPayerTotalsAdapter(this, payerCoordinator.getPayerDebtList());
 
         payerListView = findViewById(R.id.display_payer_totals);
         View header = getLayoutInflater().inflate(R.layout.column_view, null);

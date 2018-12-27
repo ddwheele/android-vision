@@ -1,4 +1,4 @@
-package com.google.android.gms.samples.vision.ocrreader;
+package com.google.android.gms.samples.vision.ocrreader.calculate;
 
 import android.graphics.Color;
 import android.os.Parcel;
@@ -15,12 +15,23 @@ public class PayerDebt implements Parcelable {
     float total;
     boolean calculated = false; // have we calculated what he owes
     boolean selected = false; // is this person selected in the Activity
+    final int numberInList;
 
     DecimalFormat twoDecimalFormat = new DecimalFormat("#.00");
 
-    public PayerDebt(String name, int color) {
+    /**
+     * Keep track of items and prices assigned to payer
+     * @param name Payer's name
+     * @param numberInList Payer's order in list (used for color)
+     */
+    public PayerDebt(String name, int numberInList) {
         this.name = name;
         items = new ArrayList<>();
+        this.numberInList = numberInList;
+    }
+
+    public String getName() {
+        return name;
     }
 
     protected PayerDebt(Parcel in) {
@@ -30,6 +41,7 @@ public class PayerDebt implements Parcelable {
         total = in.readFloat();
         calculated = in.readByte() != 0;
         selected = in.readByte() != 0;
+        numberInList = in.readInt();
     }
 
     @Override
@@ -40,6 +52,7 @@ public class PayerDebt implements Parcelable {
         dest.writeFloat(total);
         dest.writeByte((byte) (calculated ? 1 : 0));
         dest.writeByte((byte) (selected ? 1 : 0));
+        dest.writeInt(numberInList);
     }
 
     @Override
@@ -143,11 +156,15 @@ public class PayerDebt implements Parcelable {
         return twoDecimalFormat.format(getTotalAndTip());
     }
 
-    public int getThirdColumnBackgroundColor() {
-        if(selected) {
-            return Color.GREEN;
-        }
-        return Utils.BACKGROUND;
+//    public int getThirdColumnBackgroundColor() {
+//        if(selected) {
+//            return Color.GREEN;
+//        }
+//        return Utils.BACKGROUND;
+//    }
+
+    public int getNumberInList() {
+        return numberInList;
     }
 
     public boolean isSelected() {

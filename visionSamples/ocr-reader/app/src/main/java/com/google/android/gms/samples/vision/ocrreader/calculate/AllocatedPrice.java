@@ -1,4 +1,4 @@
-package com.google.android.gms.samples.vision.ocrreader;
+package com.google.android.gms.samples.vision.ocrreader.calculate;
 
 import android.graphics.Color;
 import android.os.Parcel;

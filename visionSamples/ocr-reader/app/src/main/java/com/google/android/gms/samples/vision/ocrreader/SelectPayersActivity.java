@@ -17,6 +17,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.samples.vision.ocrreader.calculate.AllocatedPrice;
+import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
+
 import java.util.ArrayList;
 
 public class SelectPayersActivity extends AppCompatActivity implements View.OnClickListener {

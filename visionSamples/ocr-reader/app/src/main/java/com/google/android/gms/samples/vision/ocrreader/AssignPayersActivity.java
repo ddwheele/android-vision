@@ -12,16 +12,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.google.android.gms.samples.vision.ocrreader.adapters.AssignPayersAdapter;
+import com.google.android.gms.samples.vision.ocrreader.calculate.AllocatedPrice;
+import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebt;
+import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebtCoordinator;
+import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
 
-import static android.graphics.Color.*;
+import java.util.ArrayList;
 
 public class AssignPayersActivity extends AppCompatActivity implements View.OnClickListener {
     final String TAG = "AssignPayersActivity";
     ArrayList<AllocatedPrice> priceList;
     ArrayList<PayerTagGraphic> payerTags;
     ListView priceListView;
-    ThreeColumnPricesAdapter priceAdapter;
+    AssignPayersAdapter priceAdapter;
 
     PayerDebtCoordinator payerCoordinator;
     PayerDebt selectedPayer;
@@ -47,7 +51,7 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
      */
     protected void toggleSelectedPayer() {
         for(PayerTagGraphic g : payerTags) {
-            if(g.name.equals(selectedPayer.name)) {
+            if(g.getName().equals(selectedPayer.getName())) {
                 g.togglePayerTag();
             }
         }
@@ -109,7 +113,7 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
 
     protected void setupPriceList() {
         priceList = getIntent().getParcelableArrayListExtra(Utils.PRICES);
-        priceAdapter = new ThreeColumnPricesAdapter(this, priceList);
+        priceAdapter = new AssignPayersAdapter(this, priceList);
 
         priceListView = findViewById(R.id.split_prices_list);
         priceListView.setAdapter(priceAdapter);
