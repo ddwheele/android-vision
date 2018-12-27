@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.samples.vision.ocrreader.adapters.AssignPayersAdapter;
-import com.google.android.gms.samples.vision.ocrreader.calculate.AllocatedPrice;
+import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
 import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebt;
 import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebtCoordinator;
 import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class AssignPayersActivity extends AppCompatActivity implements View.OnClickListener {
     final String TAG = "AssignPayersActivity";
-    ArrayList<AllocatedPrice> priceList;
+    ArrayList<AssignedPrice> priceList;
     ArrayList<PayerTagGraphic> payerTags;
     ListView priceListView;
     AssignPayersAdapter priceAdapter;
@@ -66,7 +66,7 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
 
         TagLayout tagLayout = findViewById(R.id.split_payer_cloud);
         LayoutInflater layoutInflater = getLayoutInflater();
-        int counter =0;
+        int counter = ColorUtils.COUNTER_START;
         for (String name : payerList) {
             View tagView = layoutInflater.inflate(R.layout.tag_layout, null, false);
 
@@ -123,7 +123,7 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
-                AllocatedPrice item =  (AllocatedPrice)parent.getItemAtPosition(position);
+                AssignedPrice item =  (AssignedPrice)parent.getItemAtPosition(position);
                 if(selectedPayer != null) {
                     payerCoordinator.addPayerToItem(selectedPayer, item);
                     priceAdapter.notifyDataSetChanged();
@@ -152,7 +152,6 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
                 Toast.LENGTH_SHORT);
         toast.show();
     }
-
 
     @Override
     public void onClick(View v) {

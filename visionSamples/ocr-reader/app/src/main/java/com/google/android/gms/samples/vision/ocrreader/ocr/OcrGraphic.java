@@ -21,7 +21,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.Log;
 
-import com.google.android.gms.samples.vision.ocrreader.calculate.AllocatedPrice;
+import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
@@ -55,7 +55,7 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
     private final TextBlock mText;
 
     private boolean selected = false;
-    private List<AllocatedPrice> myPrices = new ArrayList<>();
+    private List<AssignedPrice> myPrices = new ArrayList<>();
 
     // percentage across the screen where we start looking for prices
     private static float midpoint_scale_left = 0f;
@@ -123,7 +123,7 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
      *
      * @return List of AllocatedPrices
      */
-    public List<AllocatedPrice> getMyPrices() {
+    public List<AssignedPrice> getMyPrices() {
         return myPrices;
     }
 
@@ -200,7 +200,7 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
                         if("-".equals(m.group("neg"))) {
                             price = -price;
                         }
-                        myPrices.add(new AllocatedPrice(bottom + offset, price));
+                        myPrices.add(new AssignedPrice(bottom + offset, price));
                        // Log.e(TAG, "Price " + price + " added SUCCESSFULLY");
                         // if we got here, we're good
                         // TODO: betting on no mix of prices and non-prices in a block

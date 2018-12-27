@@ -1,12 +1,15 @@
 package com.google.android.gms.samples.vision.ocrreader.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.google.android.gms.samples.vision.ocrreader.ColorUtils;
+import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
 import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebt;
 import com.google.android.gms.samples.vision.ocrreader.R;
 
@@ -31,10 +34,22 @@ public class DisplayPayerTotalsAdapter extends ArrayAdapter<PayerDebt> {
         TextView text1 = rowView.findViewById(R.id.first_column);
         TextView text2 = rowView.findViewById(R.id.second_column);
         TextView text3 = rowView.findViewById(R.id.third_column);
-        text1.setText(values.get(position).getFirstColumnString());
-        text2.setText(values.get(position).getSecondColumnString());
-        text3.setText(values.get(position).getThirdColumnString());
 
+        PayerDebt payerDebt = values.get(position);
+        text1.setText(payerDebt.getFirstColumnString());
+        text2.setText(payerDebt.getSecondColumnString());
+        text3.setText(payerDebt.getThirdColumnString());
+
+        if(!payerDebt.isTotal()) {
+            int rowColor = getColor(payerDebt);
+            text1.setTextColor(rowColor);
+            text2.setTextColor(rowColor);
+            text3.setTextColor(rowColor);
+        }
         return rowView;
+    }
+
+    private int getColor(PayerDebt payerDebt) {
+        return ColorUtils.getNumColor(payerDebt.getNumberInList());
     }
 }

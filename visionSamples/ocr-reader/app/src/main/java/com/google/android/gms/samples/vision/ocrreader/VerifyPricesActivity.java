@@ -12,7 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.samples.vision.ocrreader.adapters.VerifyPricesAdapter;
-import com.google.android.gms.samples.vision.ocrreader.calculate.AllocatedPrice;
+import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
 import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
 import com.google.android.gms.samples.vision.ocrreader.ocr.OcrCaptureActivity;
 
@@ -21,7 +21,7 @@ import java.util.Collections;
 
 public class VerifyPricesActivity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = "Verify Prices";
-    ArrayList<AllocatedPrice> priceList;
+    ArrayList<AssignedPrice> priceList;
     ListView priceListView;
     VerifyPricesAdapter priceAdapter;
     Button continueButton, appendButton;
@@ -66,7 +66,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
             Log.d(TAG, "with the right request code");
             if (intent != null) {
                 Log.d(TAG, "intent is not null");
-                ArrayList<AllocatedPrice> p2 = intent.getParcelableArrayListExtra(Utils.PRICES);
+                ArrayList<AssignedPrice> p2 = intent.getParcelableArrayListExtra(Utils.PRICES);
                 Log.d(TAG, "prices has " + priceList.size() + " and p2 has " + p2.size());
                 priceList.addAll(p2);
                 Log.d(TAG, "NOW prices has " + priceList.size());
@@ -83,7 +83,8 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         if(v.getId() == R.id.verify_continue_button) {
             Intent intent = new Intent(this, SelectPayersActivity.class);
-            intent.putParcelableArrayListExtra(Utils.PRICES, priceList);
+            ArrayList<AssignedPrice> cleanPriceList = Utils.removeNonItemRows(priceList);
+            intent.putParcelableArrayListExtra(Utils.PRICES, cleanPriceList);
             startActivity(intent);
         } else if(v.getId() == R.id.verify_append_prices_button) {
             // get Y value of last price

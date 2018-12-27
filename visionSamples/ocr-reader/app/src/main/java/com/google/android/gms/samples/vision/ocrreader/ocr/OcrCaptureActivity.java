@@ -42,10 +42,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.samples.vision.ocrreader.R;
 import com.google.android.gms.samples.vision.ocrreader.VerifyPricesActivity;
-import com.google.android.gms.samples.vision.ocrreader.calculate.AllocatedPrice;
+import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
 import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
-import com.google.android.gms.samples.vision.ocrreader.ocr.OcrDetectorProcessor;
-import com.google.android.gms.samples.vision.ocrreader.ocr.OcrGraphic;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.CameraSource;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.CameraSourcePreview;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
@@ -123,7 +121,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
         super.onStart();
         yOffset = getIntent().getFloatExtra(Utils.OFFSET, 0);
         mGraphicOverlay.setYOffset(yOffset);
-        ArrayList<AllocatedPrice> priceList = getIntent().getParcelableArrayListExtra(Utils.PRICES);
+        ArrayList<AssignedPrice> priceList = getIntent().getParcelableArrayListExtra(Utils.PRICES);
         mGraphicOverlay.setPreviousPriceList(priceList);
     }
 
@@ -349,7 +347,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
      */
     private boolean onTap(float rawX, float rawY) {
         mOcrDetectorProcessor.lock();
-        ArrayList<AllocatedPrice> priceList = mGraphicOverlay.getPriceList();
+        ArrayList<AssignedPrice> priceList = mGraphicOverlay.getPriceList();
 
         if(priceList.isEmpty()) {
             mOcrDetectorProcessor.unlock();
@@ -373,7 +371,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
 
     @Override
     public void triggerPicture() {
-        ArrayList<AllocatedPrice> priceList = mGraphicOverlay.getPriceList();
+        ArrayList<AssignedPrice> priceList = mGraphicOverlay.getPriceList();
         Intent intent = new Intent(this, VerifyPricesActivity.class);
         intent.putParcelableArrayListExtra(Utils.PRICES, priceList);
         startActivity(intent);

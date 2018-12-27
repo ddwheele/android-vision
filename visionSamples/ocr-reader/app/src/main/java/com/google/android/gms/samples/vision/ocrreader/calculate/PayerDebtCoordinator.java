@@ -38,7 +38,7 @@ public class PayerDebtCoordinator implements Parcelable {
         return payerDebtList;
     }
 
-    public void addPayerToItem(PayerDebt payer, AllocatedPrice item) {
+    public void addPayerToItem(PayerDebt payer, AssignedPrice item) {
         if(payer == null || item == null) {
             return;
         }
@@ -60,7 +60,7 @@ public class PayerDebtCoordinator implements Parcelable {
         }
     }
 
-    public void removeLastPayerFromItem(AllocatedPrice item) {
+    public void removeLastPayerFromItem(AssignedPrice item) {
         if(item == null) {
             return;
         }
@@ -69,7 +69,7 @@ public class PayerDebtCoordinator implements Parcelable {
     }
 
 
-    public void removePayerFromItem(PayerDebt payer, AllocatedPrice item) {
+    public void removePayerFromItem(PayerDebt payer, AssignedPrice item) {
         if(payer == null || item == null) {
             return;
         }
@@ -77,7 +77,6 @@ public class PayerDebtCoordinator implements Parcelable {
         payer.removeItem(item);
 
         ArrayList<String> payersLeft = item.getPayers();
-
 
         if(payersLeft.isEmpty()) {
             // nobody left to pay for it

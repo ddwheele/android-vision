@@ -7,9 +7,13 @@ import android.graphics.Color;
  */
 public class PayerDebtTotals extends PayerDebt {
 
-
     public PayerDebtTotals(String name) {
-        super(name, Color.BLACK);
+        super(name, 0);
+    }
+
+    @Override
+    public boolean isTotal() {
+        return true;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.google.android.gms.samples.vision.ocrreader.calculate;
 
-import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -9,8 +8,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class PayerDebt implements Parcelable {
+    private static final String TAG = "PayerDebt";
     final String name;
-    ArrayList<AllocatedPrice> items;
+    ArrayList<AssignedPrice> items;
     float subtotal;
     float total;
     boolean calculated = false; // have we calculated what he owes
@@ -25,39 +25,10 @@ public class PayerDebt implements Parcelable {
      * @param numberInList Payer's order in list (used for color)
      */
     public PayerDebt(String name, int numberInList) {
+        Log.e(TAG, "$$$$$$$$$$$ number in list = " + numberInList);
         this.name = name;
         items = new ArrayList<>();
         this.numberInList = numberInList;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    protected PayerDebt(Parcel in) {
-        name = in.readString();
-        items = in.createTypedArrayList(AllocatedPrice.CREATOR);
-        subtotal = in.readFloat();
-        total = in.readFloat();
-        calculated = in.readByte() != 0;
-        selected = in.readByte() != 0;
-        numberInList = in.readInt();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeTypedList(items);
-        dest.writeFloat(subtotal);
-        dest.writeFloat(total);
-        dest.writeByte((byte) (calculated ? 1 : 0));
-        dest.writeByte((byte) (selected ? 1 : 0));
-        dest.writeInt(numberInList);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public static final Creator<PayerDebt> CREATOR = new Creator<PayerDebt>() {
@@ -72,14 +43,32 @@ public class PayerDebt implements Parcelable {
         }
     };
 
-    public void addItem(AllocatedPrice ap) {
+    public String getName() {
+        return name;
+    }
+
+    public boolean isTotal() {
+        return false;
+    }
+
+    protected PayerDebt(Parcel in) {
+        name = in.readString();
+        items = in.createTypedArrayList(AssignedPrice.CREATOR);
+        subtotal = in.readFloat();
+        total = in.readFloat();
+        calculated = in.readByte() != 0;
+        selected = in.readByte() != 0;
+        numberInList = in.readInt();
+    }
+
+    public void addItem(AssignedPrice ap) {
         if(!items.contains(ap)) {
             items.add(ap);
         }
         calculated = false;
     }
 
-    public void removeItem(AllocatedPrice ap) {
+    public void removeItem(AssignedPrice ap) {
         items.remove(ap);
         calculate();
     }
@@ -134,7 +123,7 @@ public class PayerDebt implements Parcelable {
     // add to get subtotal, and add tax for total
     private void calculate() {
         subtotal = 0;
-        for(AllocatedPrice ap : items) {
+        for(AssignedPrice ap : items) {
             subtotal += ap.getPricePerPayer();
         }
         total = subtotal * (1 + Utils.taxRate);
@@ -146,22 +135,14 @@ public class PayerDebt implements Parcelable {
     }
 
     public String getSecondColumnString() {
-
-        Log.e("PayerDebt", "total = " + twoDecimalFormat.format(getTotal()));
+        Log.d("PayerDebt", "total = " + twoDecimalFormat.format(getTotal()));
         return twoDecimalFormat.format(getTotal());
     }
 
     public String getThirdColumnString() {
-        Log.e("PayerDebt", "Tip = " + twoDecimalFormat.format(getTotalAndTip()));
+        Log.d("PayerDebt", "Tip = " + twoDecimalFormat.format(getTotalAndTip()));
         return twoDecimalFormat.format(getTotalAndTip());
     }
-
-//    public int getThirdColumnBackgroundColor() {
-//        if(selected) {
-//            return Color.GREEN;
-//        }
-//        return Utils.BACKGROUND;
-//    }
 
     public int getNumberInList() {
         return numberInList;
@@ -178,5 +159,21 @@ public class PayerDebt implements Parcelable {
         else {
             selected = true;
         }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeTypedList(items);
+        dest.writeFloat(subtotal);
+        dest.writeFloat(total);
+        dest.writeByte((byte) (calculated ? 1 : 0));
+        dest.writeByte((byte) (selected ? 1 : 0));
+        dest.writeInt(numberInList);
     }
 }

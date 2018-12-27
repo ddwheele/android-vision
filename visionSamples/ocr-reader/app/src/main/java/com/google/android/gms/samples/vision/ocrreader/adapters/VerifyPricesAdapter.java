@@ -7,16 +7,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.google.android.gms.samples.vision.ocrreader.calculate.AllocatedPrice;
+import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
 import com.google.android.gms.samples.vision.ocrreader.R;
 
 import java.util.ArrayList;
 
 public class VerifyPricesAdapter extends ArrayAdapter {
     private final Context context;
-    private final ArrayList<AllocatedPrice> values;
+    private final ArrayList<AssignedPrice> values;
 
-    public VerifyPricesAdapter(Context context, ArrayList<AllocatedPrice> values) {
+    public VerifyPricesAdapter(Context context, ArrayList<AssignedPrice> values) {
         super(context, -1, values);
         this.context = context;
         this.values = values;

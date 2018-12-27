@@ -22,7 +22,7 @@ import android.view.View;
 
 import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
 import com.google.android.gms.samples.vision.ocrreader.ocr.OcrGraphic;
-import com.google.android.gms.samples.vision.ocrreader.calculate.AllocatedPrice;
+import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
 import com.google.android.gms.vision.CameraSource;
 
 import java.util.ArrayList;
@@ -59,8 +59,8 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     private Set<RectangleGraphic> otherGraphics = new HashSet<>();
     private float width = 3000; // width of the image that this is on (to find prices)
     private float yOffset = 0; // if this is the second page or more, offset the y value
-    private ArrayList<AllocatedPrice> previousPriceList; // from previous pics of receipt
-    private ArrayList<AllocatedPrice> precomputedPriceList = new ArrayList<>();
+    private ArrayList<AssignedPrice> previousPriceList; // from previous pics of receipt
+    private ArrayList<AssignedPrice> precomputedPriceList = new ArrayList<>();
 
     public GraphicOverlay(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -88,15 +88,15 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     /**
      * @return all prices in mGraphics in a flat list instead of hierarchy
      */
-    private ArrayList<AllocatedPrice> flattenPriceList() {
-        ArrayList<AllocatedPrice> ret = new ArrayList<>();
+    private ArrayList<AssignedPrice> flattenPriceList() {
+        ArrayList<AssignedPrice> ret = new ArrayList<>();
         for(T g : mGraphics) {
             ret.addAll(((OcrGraphic)g).getMyPrices());
         }
         return ret;
     }
 
-    public ArrayList<AllocatedPrice> getPriceList() {
+    public ArrayList<AssignedPrice> getPriceList() {
         return precomputedPriceList;
     }
 
@@ -111,7 +111,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
         yOffset = offset;
     }
 
-    public void setPreviousPriceList(ArrayList<AllocatedPrice> oldList) {
+    public void setPreviousPriceList(ArrayList<AssignedPrice> oldList) {
         previousPriceList = oldList;
     }
 

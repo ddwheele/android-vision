@@ -2,6 +2,8 @@ package com.google.android.gms.samples.vision.ocrreader.calculate;
 
 import android.util.Log;
 
+import com.google.android.gms.samples.vision.ocrreader.ColorUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -23,13 +25,27 @@ public class Utils {
     }
 
     /**
+     * Remove rows for total, subtotal, and tax
+     * @param prices list to clean
+     */
+    public static ArrayList<AssignedPrice> removeNonItemRows(ArrayList<AssignedPrice> prices) {
+        ArrayList<AssignedPrice> newList = new ArrayList<>();
+        for(AssignedPrice p : prices) {
+            if(p.isItem()) {
+                newList.add(p);
+            }
+        }
+        return newList;
+    }
+
+    /**
      * Also adds a row for totals
      * @param payers
      * @return list of PayerDebts ready for assignment
      */
     public static ArrayList<PayerDebt> createPayerDebtList(ArrayList<String> payers) {
         ArrayList<PayerDebt> ret = new ArrayList<>();
-        int payerCounter = 0;
+        int payerCounter = ColorUtils.COUNTER_START;
         for(String p : payers) {
             PayerDebt pd = new PayerDebt(p, payerCounter);
             ret.add(pd);
@@ -39,16 +55,16 @@ public class Utils {
         return ret;
     }
 
-    public static boolean labelSubtotalTaxAndTotal(ArrayList<AllocatedPrice> prices) {
+    public static boolean labelSubtotalTaxAndTotal(ArrayList<AssignedPrice> prices) {
         if(prices.size() < 1) {
             return false;
         }
         Collections.sort(prices);
 
         int lastPriceIndex = prices.size()-1;
-        AllocatedPrice totalAllocatedPrice =  prices.get(lastPriceIndex);
-        totalAllocatedPrice.labelAsTotal();
-        float total = totalAllocatedPrice.getPrice(); // assume last item is total
+        AssignedPrice totalAssignedPrice =  prices.get(lastPriceIndex);
+        totalAssignedPrice.labelAsTotal();
+        float total = totalAssignedPrice.getPrice(); // assume last item is total
         Log.d(TAG, "============================");
         Log.d(TAG, "TOTAL = " + total);
         float calcSubtotal = 0; // from summing items
@@ -59,7 +75,7 @@ public class Utils {
 
         Log.d(TAG, "prices size is " + prices.size());
         for(int i=lastPriceIndex; i>=0; i--) {
-            AllocatedPrice p = prices.get(i);
+            AssignedPrice p = prices.get(i);
             Log.d(TAG, "Price " + p);
             float price = p.getPrice();
             if(floatEquals(price, total)) {
@@ -128,8 +144,8 @@ public class Utils {
         return false;
     }
 
-    private static void resetLabelsToItem(ArrayList<AllocatedPrice> prices) {
-        for(AllocatedPrice p : prices) {
+    private static void resetLabelsToItem(ArrayList<AssignedPrice> prices) {
+        for(AssignedPrice p : prices) {
             p.labelAsItem();
         }
     }

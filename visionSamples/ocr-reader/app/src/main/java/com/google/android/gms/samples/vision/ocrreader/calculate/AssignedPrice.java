@@ -58,8 +58,8 @@ enum Category implements Parcelable
  * - if it is subtotal, tax, and total
  * - list of who's paying for it
  */
-public class AllocatedPrice implements Parcelable, Comparable {
-    final String TAG = "Allocated Price";
+public class AssignedPrice implements Parcelable, Comparable {
+    final String TAG = "Assigned Price";
     final private float yValue;
     final private float price;
     private Category category;
@@ -71,29 +71,29 @@ public class AllocatedPrice implements Parcelable, Comparable {
         return getCategoryString() + ": $" + price + ", "+getPayerString();
     }
 
-    public AllocatedPrice(float yValue, float price) {
+    public AssignedPrice(float yValue, float price) {
         this.yValue = yValue;
         this.price = price;
         category = Category.ITEM; // assume most common category
         payers = new ArrayList<>();
     }
 
-    protected AllocatedPrice(Parcel in) {
+    protected AssignedPrice(Parcel in) {
         yValue = in.readFloat();
         price = in.readFloat();
         category = in.readParcelable(Category.class.getClassLoader());
         payers = in.createStringArrayList();
     }
 
-    public static final Creator<AllocatedPrice> CREATOR = new Creator<AllocatedPrice>() {
+    public static final Creator<AssignedPrice> CREATOR = new Creator<AssignedPrice>() {
         @Override
-        public AllocatedPrice createFromParcel(Parcel in) {
-            return new AllocatedPrice(in);
+        public AssignedPrice createFromParcel(Parcel in) {
+            return new AssignedPrice(in);
         }
 
         @Override
-        public AllocatedPrice[] newArray(int size) {
-            return new AllocatedPrice[size];
+        public AssignedPrice[] newArray(int size) {
+            return new AssignedPrice[size];
         }
     };
 
@@ -181,11 +181,11 @@ public class AllocatedPrice implements Parcelable, Comparable {
     }
 
     public int compareTo(Object o) {
-        if(o instanceof AllocatedPrice) {
-            if (((AllocatedPrice) o).yValue < yValue) {
+        if(o instanceof AssignedPrice) {
+            if (((AssignedPrice) o).yValue < yValue) {
                 return 1;
             }
-            if(((AllocatedPrice) o).yValue > yValue) {
+            if(((AssignedPrice) o).yValue > yValue) {
                 return -1;
             }
         }
@@ -217,35 +217,11 @@ public class AllocatedPrice implements Parcelable, Comparable {
         return getPayerString();
     }
 
-    public int getFirstColumnTextColor() {
-        if(isItem()) {
-            if(payers.isEmpty()) {
-                return Color.rgb(231, 76, 60);
-            } else {
-                return Color.rgb(39, 174, 96);
-            }
-        }
-        return Color.WHITE;
-    }
-
-//
-//    public int getSecondColumnBackgroundColor() {
-//
-//    }
-
-    public int getSecondColumnTextColor() {
-        return getFirstColumnTextColor();
-    }
-
-
-//    public int getThirdColumnBackgroundColor() {
-////        if(isItem() && payers.isEmpty()) {
-////            return Color.BLACK;
-////        }
-//        return Utils.BACKGROUND;
-//    }
-
-    boolean isItem() {
+    public boolean isItem() {
         return category == Category.ITEM;
+    }
+
+    public boolean hasNoPayers() {
+        return payers.isEmpty();
     }
 }

@@ -70,7 +70,7 @@ public class OcrDetectorProcessor implements Detector.Processor<TextBlock> {
         }
         if(mGraphicOverlay.isConsistent()) {
             lock();
-            Log.e(TAG, "It was consistent, I locked it");
+            Log.d(TAG, "It was consistent, I locked it");
             if(pictureTrigger != null) {
                 pictureTrigger.triggerPicture();
             }

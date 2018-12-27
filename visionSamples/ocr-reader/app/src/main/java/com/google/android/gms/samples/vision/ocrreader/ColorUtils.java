@@ -9,11 +9,16 @@ import static android.graphics.Color.rgb;
 public class ColorUtils {
     public static final int BACKGROUND = Color.WHITE;
 
+    public static final int COUNTER_START = 1; // to reserve black for the total
+
     static ArrayList<Integer> colorList;
     static boolean colorListSetup = false;
 
     private static void setupColorList() {
         colorList = new ArrayList<>();
+
+        colorList.add(Color.BLACK);
+
         colorList.add(rgb(33,97,140)); // dark blue
         colorList.add(rgb(206, 97, 85)); // salmon
         colorList.add(rgb(212, 172, 13)); // dark yellow
@@ -27,7 +32,6 @@ public class ColorUtils {
         colorList.add(rgb(93,173, 226)); // cyan
 
         colorList.add(rgb(133, 146, 158)); //gray
-
     }
 
     public static int getNumColor(int index) {

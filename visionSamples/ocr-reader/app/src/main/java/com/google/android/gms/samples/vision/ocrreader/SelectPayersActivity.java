@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.samples.vision.ocrreader.calculate.AllocatedPrice;
+import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
 import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
 
 import java.util.ArrayList;
@@ -136,7 +136,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
         }
         else if(v.getId() == R.id.select_continue) {
             Intent intent = new Intent(this, AssignPayersActivity.class);
-            ArrayList<AllocatedPrice> pricesList = getIntent().getParcelableArrayListExtra(Utils.PRICES);
+            ArrayList<AssignedPrice> pricesList = getIntent().getParcelableArrayListExtra(Utils.PRICES);
             intent.putParcelableArrayListExtra(Utils.PRICES, pricesList);
             intent.putStringArrayListExtra(Utils.PAYERS, payers);
             startActivity(intent);
