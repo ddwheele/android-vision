@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.android.gms.samples.vision.ocrreader;
+package com.google.android.gms.samples.vision.ocrreader.ocr;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -40,6 +40,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.samples.vision.ocrreader.R;
+import com.google.android.gms.samples.vision.ocrreader.VerifyPricesActivity;
 import com.google.android.gms.samples.vision.ocrreader.calculate.AllocatedPrice;
 import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
 import com.google.android.gms.samples.vision.ocrreader.ocr.OcrDetectorProcessor;

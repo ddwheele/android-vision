@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.google.android.gms.samples.vision.ocrreader.adapters.VerifyPricesAdapter;
 import com.google.android.gms.samples.vision.ocrreader.calculate.AllocatedPrice;
 import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
+import com.google.android.gms.samples.vision.ocrreader.ocr.OcrCaptureActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
