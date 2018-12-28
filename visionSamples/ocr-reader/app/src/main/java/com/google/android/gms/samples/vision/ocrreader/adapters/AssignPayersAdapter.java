@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.google.android.gms.samples.vision.ocrreader.ColorUtils;
 import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
 import com.google.android.gms.samples.vision.ocrreader.R;
 
@@ -17,8 +18,6 @@ import java.util.ArrayList;
 public class AssignPayersAdapter extends ArrayAdapter<AssignedPrice> {
     private final Context context;
     private final ArrayList<AssignedPrice> values;
-    private int greenColor = Color.rgb(39, 174, 96);
-    private int redColor = Color.rgb(231, 76, 60);
 
     public AssignPayersAdapter(Context context, ArrayList<AssignedPrice> values) {
         super(context, -1, values);
@@ -50,10 +49,10 @@ public class AssignPayersAdapter extends ArrayAdapter<AssignedPrice> {
     private int getColor(AssignedPrice assignedPrice) {
         if(assignedPrice.isItem()) {
             if(assignedPrice.hasNoPayers()) {
-                return redColor;
+                return ColorUtils.MY_RED_COLOR;
             }
             else {
-                return greenColor;
+                return ColorUtils.MY_GREEN_COLOR;
             }
         }
         else {

@@ -14,6 +14,9 @@ public class ColorUtils {
     static ArrayList<Integer> colorList;
     static boolean colorListSetup = false;
 
+    public static int MY_GREEN_COLOR = Color.rgb(39, 174, 96);
+    public static int MY_RED_COLOR = Color.rgb(231, 76, 60);
+
     private static void setupColorList() {
         colorList = new ArrayList<>();
 

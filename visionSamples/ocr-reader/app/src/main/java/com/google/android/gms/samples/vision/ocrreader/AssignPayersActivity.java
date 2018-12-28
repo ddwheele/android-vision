@@ -141,7 +141,7 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
 
     private void showInfoToast() {
         Toast toast = Toast.makeText(getApplicationContext(),
-                "Tap payer and item to assign to assign payer to item.",
+                "Tap payer and item to assign payer to item.",
                 Toast.LENGTH_LONG);
         toast.show();
     }

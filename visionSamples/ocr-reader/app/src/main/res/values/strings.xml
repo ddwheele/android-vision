@@ -26,7 +26,8 @@
     <string name="correct_continue">Continue</string>
     <string name="verify_start_over">Start Over</string>
     <string name="verify_flash">Flash</string>
-    <string name="verify_append_prices">Add More Prices</string>
+    <string name="verify_append_prices">Read More Prices</string>
+    <string name="verify_add_a_price">Add A Price</string>
     <string name="verify_continue">Add Payers</string>
     <string name="select_contact_button">Select From Contacts</string>
     <string name="select_manual_add">Add</string>

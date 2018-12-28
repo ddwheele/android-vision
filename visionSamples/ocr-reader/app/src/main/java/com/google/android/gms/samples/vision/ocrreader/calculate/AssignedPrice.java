@@ -61,7 +61,7 @@ enum Category implements Parcelable
 public class AssignedPrice implements Parcelable, Comparable {
     final String TAG = "Assigned Price";
     final private float yValue;
-    final private float price;
+    private float price;
     private Category category;
     private ArrayList<String> payers;
     public static final DecimalFormat df2 = new DecimalFormat( "#.00" );
@@ -178,6 +178,10 @@ public class AssignedPrice implements Parcelable, Comparable {
             return price / (float) splitBy;
         }
         return 0;
+    }
+
+    public void updatePrice(float newPrice) {
+        price = newPrice;
     }
 
     public int compareTo(Object o) {

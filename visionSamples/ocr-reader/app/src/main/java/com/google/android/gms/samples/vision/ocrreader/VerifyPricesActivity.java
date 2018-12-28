@@ -1,5 +1,8 @@
 package com.google.android.gms.samples.vision.ocrreader;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,7 +28,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
     ArrayList<AssignedPrice> priceList;
     ListView priceListView;
     VerifyPricesAdapter priceAdapter;
-    Button continueButton, appendButton;
+    Button continueButton, readMoreButton, addButton;
     TextView topMessage;
 
     private static final int VF_OCR_CAPTURE = 9016;
@@ -35,7 +39,8 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_verify);
 
         continueButton = findViewById(R.id.verify_continue_button);
-        appendButton = findViewById(R.id.verify_append_prices_button);
+        readMoreButton = findViewById(R.id.verify_append_prices_button);
+        addButton = findViewById(R.id.verify_add_a_price_button);
         topMessage = findViewById(R.id.prices_to_verify);
 
         priceList = getIntent().getParcelableArrayListExtra(Utils.PRICES);
@@ -49,14 +54,60 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
-               //TODO let user correct the price
+                AssignedPrice selectedPrice = (AssignedPrice) parent.getItemAtPosition(position);
+                showCorrectAnItemDialog(VerifyPricesActivity.this, selectedPrice);
+
             }
         });
 
         continueButton.setOnClickListener(this);
-        appendButton.setOnClickListener(this);
+        readMoreButton.setOnClickListener(this);
+        addButton.setOnClickListener(this);
 
         parsePrices();
+    }
+
+    private void showCorrectAnItemDialog(Context c, final AssignedPrice selectedPrice) {
+        final EditText taskEditText = new EditText(c);
+        AlertDialog dialog = new AlertDialog.Builder(c)
+                .setTitle("Change Price")
+                .setMessage("Input correct price")
+                .setView(taskEditText)
+                .setPositiveButton("Change", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newPrice = String.valueOf(taskEditText.getText());
+                        Log.e(TAG, "Change price to " + newPrice);
+                        selectedPrice.updatePrice(Float.valueOf(newPrice));
+                        Log.e(TAG, "Price Updated");
+                        parsePrices();
+                        Log.e(TAG, "Prices reparsed!");
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.show();
+    }
+
+    private void showAddItemDialog(Context c) {
+        final EditText taskEditText = new EditText(c);
+        AlertDialog dialog = new AlertDialog.Builder(c)
+                .setTitle("Add Price")
+                .setMessage("Input a price")
+                .setView(taskEditText)
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newPrice = String.valueOf(taskEditText.getText());
+                        priceList.add(new AssignedPrice(-1, Float.valueOf(newPrice)));
+                        Log.e(TAG, "Price Added");
+                        parsePrices();
+                        Log.e(TAG, "Prices Reparsed!");
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.show();
     }
 
     @Override
@@ -86,9 +137,12 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
             ArrayList<AssignedPrice> cleanPriceList = Utils.removeNonItemRows(priceList);
             intent.putParcelableArrayListExtra(Utils.PRICES, cleanPriceList);
             startActivity(intent);
+        } else if(v.getId() == R.id.verify_add_a_price_button) {
+            // add a new price at the top
+            showAddItemDialog(VerifyPricesActivity.this);
         } else if(v.getId() == R.id.verify_append_prices_button) {
             // get Y value of last price
-            // TODO is it stil guaranteed to be sorted from the last parsing?
+            // TODO is it still guaranteed to be sorted from the last parsing?
             Collections.sort(priceList);
             float offset = priceList.get(priceList.size()-1).getYValue();
             Intent intent = new Intent(this, OcrCaptureActivity.class);
@@ -111,18 +165,19 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
 
     private void parseNotSuccessful() {
         setTitle("Partial Receipt");
-        topMessage.setText("Add more prices or try again.");
-        topMessage.setTextColor(Color.CYAN);
-        appendButton.setEnabled(true);
+        topMessage.setText("Correct these prices or read in more.");
+        topMessage.setTextColor(ColorUtils.MY_RED_COLOR);
+        readMoreButton.setEnabled(true);
         continueButton.setEnabled(false);
         Log.e(TAG, "not success ");
     }
 
     private void parseSuccessful() {
         setTitle("Verify Prices");
-        topMessage.setText("Prices detected:\n");
-        appendButton.setEnabled(false);
+        topMessage.setText("Prices Verified");
+        topMessage.setTextColor(ColorUtils.MY_GREEN_COLOR);
+        readMoreButton.setEnabled(false);
         continueButton.setEnabled(true);
-        Log.d(TAG, "SUCCESS!!!!!!!!!!! " );
+        Log.e(TAG, "SUCCESS!!!!!!!!!!! " );
     }
 }

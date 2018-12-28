@@ -44,6 +44,9 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Select payers from Contact List, type in payer names, or tap on recent payer names
+ */
 public class SelectPayersActivity extends AppCompatActivity implements View.OnClickListener {
     String TAG = "Select Payers";
     static final int PICK_CONTACT = 1;
@@ -58,6 +61,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     ArrayList<PayerTagGraphic> payerTags;
     private String filepath = "MyFileStorage";
     File myExternalFile;
+    boolean hasPayerCloud = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,9 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     }
 
     protected void setupOldPayerTags() {
+        if(hasPayerCloud) {
+            return;
+        }
         payerTags = new ArrayList<>();
 
         TagLayout tagLayout = findViewById(R.id.old_payer_cloud);
@@ -100,6 +107,9 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                 @Override
                 public void onClick(View v) {
                     // add payerName to list
+                    if(payerList.contains(payerName)) {
+                        return;
+                    }
                     payerList.add(payerName);
                     adapter.notifyDataSetChanged();
                     continueButton.setEnabled(true);
@@ -111,6 +121,9 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
             tagLayout.addView(tagView);
             counter++;
             Log.e(TAG, "Added " + name + " to Payer Cloud");
+        }
+        if(!payerTags.isEmpty()) {
+            hasPayerCloud = true;
         }
     }
 
@@ -249,8 +262,6 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(payerList);
             oos.close();
-//            fos.write(str.getBytes());
-//            fos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -283,11 +294,6 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
 
         if (oldPayerList == null) {
             oldPayerList = new ArrayList<>();
-        }
-        if(oldPayerList.isEmpty()) {
-            oldPayerList.add("Athena");
-            oldPayerList.add("Hercules");
-            oldPayerList.add("Theo");
         }
     }
 
