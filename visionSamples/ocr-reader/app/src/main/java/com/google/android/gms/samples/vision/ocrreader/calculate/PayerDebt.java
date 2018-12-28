@@ -25,7 +25,7 @@ public class PayerDebt implements Parcelable {
      * @param numberInList Payer's order in list (used for color)
      */
     public PayerDebt(String name, int numberInList) {
-        Log.e(TAG, "$$$$$$$$$$$ number in list = " + numberInList);
+        Log.d(TAG, "$$$$$$$$$$$ number in list = " + numberInList);
         this.name = name;
         items = new ArrayList<>();
         this.numberInList = numberInList;

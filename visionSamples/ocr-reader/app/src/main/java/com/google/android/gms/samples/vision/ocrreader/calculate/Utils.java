@@ -87,7 +87,7 @@ public class Utils {
                 tax = price;
                 p.labelAsTax();
                 foundTax = true;
-                Log.e(TAG, "TAX = " + tax);
+                Log.d(TAG, "TAX = " + tax);
             }
             // don't think they ever repeat tax, and what if tax happens to match an item price?
 //            else if(floatEquals(price, tax)) { // must have found tax already

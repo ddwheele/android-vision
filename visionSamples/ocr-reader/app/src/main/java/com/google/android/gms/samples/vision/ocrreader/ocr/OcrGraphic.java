@@ -188,14 +188,14 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
                         // make sure it is not a zip code
                         Matcher reject = rejectRegexPattern.matcher(text);
                         if(reject.find()) {
-                            Log.e(TAG, "Rejecting: " + text);
+                            Log.d(TAG, "Rejecting: " + text);
                             continue;
                         }
 
                         String d = m.group("dollars");
                         String c = m.group("cents");
                         String numberString = d + "." + c;
-                        Log.e(TAG, "MATCHED " + numberString);
+                        Log.d(TAG, "MATCHED " + numberString);
                         float price = Float.valueOf(numberString);
                         if("-".equals(m.group("neg"))) {
                             price = -price;
@@ -232,11 +232,6 @@ public class OcrGraphic extends GraphicOverlay.Graphic {
         if (text == null) {
             return;
         }
-
-//        // don't draw non-prices, they are just clutter
-//        if(currentRectPaint != sRectPaintSelected) {
-//            return;
-//        }
 
         // Draws the bounding box around the TextBlock.
         RectF rect = new RectF(text.getBoundingBox());
