@@ -243,8 +243,11 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
 
         try {
             FileOutputStream fos = new FileOutputStream(myExternalFile);
-            fos.write(str.getBytes());
-            fos.close();
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(payerList);
+            oos.close();
+//            fos.write(str.getBytes());
+//            fos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -261,18 +264,28 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
         String myData = "";
         try {
             FileInputStream fis = new FileInputStream(myExternalFile);
-            DataInputStream in = new DataInputStream(fis);
-            BufferedReader br =
-                    new BufferedReader(new InputStreamReader(in));
-            String strLine;
-            while ((strLine = br.readLine()) != null) {
-                myData = myData + strLine;
+            ObjectInputStream ois = new ObjectInputStream(fis);
+
+            oldPayerList = (ArrayList<String>) ois.readObject();
+
+            ois.close();
+
+            Log.e(TAG, "GOT DATA!!!!!!! " );
+            for(String s : oldPayerList) {
+                Log.e(TAG, "\t" + s);
             }
-            in.close();
-        } catch (IOException e) {
+
+//            DataInputStream in = new DataInputStream(fis);
+//            BufferedReader br =
+//                    new BufferedReader(new InputStreamReader(in));
+//            String strLine;
+//            while ((strLine = br.readLine()) != null) {
+//                myData = myData + strLine;
+//            }
+//            in.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.e(TAG, "GOT DATA!!!!!!! " + myData);
     }
 
     /* Checks if external storage is available for read and write */
