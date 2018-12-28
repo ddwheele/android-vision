@@ -70,7 +70,6 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
         findViewById(R.id.select_contact_button).setOnClickListener(this);
 
         makeManualInput();
-        setupOldPayerTags();
 
         continueButton = findViewById(R.id.select_continue);
         continueButton.setEnabled(false);
@@ -82,9 +81,10 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     protected void setupOldPayerTags() {
         payerTags = new ArrayList<>();
 
-        TagLayout tagLayout = findViewById(R.id.split_payer_cloud);
+        TagLayout tagLayout = findViewById(R.id.old_payer_cloud);
         LayoutInflater layoutInflater = getLayoutInflater();
         int counter = ColorUtils.COUNTER_START;
+        Log.e(TAG, "Making Payer Cloud");
         for (String name : oldPayerList) {
             View tagView = layoutInflater.inflate(R.layout.tag_layout, null, false);
 
@@ -110,6 +110,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
             payerTags.add(new PayerTagGraphic(payerName, payerColor, tagTextView));
             tagLayout.addView(tagView);
             counter++;
+            Log.e(TAG, "Added " + name + " to Payer Cloud");
         }
     }
 
@@ -164,7 +165,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     private void showToast() {
         // Show Toast message: "Long press on name to delete"
         if (!has_shown_toast) {
-            Toast toast = Toast.makeText(getApplicationContext(), "Long press on name to delete", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(), "Long press a name to delete", Toast.LENGTH_LONG);
             toast.show();
             has_shown_toast = true;
         }
@@ -231,6 +232,8 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
         Log.e(TAG, "*********** RESUMING **************");
         super.onResume();
         loadData();
+        setupOldPayerTags();
+
     }
 
     private void saveData() {
@@ -261,7 +264,6 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
             Log.e(TAG, "Readable");
         }
 
-        String myData = "";
         try {
             FileInputStream fis = new FileInputStream(myExternalFile);
             ObjectInputStream ois = new ObjectInputStream(fis);
@@ -275,16 +277,17 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                 Log.e(TAG, "\t" + s);
             }
 
-//            DataInputStream in = new DataInputStream(fis);
-//            BufferedReader br =
-//                    new BufferedReader(new InputStreamReader(in));
-//            String strLine;
-//            while ((strLine = br.readLine()) != null) {
-//                myData = myData + strLine;
-//            }
-//            in.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        if (oldPayerList == null) {
+            oldPayerList = new ArrayList<>();
+        }
+        if(oldPayerList.isEmpty()) {
+            oldPayerList.add("Athena");
+            oldPayerList.add("Hercules");
+            oldPayerList.add("Theo");
         }
     }
 
