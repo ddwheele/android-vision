@@ -56,7 +56,6 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
                                     int position, long id) {
                 AssignedPrice selectedPrice = (AssignedPrice) parent.getItemAtPosition(position);
                 showCorrectAnItemDialog(VerifyPricesActivity.this, selectedPrice);
-
             }
         });
 

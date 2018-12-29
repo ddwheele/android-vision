@@ -110,8 +110,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
-        Snackbar.make(mGraphicOverlay, "If receipt doesn't fit on the screen," +
-                        " tap when first set of prices are green.",
+        Snackbar.make(mGraphicOverlay, "Tap when prices are green",
                 Snackbar.LENGTH_LONG)
                 .show();
     }
