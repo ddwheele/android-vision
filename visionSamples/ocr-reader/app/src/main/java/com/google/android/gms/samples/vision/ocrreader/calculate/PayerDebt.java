@@ -4,31 +4,44 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class PayerDebt implements Parcelable {
+public class PayerDebt implements Parcelable, Serializable {
     private static final String TAG = "PayerDebt";
+    private static int count = 0;
     final String name;
+    String phoneNumber;
     ArrayList<AssignedPrice> items;
     float subtotal;
     float total;
     boolean calculated = false; // have we calculated what he owes
     boolean selected = false; // is this person selected in the Activity
-    final int numberInList;
+    final int numberInList; // Payer's order in list (used for color)
 
     DecimalFormat twoDecimalFormat = new DecimalFormat("#.00");
 
     /**
      * Keep track of items and prices assigned to payer
      * @param name Payer's name
-     * @param numberInList Payer's order in list (used for color)
      */
-    public PayerDebt(String name, int numberInList) {
+    public PayerDebt(String name) {
+        numberInList = count++;
         Log.d(TAG, "$$$$$$$$$$$ number in list = " + numberInList);
         this.name = name;
         items = new ArrayList<>();
-        this.numberInList = numberInList;
+    }
+
+    protected PayerDebt(Parcel in) {
+        name = in.readString();
+        phoneNumber = in.readString();
+        items = in.createTypedArrayList(AssignedPrice.CREATOR);
+        subtotal = in.readFloat();
+        total = in.readFloat();
+        calculated = in.readByte() != 0;
+        selected = in.readByte() != 0;
+        numberInList = in.readInt();
     }
 
     public static final Creator<PayerDebt> CREATOR = new Creator<PayerDebt>() {
@@ -51,15 +64,6 @@ public class PayerDebt implements Parcelable {
         return false;
     }
 
-    protected PayerDebt(Parcel in) {
-        name = in.readString();
-        items = in.createTypedArrayList(AssignedPrice.CREATOR);
-        subtotal = in.readFloat();
-        total = in.readFloat();
-        calculated = in.readByte() != 0;
-        selected = in.readByte() != 0;
-        numberInList = in.readInt();
-    }
 
     public void addItem(AssignedPrice ap) {
         if(!items.contains(ap)) {
@@ -161,6 +165,19 @@ public class PayerDebt implements Parcelable {
         }
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -169,6 +186,7 @@ public class PayerDebt implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
+        dest.writeString(phoneNumber);
         dest.writeTypedList(items);
         dest.writeFloat(subtotal);
         dest.writeFloat(total);

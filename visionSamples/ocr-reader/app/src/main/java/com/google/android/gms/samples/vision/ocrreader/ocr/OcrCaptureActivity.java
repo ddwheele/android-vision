@@ -95,7 +95,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
         mGraphicOverlay = findViewById(R.id.graphicOverlay);
 
         // read parameters from the intent used to launch the activity.
-        boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, true);
+        boolean autoFocus = true;
         boolean useFlash = true;
 
         // Check for the camera permission before accessing the camera.  If the
@@ -242,7 +242,9 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
         super.onPause();
         if (mPreview != null) {
             mPreview.stop();
-            mOcrDetectorProcessor.release();
+            if(mOcrDetectorProcessor != null) {
+                mOcrDetectorProcessor.release();
+            }
         }
     }
 
@@ -287,7 +289,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "Camera permission granted - initialize the camera source");
             // We have permission, so create the camerasource
-            boolean autoFocus = getIntent().getBooleanExtra(AutoFocus,false);
+            boolean autoFocus = true;
             boolean useFlash = true;
             createCameraSource(autoFocus, useFlash);
             return;

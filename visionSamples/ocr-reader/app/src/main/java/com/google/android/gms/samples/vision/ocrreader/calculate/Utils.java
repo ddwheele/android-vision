@@ -16,6 +16,7 @@ public class Utils {
     public static final String PAYERS = "payers";
     public static final String OFFSET = "offset";
     public static final String PAYER_COORDINATOR = "payer coordinator";
+    public static final String TOTAL = "Total";
 
     public static boolean floatEquals(float f1, float f2) {
         if(Math.abs(f1 - f2) < epsilon) {
@@ -36,23 +37,6 @@ public class Utils {
             }
         }
         return newList;
-    }
-
-    /**
-     * Also adds a row for totals
-     * @param payers
-     * @return list of PayerDebts ready for assignment
-     */
-    public static ArrayList<PayerDebt> createPayerDebtList(ArrayList<String> payers) {
-        ArrayList<PayerDebt> ret = new ArrayList<>();
-        int payerCounter = GuiUtils.COUNTER_START;
-        for(String p : payers) {
-            PayerDebt pd = new PayerDebt(p, payerCounter);
-            ret.add(pd);
-            payerCounter++;
-        }
-        ret.add(new PayerDebtTotals("Total"));
-        return ret;
     }
 
     public static boolean labelSubtotalTaxAndTotal(ArrayList<AssignedPrice> prices) {

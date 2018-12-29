@@ -16,6 +16,7 @@ import com.google.android.gms.samples.vision.ocrreader.adapters.AssignPayersAdap
 import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
 import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebt;
 import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebtCoordinator;
+import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebtTotals;
 import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
 
 import java.util.ArrayList;
@@ -59,20 +60,23 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
     }
 
     protected void setupPayerTags() {
-        ArrayList<String> payerList = getIntent().getStringArrayListExtra(Utils.PAYERS);
-        payerCoordinator = new PayerDebtCoordinator(payerList);
+        ArrayList<PayerDebt> payerDebtList = getIntent().getParcelableArrayListExtra(Utils.PAYERS);
+        payerCoordinator = new PayerDebtCoordinator(payerDebtList);
         totals = payerCoordinator.getTotals();
         payerTags = new ArrayList<>();
 
         TagLayout tagLayout = findViewById(R.id.split_payer_cloud);
         LayoutInflater layoutInflater = getLayoutInflater();
-        int counter = GuiUtils.COUNTER_START;
-        for (String name : payerList) {
+        for (PayerDebt payerDebt : payerDebtList) {
+            if(payerDebt instanceof PayerDebtTotals) {
+                // don't make a tag for "Total"
+                continue;
+            }
             View tagView = layoutInflater.inflate(R.layout.tag_layout, null, false);
 
             final TextView tagTextView = tagView.findViewById(R.id.tagTextView);
-            final String payerName = name;
-            final int payerColor = GuiUtils.getNumColor(counter);
+            final String payerName = payerDebt.getName();
+            final int payerColor = GuiUtils.getNumColor(payerDebt.getNumberInList());
             tagTextView.setText(payerName);
 
             GradientDrawable drawable = (GradientDrawable)tagTextView.getBackground();
@@ -107,7 +111,6 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
 
             payerTags.add(new PayerTagGraphic(payerName, payerColor, tagTextView));
             tagLayout.addView(tagView);
-            counter++;
         }
     }
 

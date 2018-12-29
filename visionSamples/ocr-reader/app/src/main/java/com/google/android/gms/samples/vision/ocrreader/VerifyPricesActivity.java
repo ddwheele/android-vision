@@ -165,6 +165,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
         setTitle("Partial Receipt");
         topMessage.setText("Correct these prices or read in more.");
         topMessage.setTextColor(GuiUtils.MY_RED_COLOR);
+        addButton.setEnabled(true);
         readMoreButton.setEnabled(true);
         continueButton.setEnabled(false);
         Log.e(TAG, "not success ");
@@ -175,6 +176,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
         topMessage.setText("Prices Verified");
         topMessage.setTextColor(GuiUtils.MY_GREEN_COLOR);
         readMoreButton.setEnabled(false);
+        addButton.setEnabled(false);
         continueButton.setEnabled(true);
         Log.e(TAG, "SUCCESS!!!!!!!!!!! " );
     }

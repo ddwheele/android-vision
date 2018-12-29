@@ -10,8 +10,9 @@ public class PayerDebtCoordinator implements Parcelable {
     ArrayList<PayerDebt> payerDebtList;
     PayerDebt totals;
 
-    public PayerDebtCoordinator(ArrayList<String> payerList) {
-        payerDebtList = Utils.createPayerDebtList(payerList);
+    public PayerDebtCoordinator(ArrayList<PayerDebt> payerList) {
+        payerDebtList = payerList;
+        payerDebtList.add(new PayerDebtTotals());
         totals = payerDebtList.get(payerDebtList.size()-1);
     }
 

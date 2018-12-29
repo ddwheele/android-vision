@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
+import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebt;
 import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
 
 import java.io.File;
@@ -42,10 +43,10 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     String TAG = "Select Payers";
     static final int PICK_CONTACT = 1;
     static final int GET_READ_CONTACT_PERMISSION = 55;
-    ArrayList<String> payerList = new ArrayList<>();
-    ArrayList<String> oldPayerList = new ArrayList<>();
+    ArrayList<PayerDebt> payerList = new ArrayList<>();
+    ArrayList<PayerDebt> oldPayerList = new ArrayList<>();
     ListView listView;
-    ArrayAdapter<String> adapter;
+    ArrayAdapter<PayerDebt> adapter;
     Button continueButton, addButton;
     private boolean has_shown_toast = false;
     EditText inputName;
@@ -83,13 +84,12 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
 
         TagLayout tagLayout = findViewById(R.id.old_payer_cloud);
         LayoutInflater layoutInflater = getLayoutInflater();
-        int counter = GuiUtils.COUNTER_START;
-        for (String name : oldPayerList) {
+        for (final PayerDebt payerDebt : oldPayerList) {
             View tagView = layoutInflater.inflate(R.layout.tag_layout, null, false);
 
             final TextView tagTextView = tagView.findViewById(R.id.tagTextView);
-            final String payerName = name;
-            final int payerColor = GuiUtils.getNumColor(counter);
+            final String payerName = payerDebt.getName();
+            final int payerColor = GuiUtils.getNumColor(payerDebt.getNumberInList());
             tagTextView.setText(payerName);
 
             GradientDrawable drawable = (GradientDrawable) tagTextView.getBackground();
@@ -99,10 +99,10 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                 @Override
                 public void onClick(View v) {
                     // add payerName to list
-                    if (payerList.contains(payerName)) {
+                    if (payerList.contains(payerDebt)) {
                         return;
                     }
-                    payerList.add(payerName);
+                    payerList.add(payerDebt);
                     adapter.notifyDataSetChanged();
                     continueButton.setEnabled(true);
                     showToast();
@@ -111,7 +111,6 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
 
             payerTags.add(new PayerTagGraphic(payerName, payerColor, tagTextView));
             tagLayout.addView(tagView);
-            counter++;
         }
         if (!payerTags.isEmpty()) {
             hasPayerCloud = true;
@@ -129,7 +128,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                         if (cur.moveToNext()) {
                             String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
                             String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                            payerList.add(name);
+                            PayerDebt pickedPayer = new PayerDebt(name);
                             Log.e(TAG, "Names: " + name);
 
                             if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
@@ -147,8 +146,8 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                                             // do something with the Home number here...
                                             break;
                                         case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
-                                            String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                                             String number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                                            pickedPayer.setPhoneNumber(number);
                                             Log.e(TAG, "MOBILE Number: " + number);
                                             break;
                                         case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
@@ -158,7 +157,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                                 }
                                 phones.close();
                             }
-
+                            payerList.add(pickedPayer);
                         }
                     }
                     cur.close();
@@ -173,7 +172,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.select_contact_button) {
-            if(GuiUtils.hasPermissions(SelectPayersActivity.this, permissions)) {
+            if (GuiUtils.hasPermissions(SelectPayersActivity.this, permissions)) {
                 Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 startActivityForResult(intent, PICK_CONTACT);
             } else {
@@ -185,7 +184,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
             if (newName.isEmpty()) {
                 return; // don't add blanks
             }
-            payerList.add(newName);
+            payerList.add(new PayerDebt(newName));
             adapter.notifyDataSetChanged();
             inputName.getText().clear();
             continueButton.setEnabled(true);
@@ -194,7 +193,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
             Intent intent = new Intent(this, AssignPayersActivity.class);
             ArrayList<AssignedPrice> pricesList = getIntent().getParcelableArrayListExtra(Utils.PRICES);
             intent.putParcelableArrayListExtra(Utils.PRICES, pricesList);
-            intent.putStringArrayListExtra(Utils.PAYERS, payerList);
+            intent.putParcelableArrayListExtra(Utils.PAYERS, payerList);
             startActivity(intent);
         }
     }
@@ -240,7 +239,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
-                final String item = (String) parent.getItemAtPosition(position);
+                final PayerDebt item = (PayerDebt) parent.getItemAtPosition(position);
                 view.animate().setDuration(750).alpha(0)
                         .withEndAction(new Runnable() {
                             @Override
@@ -272,7 +271,6 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void saveData() {
-        String str = "Saved data. Saved data. Saved data. ";
         if (!isExternalStorageWritable()) {
             Log.e(TAG, "External storage not writable");
         } else {
@@ -300,12 +298,12 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
             FileInputStream fis = new FileInputStream(myExternalFile);
             ObjectInputStream ois = new ObjectInputStream(fis);
 
-            oldPayerList = (ArrayList<String>) ois.readObject();
+            oldPayerList = (ArrayList<PayerDebt>) ois.readObject();
 
             ois.close();
 
-            for (String s : oldPayerList) {
-                Log.d(TAG, "\t" + s);
+            for (PayerDebt pd : oldPayerList) {
+                Log.d(TAG, "\t" + pd.getName() + ": " + pd.getPhoneNumber());
             }
 
         } catch (Exception e) {

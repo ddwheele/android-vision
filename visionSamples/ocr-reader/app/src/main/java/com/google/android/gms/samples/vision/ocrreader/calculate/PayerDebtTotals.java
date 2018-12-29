@@ -7,8 +7,8 @@ import android.graphics.Color;
  */
 public class PayerDebtTotals extends PayerDebt {
 
-    public PayerDebtTotals(String name) {
-        super(name, 0);
+    public PayerDebtTotals() {
+        super(Utils.TOTAL);
     }
 
     @Override

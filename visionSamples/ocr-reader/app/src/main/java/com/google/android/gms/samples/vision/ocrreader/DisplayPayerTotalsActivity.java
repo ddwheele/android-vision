@@ -94,7 +94,7 @@ public class DisplayPayerTotalsActivity extends Activity {
         String withTip = twoDecimalFormat.format(payerDebt.getTotalAndTip());
 
         message = "FairSplit:  $" + withTax + " with tax and $" + withTip + " with 15% tip.";
-        phoneNumber = null;
+        phoneNumber = payerDebt.getPhoneNumber();
         taskEditText.setText(message);
         AlertDialog dialog = new AlertDialog.Builder(c)
                 .setTitle("Send Text Message")
