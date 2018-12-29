@@ -19,6 +19,7 @@ public class PayerDebt implements Parcelable, Serializable {
     boolean calculated = false; // have we calculated what he owes
     boolean selected = false; // is this person selected in the Activity
     final int numberInList; // Payer's order in list (used for color)
+    float tipPercent = 0.15f;
 
     DecimalFormat twoDecimalFormat = new DecimalFormat("#.00");
 
@@ -102,20 +103,21 @@ public class PayerDebt implements Parcelable, Serializable {
         if(!calculated) {
             calculate();
         }
-        return total * tipPercent;
+        return subtotal * tipPercent;
+    }
+
+    public float getTipPercent() {
+        return tipPercent;
+    }
+
+    public void setTipPercent(float tipPercent) {
+        this.tipPercent = tipPercent;
     }
 
     /**
      * @return subtotal + tax + 15% tip
      */
     public float getTotalAndTip() {
-        return getTotal() + getTip(0.15f);
-    }
-
-    /**
-     * @return subtotal + tax + 15% tip
-     */
-    public float getTotalAndTip(float tipPercent) {
         return getTotal() + getTip(tipPercent);
     }
 

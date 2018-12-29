@@ -99,6 +99,15 @@ public class PayerDebtCoordinator implements Parcelable {
         return null;
     }
 
+    public void changeTipPercent(float tipPercent) {
+        if(tipPercent > 1) {
+            tipPercent /= 100;
+        }
+        for(PayerDebt pd: payerDebtList) {
+            pd.setTipPercent(tipPercent);
+        }
+    }
+
     @Override
     public int describeContents() {
         return 0;

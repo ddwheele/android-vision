@@ -8,12 +8,14 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.telephony.SmsManager;
@@ -37,7 +39,8 @@ public class DisplayPayerTotalsActivity extends Activity {
 
     String phoneNumber, message, nameToText;
     String[] permissions;
-
+    int tipPercent = 15;
+    TextView tipHeader;
     /**
      * Called when the activity is first created.
      */
@@ -56,11 +59,11 @@ public class DisplayPayerTotalsActivity extends Activity {
         View header = getLayoutInflater().inflate(R.layout.column_view, null);
         TextView header1 = header.findViewById(R.id.first_column);
         TextView header2 = header.findViewById(R.id.second_column);
-        TextView header3 = header.findViewById(R.id.third_column);
+        tipHeader = header.findViewById(R.id.third_column);
 
         header1.setText("Name");
         header2.setText("+Tax");
-        header3.setText("+Tip");
+        tipHeader.setText("+Tip");
         payerListView.addHeaderView(header);
 
         payerListView.setAdapter(payerAdapter);
@@ -70,20 +73,63 @@ public class DisplayPayerTotalsActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
+                if(position == 0) {
+                    // change the tip percentage
+                    showTipPercentPicker(DisplayPayerTotalsActivity.this);
+                    return;
+                }
+
                 PayerDebt payerDebt = (PayerDebt) parent.getItemAtPosition(position);
                 showSendSmSDialog(DisplayPayerTotalsActivity.this, payerDebt);
             }
         });
 
-        Log.e(TAG, "Android build version = " + android.os.Build.VERSION.SDK_INT);
-
-
         if (android.os.Build.VERSION.SDK_INT == 26) {
-            // stupid Google bug that they refuse to fix in 8.0
+            // stupid Android bug that Google refuses to fix in 8.0
             permissions = new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE};
         } else {
             permissions = new String[]{Manifest.permission.SEND_SMS};
         }
+    }
+
+    protected void changeTipPercent() {
+        tipHeader.setText("+" + tipPercent + "%" );
+        payerCoordinator.changeTipPercent(tipPercent);
+        payerAdapter.notifyDataSetChanged();
+    }
+
+    protected void showTipPercentPicker(Context context) {
+        final AlertDialog.Builder d = new AlertDialog.Builder(context);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.number_picker_dialog, null);
+        d.setTitle("Tip Percent");
+        d.setMessage("Select Tip Percent");
+        d.setView(dialogView);
+        final NumberPicker numberPicker = dialogView.findViewById(R.id.dialog_number_picker);
+        numberPicker.setMaxValue(100);
+        numberPicker.setMinValue(10);
+        numberPicker.setValue(tipPercent);
+        numberPicker.setWrapSelectorWheel(false);
+        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+                Log.d(TAG, "onValueChange: ");
+            }
+        });
+        d.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                tipPercent =  numberPicker.getValue();
+                changeTipPercent();
+            }
+        });
+        d.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        AlertDialog alertDialog = d.create();
+        alertDialog.show();
     }
 
     protected void showSendSmSDialog(Context c, final PayerDebt payerDebt) {
@@ -93,7 +139,7 @@ public class DisplayPayerTotalsActivity extends Activity {
         String withTax = twoDecimalFormat.format(payerDebt.getTotal());
         String withTip = twoDecimalFormat.format(payerDebt.getTotalAndTip());
 
-        message = "FairSplit:  $" + withTax + " with tax and $" + withTip + " with 15% tip.";
+        message = "FairSplit:  $" + withTax + " with tax and $" + withTip + " with " + tipPercent + "% tip.";
         phoneNumber = payerDebt.getPhoneNumber();
         taskEditText.setText(message);
         AlertDialog dialog = new AlertDialog.Builder(c)

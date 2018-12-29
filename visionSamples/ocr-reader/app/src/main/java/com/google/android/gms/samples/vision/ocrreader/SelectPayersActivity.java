@@ -112,9 +112,8 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
             payerTags.add(new PayerTagGraphic(payerName, payerColor, tagTextView));
             tagLayout.addView(tagView);
         }
-        if (!payerTags.isEmpty()) {
-            hasPayerCloud = true;
-        }
+
+        hasPayerCloud = true;
     }
 
     public void onActivityResult(int reqCode, int resultCode, Intent data) {

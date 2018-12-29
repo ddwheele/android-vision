@@ -29,6 +29,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
     VerifyPricesAdapter priceAdapter;
     Button continueButton, readMoreButton, addButton;
     TextView topMessage;
+    boolean pricesVerified = false;
 
     private static final int VF_OCR_CAPTURE = 9016;
 
@@ -53,6 +54,9 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
+                if(pricesVerified) {
+                    return;
+                }
                 AssignedPrice selectedPrice = (AssignedPrice) parent.getItemAtPosition(position);
                 showCorrectAnItemDialog(VerifyPricesActivity.this, selectedPrice);
             }
@@ -168,6 +172,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
         addButton.setEnabled(true);
         readMoreButton.setEnabled(true);
         continueButton.setEnabled(false);
+        pricesVerified = false;
         Log.e(TAG, "not success ");
     }
 
@@ -178,6 +183,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
         readMoreButton.setEnabled(false);
         addButton.setEnabled(false);
         continueButton.setEnabled(true);
+        pricesVerified = true;
         Log.e(TAG, "SUCCESS!!!!!!!!!!! " );
     }
 }
