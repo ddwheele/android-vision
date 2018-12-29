@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
@@ -77,7 +75,15 @@ public class DisplayPayerTotalsActivity extends Activity {
             }
         });
 
-        permissions = new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE};
+        Log.e(TAG, "Android build version = " + android.os.Build.VERSION.SDK_INT);
+
+
+        if (android.os.Build.VERSION.SDK_INT == 26) {
+            // stupid Google bug that they refuse to fix in 8.0
+            permissions = new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE};
+        } else {
+            permissions = new String[]{Manifest.permission.SEND_SMS};
+        }
     }
 
     protected void showSendSmSDialog(Context c, final PayerDebt payerDebt) {
@@ -87,7 +93,7 @@ public class DisplayPayerTotalsActivity extends Activity {
         String withTax = twoDecimalFormat.format(payerDebt.getTotal());
         String withTip = twoDecimalFormat.format(payerDebt.getTotalAndTip());
 
-        message = "FairSplit: $" + withTax + " with tax and $" + withTip + " with 15% tip.";
+        message = "FairSplit:  $" + withTax + " with tax and $" + withTip + " with 15% tip.";
         phoneNumber = null;
         taskEditText.setText(message);
         AlertDialog dialog = new AlertDialog.Builder(c)
@@ -98,57 +104,19 @@ public class DisplayPayerTotalsActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Log.e(TAG, "inside showSendSmSDialog onClick()");
-                        boolean granted = hasPermissions();
-
-                        if (granted) {
+                        if (GuiUtils.hasPermissions(DisplayPayerTotalsActivity.this, permissions)) {
                             Log.e(TAG, "inside showSendSmSDialog onClick() - granted");
                             sendSms();
                         } else {
                             Log.e(TAG, "inside showSendSmSDialog onClick() - not granted");
-                            requestPermissions();
+                            GuiUtils.requestPermissions(DisplayPayerTotalsActivity.this,
+                                    MY_PERMISSIONS_REQUEST_SEND_SMS, permissions);
                         }
                     }
                 })
                 .setNegativeButton("Cancel", null)
                 .create();
         dialog.show();
-    }
-
-    protected boolean hasPermissions() {
-        Log.e(TAG, "inside hasPermissions()");
-        if (permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(DisplayPayerTotalsActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
-                    Log.e(TAG, "inside hasPermissions() - returning false");
-                    return false;
-                }
-            }
-        }
-        Log.e(TAG, "inside hasPermissions() - returning true");
-        return true;
-    }
-
-    private void requestPermissions() {
-        Log.e(TAG, "****** Requesting permission");
-
-        final String[] permissions = new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE};
-
-        ActivityCompat.requestPermissions(this, permissions,
-                MY_PERMISSIONS_REQUEST_SEND_SMS);
-
-//        try {
-//            SmsManager.getDefault().sendTextMessage(msisdn, null, text, null, null);
-//            return false;
-//        } catch (Exception e) {
-//            if (e.toString().contains(Manifest.permission.READ_PHONE_STATE) && ContextCompat
-//                    .checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)!=
-//                    PackageManager.PERMISSION_GRANTED) {
-//                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission
-//                        .READ_PHONE_STATE}, DAJMI_KITU);
-//                return true;
-//            } // else it's some other exception
-//        }
-
     }
 
     @Override
@@ -161,7 +129,7 @@ public class DisplayPayerTotalsActivity extends Activity {
                     sendSms();
                 } else {
                     Toast.makeText(getApplicationContext(),
-                            "SMS failed, please try again.", Toast.LENGTH_LONG).show();
+                            "SMS failed, please try again", Toast.LENGTH_LONG).show();
                     return;
                 }
             }
@@ -194,7 +162,7 @@ public class DisplayPayerTotalsActivity extends Activity {
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(phoneNumber, null, message, null, null);
         Toast.makeText(
-                getApplicationContext(), "SMS sent.",
+                getApplicationContext(), "SMS sent",
                 Toast.LENGTH_LONG).
                 show();
 
@@ -203,41 +171,3 @@ public class DisplayPayerTotalsActivity extends Activity {
         message = null;
     }
 }
-
-//    private void checkPermission() {
-//
-//        if (ContextCompat.checkSelfPermission(this,
-//                Manifest.permission.SEND_SMS)
-//                != PackageManager.PERMISSION_GRANTED)
-//
-//        {
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                    Manifest.permission.SEND_SMS)) {
-//            } else {
-//                ActivityCompat.requestPermissions(this,
-//                        new String[]{Manifest.permission.SEND_SMS},
-//                        MY_PERMISSIONS_REQUEST_SEND_SMS);
-//            }
-//        }
-//    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

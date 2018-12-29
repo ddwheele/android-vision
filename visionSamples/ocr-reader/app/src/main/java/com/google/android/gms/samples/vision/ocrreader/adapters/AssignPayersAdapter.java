@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.google.android.gms.samples.vision.ocrreader.ColorUtils;
+import com.google.android.gms.samples.vision.ocrreader.GuiUtils;
 import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
 import com.google.android.gms.samples.vision.ocrreader.R;
 
@@ -49,10 +49,10 @@ public class AssignPayersAdapter extends ArrayAdapter<AssignedPrice> {
     private int getColor(AssignedPrice assignedPrice) {
         if(assignedPrice.isItem()) {
             if(assignedPrice.hasNoPayers()) {
-                return ColorUtils.MY_RED_COLOR;
+                return GuiUtils.MY_RED_COLOR;
             }
             else {
-                return ColorUtils.MY_GREEN_COLOR;
+                return GuiUtils.MY_GREEN_COLOR;
             }
         }
         else {

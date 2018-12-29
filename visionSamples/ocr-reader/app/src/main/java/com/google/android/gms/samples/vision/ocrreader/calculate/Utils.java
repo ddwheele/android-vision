@@ -2,7 +2,7 @@ package com.google.android.gms.samples.vision.ocrreader.calculate;
 
 import android.util.Log;
 
-import com.google.android.gms.samples.vision.ocrreader.ColorUtils;
+import com.google.android.gms.samples.vision.ocrreader.GuiUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +45,7 @@ public class Utils {
      */
     public static ArrayList<PayerDebt> createPayerDebtList(ArrayList<String> payers) {
         ArrayList<PayerDebt> ret = new ArrayList<>();
-        int payerCounter = ColorUtils.COUNTER_START;
+        int payerCounter = GuiUtils.COUNTER_START;
         for(String p : payers) {
             PayerDebt pd = new PayerDebt(p, payerCounter);
             ret.add(pd);

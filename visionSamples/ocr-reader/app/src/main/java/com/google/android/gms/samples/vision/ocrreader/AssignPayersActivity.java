@@ -66,13 +66,13 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
 
         TagLayout tagLayout = findViewById(R.id.split_payer_cloud);
         LayoutInflater layoutInflater = getLayoutInflater();
-        int counter = ColorUtils.COUNTER_START;
+        int counter = GuiUtils.COUNTER_START;
         for (String name : payerList) {
             View tagView = layoutInflater.inflate(R.layout.tag_layout, null, false);
 
             final TextView tagTextView = tagView.findViewById(R.id.tagTextView);
             final String payerName = name;
-            final int payerColor = ColorUtils.getNumColor(counter);
+            final int payerColor = GuiUtils.getNumColor(counter);
             tagTextView.setText(payerName);
 
             GradientDrawable drawable = (GradientDrawable)tagTextView.getBackground();

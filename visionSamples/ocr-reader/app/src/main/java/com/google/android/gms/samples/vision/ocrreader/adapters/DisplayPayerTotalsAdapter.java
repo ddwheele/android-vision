@@ -1,15 +1,13 @@
 package com.google.android.gms.samples.vision.ocrreader.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.google.android.gms.samples.vision.ocrreader.ColorUtils;
-import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
+import com.google.android.gms.samples.vision.ocrreader.GuiUtils;
 import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebt;
 import com.google.android.gms.samples.vision.ocrreader.R;
 
@@ -50,6 +48,6 @@ public class DisplayPayerTotalsAdapter extends ArrayAdapter<PayerDebt> {
     }
 
     private int getColor(PayerDebt payerDebt) {
-        return ColorUtils.getNumColor(payerDebt.getNumberInList());
+        return GuiUtils.getNumColor(payerDebt.getNumberInList());
     }
 }

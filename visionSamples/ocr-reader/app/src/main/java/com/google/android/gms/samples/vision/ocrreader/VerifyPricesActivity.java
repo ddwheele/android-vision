@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -165,7 +164,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
     private void parseNotSuccessful() {
         setTitle("Partial Receipt");
         topMessage.setText("Correct these prices or read in more.");
-        topMessage.setTextColor(ColorUtils.MY_RED_COLOR);
+        topMessage.setTextColor(GuiUtils.MY_RED_COLOR);
         readMoreButton.setEnabled(true);
         continueButton.setEnabled(false);
         Log.e(TAG, "not success ");
@@ -174,7 +173,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
     private void parseSuccessful() {
         setTitle("Verify Prices");
         topMessage.setText("Prices Verified");
-        topMessage.setTextColor(ColorUtils.MY_GREEN_COLOR);
+        topMessage.setTextColor(GuiUtils.MY_GREEN_COLOR);
         readMoreButton.setEnabled(false);
         continueButton.setEnabled(true);
         Log.e(TAG, "SUCCESS!!!!!!!!!!! " );
