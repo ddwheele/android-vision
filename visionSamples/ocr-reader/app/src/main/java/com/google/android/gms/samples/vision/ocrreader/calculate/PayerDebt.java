@@ -96,10 +96,9 @@ public class PayerDebt implements Parcelable, Serializable {
     }
 
     /**
-     * @param tipPercent 0.15 for 15%
      * @return total * tipPercent
      */
-    public float getTip(float tipPercent) {
+    public float getTip() {
         if(!calculated) {
             calculate();
         }
@@ -115,10 +114,10 @@ public class PayerDebt implements Parcelable, Serializable {
     }
 
     /**
-     * @return subtotal + tax + 15% tip
+     * @return subtotal + tax + tip
      */
     public float getTotalAndTip() {
-        return getTotal() + getTip(tipPercent);
+        return getTotal() + getTip();
     }
 
     public void recalculate() {
@@ -132,7 +131,7 @@ public class PayerDebt implements Parcelable, Serializable {
         for(AssignedPrice ap : items) {
             subtotal += ap.getPricePerPayer();
         }
-        total = subtotal * (1 + Utils.taxRate);
+        total = subtotal * (1 + CalcUtils.taxRate);
         calculated = true;
     }
 

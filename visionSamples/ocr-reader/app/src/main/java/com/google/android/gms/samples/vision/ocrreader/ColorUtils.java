@@ -1,26 +1,20 @@
 package com.google.android.gms.samples.vision.ocrreader;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.support.v4.app.ActivityCompat;
-import android.util.Log;
-
 import java.util.ArrayList;
 
 import static android.graphics.Color.rgb;
 
-public class GuiUtils {
+public class ColorUtils {
+    //https://htmlcolorcodes.com/color-chart/
+    private static final String TAG = "ColorUtils";
     public static final int BACKGROUND = Color.WHITE;
-
-    public static final int COUNTER_START = 1; // to reserve black for the total
-
-    static ArrayList<Integer> colorList;
-    static boolean colorListSetup = false;
 
     public static int MY_GREEN_COLOR = Color.rgb(39, 174, 96);
     public static int MY_RED_COLOR = Color.rgb(231, 76, 60);
+
+    static ArrayList<Integer> colorList;
+    static boolean colorListSetup = false;
 
     private static void setupColorList() {
         colorList = new ArrayList<>();
@@ -50,19 +44,5 @@ public class GuiUtils {
         return colorList.get(index%(colorList.size()));
     }
 
-    public static boolean hasPermissions(Context context, String... permissions) {
-        if (permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
-    public static void requestPermissions(Activity activity, int requestCode, String... permissions) {
-        ActivityCompat.requestPermissions(activity, permissions,
-                requestCode);
-    }
 }

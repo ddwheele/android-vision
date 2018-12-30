@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.google.android.gms.samples.vision.ocrreader.GuiUtils;
+import com.google.android.gms.samples.vision.ocrreader.ColorUtils;
 import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebt;
 import com.google.android.gms.samples.vision.ocrreader.R;
 
@@ -48,6 +48,6 @@ public class DisplayPayerTotalsAdapter extends ArrayAdapter<PayerDebt> {
     }
 
     private int getColor(PayerDebt payerDebt) {
-        return GuiUtils.getNumColor(payerDebt.getNumberInList());
+        return ColorUtils.getNumColor(payerDebt.getNumberInList());
     }
 }

@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,14 +25,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
 import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebt;
-import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 /**
@@ -44,16 +36,14 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     static final int PICK_CONTACT = 1;
     static final int GET_READ_CONTACT_PERMISSION = 55;
     ArrayList<PayerDebt> payerList = new ArrayList<>();
-    ArrayList<PayerDebt> oldPayerList = new ArrayList<>();
+    ArrayList<PayerDebt> oldPayerList;
     ListView listView;
     ArrayAdapter<PayerDebt> adapter;
     Button continueButton, addButton;
-    private boolean has_shown_toast = false;
     EditText inputName;
-    String filename = "RecentPayers.txt";
+    String payersFilename = "RecentPayers.dat";
     ArrayList<PayerTagGraphic> payerTags;
-    private String filepath = "MyFileStorage";
-    File myExternalFile;
+
     boolean hasPayerCloud = false;
     String[] permissions = new String[]{Manifest.permission.READ_CONTACTS};
 
@@ -72,8 +62,6 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
         continueButton = findViewById(R.id.select_continue);
         continueButton.setEnabled(false);
         continueButton.setOnClickListener(this);
-
-        myExternalFile = new File(getExternalFilesDir(filepath), filename);
     }
 
     protected void setupOldPayerTags() {
@@ -89,7 +77,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
 
             final TextView tagTextView = tagView.findViewById(R.id.tagTextView);
             final String payerName = payerDebt.getName();
-            final int payerColor = GuiUtils.getNumColor(payerDebt.getNumberInList());
+            final int payerColor = ColorUtils.getNumColor(payerDebt.getNumberInList());
             tagTextView.setText(payerName);
 
             GradientDrawable drawable = (GradientDrawable) tagTextView.getBackground();
@@ -128,7 +116,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                             String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
                             String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                             PayerDebt pickedPayer = new PayerDebt(name);
-                            Log.e(TAG, "Names: " + name);
+                            Log.d(TAG, "Names: " + name);
 
                             if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
 
@@ -141,16 +129,10 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                                 while (phones.moveToNext()) {
                                     int type = phones.getInt(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
                                     switch (type) {
-                                        case ContactsContract.CommonDataKinds.Phone.TYPE_HOME:
-                                            // do something with the Home number here...
-                                            break;
                                         case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
                                             String number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                                             pickedPayer.setPhoneNumber(number);
-                                            Log.e(TAG, "MOBILE Number: " + number);
-                                            break;
-                                        case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
-                                            // do something with the Work number here...
+                                            Log.d(TAG, "MOBILE Number: " + number);
                                             break;
                                     }
                                 }
@@ -171,11 +153,11 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.select_contact_button) {
-            if (GuiUtils.hasPermissions(SelectPayersActivity.this, permissions)) {
+            if (Utils.hasPermissions(SelectPayersActivity.this, permissions)) {
                 Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 startActivityForResult(intent, PICK_CONTACT);
             } else {
-                GuiUtils.requestPermissions(this, GET_READ_CONTACT_PERMISSION, permissions);
+                Utils.requestPermissions(this, GET_READ_CONTACT_PERMISSION, permissions);
             }
         } else if (v.getId() == R.id.select_add_button) {
 
@@ -199,10 +181,13 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
 
     private void showToast() {
         // Show Toast message: "Long press on name to delete"
-        if (!has_shown_toast) {
-            Toast toast = Toast.makeText(getApplicationContext(), "Long press a name to delete", Toast.LENGTH_LONG);
+        if (!HintsShown.isSelectPayersToast()) {
+            Toast toast = Toast.makeText(
+                    getApplicationContext(),
+                    "Long press name to delete",
+                    Toast.LENGTH_LONG);
             toast.show();
-            has_shown_toast = true;
+            HintsShown.setSelectPayersToast(true);
         }
     }
 
@@ -258,65 +243,22 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onPause() {
         super.onPause();
-        saveData();
+        // TODO make this a priority queue
+        Utils.saveData(payersFilename, payerList);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadData();
-        setupOldPayerTags();
-
-    }
-
-    private void saveData() {
-        if (!isExternalStorageWritable()) {
-            Log.e(TAG, "External storage not writable");
-        } else {
-            Log.d(TAG, "Writable");
-        }
-
-        try {
-            FileOutputStream fos = new FileOutputStream(myExternalFile);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(payerList);
-            oos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadData() {
-        if (!isExternalStorageReadable()) {
-            Log.e(TAG, "External storage not readable");
-        } else {
-            Log.d(TAG, "Readable");
-        }
-
-        try {
-            FileInputStream fis = new FileInputStream(myExternalFile);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-
-            oldPayerList = (ArrayList<PayerDebt>) ois.readObject();
-
-            ois.close();
-
-            for (PayerDebt pd : oldPayerList) {
-                Log.d(TAG, "\t" + pd.getName() + ": " + pd.getPhoneNumber());
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (oldPayerList == null) {
+        oldPayerList = (ArrayList<PayerDebt>) Utils.loadData(payersFilename);
+        if(oldPayerList == null) {
             oldPayerList = new ArrayList<>();
         }
+        setupOldPayerTags();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        Log.e(TAG, "got onRequestPermissionsResult callback");
         switch (requestCode) {
             case GET_READ_CONTACT_PERMISSION: {
                 if (grantResults.length > 0
@@ -326,24 +268,5 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                 }
             }
         }
-    }
-
-    /* Checks if external storage is available for read and write */
-    public boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
-    }
-
-    /* Checks if external storage is available to at least read */
-    public boolean isExternalStorageReadable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) ||
-                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            return true;
-        }
-        return false;
     }
 }

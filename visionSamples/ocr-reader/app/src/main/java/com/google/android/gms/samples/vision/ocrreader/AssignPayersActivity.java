@@ -17,7 +17,6 @@ import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
 import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebt;
 import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebtCoordinator;
 import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebtTotals;
-import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
 
 import java.util.ArrayList;
 
@@ -76,7 +75,7 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
 
             final TextView tagTextView = tagView.findViewById(R.id.tagTextView);
             final String payerName = payerDebt.getName();
-            final int payerColor = GuiUtils.getNumColor(payerDebt.getNumberInList());
+            final int payerColor = ColorUtils.getNumColor(payerDebt.getNumberInList());
             tagTextView.setText(payerName);
 
             GradientDrawable drawable = (GradientDrawable)tagTextView.getBackground();
@@ -143,17 +142,13 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void showInfoToast() {
-        Toast toast = Toast.makeText(getApplicationContext(),
-                "Tap payer and item to assign payer to item.",
-                Toast.LENGTH_LONG);
-        toast.show();
-    }
-
-    private void showToast(String msg) {
-        Toast toast = Toast.makeText(getApplicationContext(),
-                msg,
-                Toast.LENGTH_SHORT);
-        toast.show();
+        if(!HintsShown.isAssignPayersToast()) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "Tap payer and item to assign payer to item.",
+                    Toast.LENGTH_LONG);
+            toast.show();
+            HintsShown.setAssignPayersToast(true);
+        }
     }
 
     @Override

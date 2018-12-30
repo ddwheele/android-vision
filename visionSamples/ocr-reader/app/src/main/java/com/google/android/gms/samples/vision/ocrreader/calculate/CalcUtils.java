@@ -2,21 +2,13 @@ package com.google.android.gms.samples.vision.ocrreader.calculate;
 
 import android.util.Log;
 
-import com.google.android.gms.samples.vision.ocrreader.GuiUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Utils {
-    static final String TAG = "Utils";
+public class CalcUtils {
+    static final String TAG = "CalcUtils";
     public static float epsilon = 0.01f;
     public static float taxRate = 0.0925f;
-
-    public static final String PRICES = "prices";
-    public static final String PAYERS = "payers";
-    public static final String OFFSET = "offset";
-    public static final String PAYER_COORDINATOR = "payer coordinator";
-    public static final String TOTAL = "Total";
 
     public static boolean floatEquals(float f1, float f2) {
         if(Math.abs(f1 - f2) < epsilon) {

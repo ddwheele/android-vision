@@ -1,6 +1,6 @@
 package com.google.android.gms.samples.vision.ocrreader.calculate;
 
-import android.graphics.Color;
+import com.google.android.gms.samples.vision.ocrreader.Utils;
 
 /**
  * This is the aggregate of all the assigned debts

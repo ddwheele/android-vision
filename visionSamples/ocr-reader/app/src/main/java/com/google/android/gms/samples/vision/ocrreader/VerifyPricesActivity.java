@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.samples.vision.ocrreader.adapters.VerifyPricesAdapter;
 import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
-import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
+import com.google.android.gms.samples.vision.ocrreader.calculate.CalcUtils;
 import com.google.android.gms.samples.vision.ocrreader.ocr.OcrCaptureActivity;
 
 import java.util.ArrayList;
@@ -79,11 +79,8 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String newPrice = String.valueOf(taskEditText.getText());
-                        Log.e(TAG, "Change price to " + newPrice);
                         selectedPrice.updatePrice(Float.valueOf(newPrice));
-                        Log.e(TAG, "Price Updated");
                         parsePrices();
-                        Log.e(TAG, "Prices reparsed!");
                     }
                 })
                 .setNegativeButton("Cancel", null)
@@ -102,9 +99,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
                     public void onClick(DialogInterface dialog, int which) {
                         String newPrice = String.valueOf(taskEditText.getText());
                         priceList.add(new AssignedPrice(-1, Float.valueOf(newPrice)));
-                        Log.e(TAG, "Price Added");
                         parsePrices();
-                        Log.e(TAG, "Prices Reparsed!");
                     }
                 })
                 .setNegativeButton("Cancel", null)
@@ -136,7 +131,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         if(v.getId() == R.id.verify_continue_button) {
             Intent intent = new Intent(this, SelectPayersActivity.class);
-            ArrayList<AssignedPrice> cleanPriceList = Utils.removeNonItemRows(priceList);
+            ArrayList<AssignedPrice> cleanPriceList = CalcUtils.removeNonItemRows(priceList);
             intent.putParcelableArrayListExtra(Utils.PRICES, cleanPriceList);
             startActivity(intent);
         } else if(v.getId() == R.id.verify_add_a_price_button) {
@@ -155,7 +150,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void parsePrices() {
-        boolean parsed = Utils.labelSubtotalTaxAndTotal(priceList);
+        boolean parsed = CalcUtils.labelSubtotalTaxAndTotal(priceList);
 
         if(parsed) {
             parseSuccessful();
@@ -168,22 +163,20 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
     private void parseNotSuccessful() {
         setTitle("Partial Receipt");
         topMessage.setText("Correct these prices or read in more.");
-        topMessage.setTextColor(GuiUtils.MY_RED_COLOR);
+        topMessage.setTextColor(ColorUtils.MY_RED_COLOR);
         addButton.setEnabled(true);
         readMoreButton.setEnabled(true);
         continueButton.setEnabled(false);
         pricesVerified = false;
-        Log.e(TAG, "not success ");
     }
 
     private void parseSuccessful() {
         setTitle("Verify Prices");
         topMessage.setText("Prices Verified");
-        topMessage.setTextColor(GuiUtils.MY_GREEN_COLOR);
+        topMessage.setTextColor(ColorUtils.MY_GREEN_COLOR);
         readMoreButton.setEnabled(false);
         addButton.setEnabled(false);
         continueButton.setEnabled(true);
         pricesVerified = true;
-        Log.e(TAG, "SUCCESS!!!!!!!!!!! " );
     }
 }

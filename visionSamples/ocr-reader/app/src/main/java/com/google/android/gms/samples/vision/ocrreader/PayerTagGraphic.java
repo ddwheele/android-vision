@@ -15,7 +15,6 @@ public class PayerTagGraphic {
     final int color;
     final TextView textView;
     boolean selected = false;
-    //https://htmlcolorcodes.com/color-chart/
 
     public PayerTagGraphic(String name, int color, TextView textView) {
         this.name = name;

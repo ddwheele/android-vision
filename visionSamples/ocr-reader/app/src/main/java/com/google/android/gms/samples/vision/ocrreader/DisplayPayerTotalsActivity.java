@@ -23,7 +23,6 @@ import android.telephony.SmsManager;
 import com.google.android.gms.samples.vision.ocrreader.adapters.DisplayPayerTotalsAdapter;
 import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebt;
 import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebtCoordinator;
-import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
 
 import java.text.DecimalFormat;
 
@@ -90,6 +89,7 @@ public class DisplayPayerTotalsActivity extends Activity {
         } else {
             permissions = new String[]{Manifest.permission.SEND_SMS};
         }
+        showToast();
     }
 
     protected void changeTipPercent() {
@@ -106,7 +106,7 @@ public class DisplayPayerTotalsActivity extends Activity {
         d.setMessage("Select Tip Percent");
         d.setView(dialogView);
         final NumberPicker numberPicker = dialogView.findViewById(R.id.dialog_number_picker);
-        numberPicker.setMaxValue(100);
+        numberPicker.setMaxValue(50);
         numberPicker.setMinValue(10);
         numberPicker.setValue(tipPercent);
         numberPicker.setWrapSelectorWheel(false);
@@ -150,12 +150,12 @@ public class DisplayPayerTotalsActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Log.e(TAG, "inside showSendSmSDialog onClick()");
-                        if (GuiUtils.hasPermissions(DisplayPayerTotalsActivity.this, permissions)) {
+                        if (Utils.hasPermissions(DisplayPayerTotalsActivity.this, permissions)) {
                             Log.e(TAG, "inside showSendSmSDialog onClick() - granted");
                             sendSms();
                         } else {
                             Log.e(TAG, "inside showSendSmSDialog onClick() - not granted");
-                            GuiUtils.requestPermissions(DisplayPayerTotalsActivity.this,
+                            Utils.requestPermissions(DisplayPayerTotalsActivity.this,
                                     MY_PERMISSIONS_REQUEST_SEND_SMS, permissions);
                         }
                     }
@@ -198,6 +198,17 @@ public class DisplayPayerTotalsActivity extends Activity {
                 .setNegativeButton("Cancel", null)
                 .create();
         dialog.show();
+    }
+
+    private void showToast() {
+        if (!HintsShown.isDisplayPayersToast()) {
+            Toast toast = Toast.makeText(
+                    getApplicationContext(),
+                    "Tap payer name to text",
+                    Toast.LENGTH_LONG);
+            toast.show();
+            HintsShown.setDisplayPayersToast(true);
+        }
     }
 
     public void sendSms() {

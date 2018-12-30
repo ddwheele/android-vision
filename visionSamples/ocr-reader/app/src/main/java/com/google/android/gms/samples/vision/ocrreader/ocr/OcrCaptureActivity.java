@@ -40,10 +40,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.samples.vision.ocrreader.Utils;
 import com.google.android.gms.samples.vision.ocrreader.R;
+import com.google.android.gms.samples.vision.ocrreader.HintsShown;
 import com.google.android.gms.samples.vision.ocrreader.VerifyPricesActivity;
 import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
-import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.CameraSource;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.CameraSourcePreview;
 import com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay;
@@ -54,9 +55,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Activity for the multi-tracker app.  This app detects text and displays the value with the
- * rear facing camera. During detection overlay graphics are drawn to indicate the position,
- * size, and contents of each TextBlock.
+ * Main activity. Detects text with the rear facing camera. During detection overlay graphics
+ * are drawn for detected prices to indicate the position, size, and contents of each TextBlock.
  */
 public final class OcrCaptureActivity extends AppCompatActivity implements IPictureTrigger {
     private static final String TAG = "OcrCaptureActivity";
@@ -67,10 +67,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
     // Permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
-    // Constants used to pass extra data in the intent
-    public static final String AutoFocus = "AutoFocus";
-    public static final String UseFlash = "UseFlash";
-    public static final String TextBlockObject = "String";
+    private static Context context;
 
     private CameraSource mCameraSource;
     private CameraSourcePreview mPreview;
@@ -89,6 +86,8 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+
+        context = getApplicationContext();
         setContentView(R.layout.ocr_capture);
 
         mPreview = findViewById(R.id.preview);
@@ -110,9 +109,16 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
-        Snackbar.make(mGraphicOverlay, "Tap when prices are green",
-                Snackbar.LENGTH_LONG)
-                .show();
+        showUserHint();
+    }
+
+    protected void showUserHint() {
+        if(!HintsShown.isOcrCaptureToast()) {
+            Snackbar.make(mGraphicOverlay, "Tap when prices are green",
+                    Snackbar.LENGTH_LONG)
+                    .show();
+            HintsShown.setOcrCaptureToast(true);
+        }
     }
 
     @Override
@@ -438,5 +444,9 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
         public void onScaleEnd(ScaleGestureDetector detector) {
             mCameraSource.doZoom(detector.getScaleFactor());
         }
+    }
+
+    public static Context getAppContext() {
+        return context;
     }
 }

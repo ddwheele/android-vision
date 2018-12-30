@@ -20,7 +20,7 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.google.android.gms.samples.vision.ocrreader.calculate.Utils;
+import com.google.android.gms.samples.vision.ocrreader.calculate.CalcUtils;
 import com.google.android.gms.samples.vision.ocrreader.ocr.OcrGraphic;
 import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
 import com.google.android.gms.vision.CameraSource;
@@ -82,7 +82,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
             precomputedPriceList.addAll(previousPriceList);
         }
         precomputedPriceList.addAll(flattenPriceList());
-        return Utils.labelSubtotalTaxAndTotal(precomputedPriceList);
+        return CalcUtils.labelSubtotalTaxAndTotal(precomputedPriceList);
     }
 
     /**
