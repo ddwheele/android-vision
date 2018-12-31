@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,7 +36,7 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
 
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_split);
+        setContentView(R.layout.activity_assign);
         setTitle("Assign Payers to Items");
 
         setupPayerTags();
@@ -44,6 +45,17 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
         continueButton = findViewById(R.id.split_continue_button);
         continueButton.setOnClickListener(this);
         showInfoToast();
+    }
+
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "**************** Adapting");
+        priceAdapter.notifyDataSetChanged();
+        continueButton.invalidate();
+        LayoutInflater layoutInflater = getLayoutInflater();
+        View tagView = layoutInflater.inflate(R.layout.tag_layout, null, false);
+        tagView.invalidate();
+        Log.e(TAG, "************ Did ALL THAT");
     }
 
     /**
@@ -65,6 +77,7 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
         payerTags = new ArrayList<>();
 
         TagLayout tagLayout = findViewById(R.id.split_payer_cloud);
+        tagLayout.setAssignPayersActivity(this);
         LayoutInflater layoutInflater = getLayoutInflater();
         for (PayerDebt payerDebt : payerDebtList) {
             if(payerDebt instanceof PayerDebtTotals) {

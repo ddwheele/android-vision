@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".AssignPayersActivity">
 
-    <ScrollView
+<!--    <ScrollView
         android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="96dp"
@@ -15,20 +15,19 @@
         app:layout_constraintBottom_toTopOf="@+id/split_prices_list"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"> -->
 
-        <com.google.android.gms.samples.vision.ocrreader.TagLayout
-            android:id="@+id/split_payer_cloud"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/split_prices_list"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </ScrollView>
+    <com.google.android.gms.samples.vision.ocrreader.TagLayout
+        android:id="@+id/split_payer_cloud"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <!--/ScrollView -->
 
     <ListView
         android:id="@+id/split_prices_list"
@@ -41,7 +40,7 @@
         app:layout_constraintBottom_toTopOf="@+id/split_continue_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView3" />
+        app:layout_constraintTop_toBottomOf="@+id/split_payer_cloud" />
 
     <Button
         android:id="@+id/split_continue_button"
