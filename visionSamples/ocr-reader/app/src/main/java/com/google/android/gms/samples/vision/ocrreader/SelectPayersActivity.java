@@ -90,7 +90,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                     if (payerList.contains(payerDebt)) {
                         return;
                     }
-                    payerList.add(payerDebt);
+                    payerList.add(0, payerDebt);
                     adapter.notifyDataSetChanged();
                     continueButton.setEnabled(true);
                     showToast();
