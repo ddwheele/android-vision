@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -45,17 +46,6 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
         continueButton = findViewById(R.id.split_continue_button);
         continueButton.setOnClickListener(this);
         showInfoToast();
-    }
-
-    protected void onResume() {
-        super.onResume();
-        Log.e(TAG, "**************** Adapting");
-        priceAdapter.notifyDataSetChanged();
-        continueButton.invalidate();
-        LayoutInflater layoutInflater = getLayoutInflater();
-        View tagView = layoutInflater.inflate(R.layout.tag_layout, null, false);
-        tagView.invalidate();
-        Log.e(TAG, "************ Did ALL THAT");
     }
 
     /**
