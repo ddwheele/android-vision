@@ -1,6 +1,5 @@
 package com.google.android.gms.samples.vision.ocrreader.calculate;
 
-import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;

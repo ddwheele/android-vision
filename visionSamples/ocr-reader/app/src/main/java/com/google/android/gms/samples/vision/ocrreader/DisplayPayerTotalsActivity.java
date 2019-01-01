@@ -62,7 +62,7 @@ public class DisplayPayerTotalsActivity extends Activity {
 
         header1.setText("Name");
         header2.setText("+Tax");
-        tipHeader.setText("+Tip");
+        tipHeader.setText("+15%");
         payerListView.addHeaderView(header);
 
         payerListView.setAdapter(payerAdapter);
