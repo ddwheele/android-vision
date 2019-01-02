@@ -1,10 +1,15 @@
-Android Vision API Samples
+Fair Split App Code
 ============
 
-These samples demonstrate the vision API for detecting faces and barcodes.
+Forked from the Google android-vision repo.  I modified the visionSamples/ocr-reader project to be an application called Fair Split that reads the prices off of a restaurant receipt and lets you distribute items between a list of payers.
 
-Introduction
-------------
+Features:
+- App autodetects list of prices if entire receipt fits in single camera view
+- Manually correct misread prices or add missing prices
+- Select payers from contact list, or type in names
+- Split items evenly between multiple payers
+- Automatically calculate variable tip percentage
+- Text invoice to payers
 
 Pre-requisites
 --------------
@@ -15,22 +20,11 @@ Getting Started
 The samples build using Gradle in Android Studio.  There is no special
 configuration required.
 
-Support (Post Release)
--------
-
-For General questions and discussion on StackOverflow:
-- Stack Overflow: http://stackoverflow.com/questions/tagged/android-vision
-
-If you've found an error in this sample, please file an issue:
-https://github.com/googlesamples/android-vision/issues
-
-Patches are encouraged, and may be submitted by forking this project and
-submitting a pull request through GitHub.
 
 License
 -------
 
-Copyright 2015 Google, Inc. All Rights Reserved.
+Copyright 2019 DW Wheeler. All Rights Reserved.
 
 Licensed to the Apache Software Foundation (ASF) under one or more contributor
 license agreements.  See the NOTICE file distributed with this work for
