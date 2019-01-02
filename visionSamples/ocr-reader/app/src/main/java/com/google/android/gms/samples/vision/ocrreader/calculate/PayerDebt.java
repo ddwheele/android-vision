@@ -13,13 +13,13 @@ public class PayerDebt implements Parcelable, Serializable {
     private static int count = 0;
     final String name;
     private String phoneNumber;
-    private ArrayList<AssignedPrice> items;
-    private float subtotal;
-    private float total;
-    private boolean calculated = false; // have we calculated what he owes
+    protected ArrayList<AssignedPrice> items;
+    protected float subtotal;
+    protected float total;
+    protected boolean calculated = false; // have we calculated what he owes
     private boolean selected = false; // is this person selected in the Activity
-    private final int numberInList; // Payer's order in list (used for color)
-    private float tipPercent = 0.15f;
+    protected final int numberInList; // Payer's order in list (used for color)
+    protected float tipPercent = 0.15f;
 
     DecimalFormat twoDecimalFormat = new DecimalFormat("#.00");
 
@@ -69,7 +69,6 @@ public class PayerDebt implements Parcelable, Serializable {
     public void addItem(AssignedPrice ap) {
         if(!items.contains(ap)) {
             items.add(ap);
-            ap.addPayer(this);
         }
         calculated = false;
     }
@@ -130,7 +129,7 @@ public class PayerDebt implements Parcelable, Serializable {
     }
 
     // add to get subtotal, and add tax for total
-    private void calculate() {
+    protected void calculate() {
         subtotal = 0;
         for(AssignedPrice ap : items) {
             subtotal += ap.getPricePerPayer();

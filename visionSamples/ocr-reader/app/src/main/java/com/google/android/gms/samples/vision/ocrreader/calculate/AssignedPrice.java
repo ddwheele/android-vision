@@ -61,14 +61,14 @@ public class AssignedPrice implements Parcelable, Comparable {
     final private float yValue;
     private float price;
     private Category category;
-    private ArrayList<PayerDebt> payers;
+    private ArrayList<String> payers;
     public static final DecimalFormat df2 = new DecimalFormat( "#.00" );
 
     protected AssignedPrice(Parcel in) {
         yValue = in.readFloat();
         price = in.readFloat();
         category = in.readParcelable(Category.class.getClassLoader());
-        payers = in.createTypedArrayList(PayerDebt.CREATOR);
+        payers = in.createStringArrayList();
     }
 
     public static final Creator<AssignedPrice> CREATOR = new Creator<AssignedPrice>() {
@@ -123,16 +123,12 @@ public class AssignedPrice implements Parcelable, Comparable {
         if(!isItem() || payers.contains(payer)) {
             return;
         }
-        payers.add(payer);
-        // tell everybody to recalculate
-        for(PayerDebt pd : payers) {
-            pd.recalculate();
-            // the new guy is recalculating twice, but it shouldn't matter too much
-        }
+        //payer.addItem(this);
+        payers.add(payer.name);
     }
 
     // for now, just assume that the last payer entered was the mistake
-    public PayerDebt removePayer() {
+    public String removePayer() {
         if(payers.size() > 0) {
             return payers.remove(payers.size() - 1);
         }
@@ -140,8 +136,8 @@ public class AssignedPrice implements Parcelable, Comparable {
     }
 
     // for later ...
-    public void removePayer(String payer) {
-        payers.remove(payer);
+    public void removePayer(PayerDebt payer) {
+        payers.remove(payer.name);
     }
 
     public String getCategoryString() {
@@ -152,7 +148,7 @@ public class AssignedPrice implements Parcelable, Comparable {
         return df2.format(price);
     }
 
-    public ArrayList<PayerDebt> getPayers() {
+    public ArrayList<String> getPayers() {
         return payers;
     }
 
@@ -163,8 +159,8 @@ public class AssignedPrice implements Parcelable, Comparable {
             }
             else {
                 StringBuilder sb = new StringBuilder();
-                for(PayerDebt p : payers) {
-                    sb.append(p.name + ", ");
+                for(String p : payers) {
+                    sb.append(p + ", ");
                 }
                 sb.deleteCharAt(sb.length()-1); // remove last space
                 sb.deleteCharAt(sb.length()-1); // remove last comma
@@ -228,6 +224,6 @@ public class AssignedPrice implements Parcelable, Comparable {
         dest.writeFloat(yValue);
         dest.writeFloat(price);
         dest.writeParcelable(category, flags);
-        dest.writeTypedList(payers);
+        dest.writeStringList(payers);
     }
 }

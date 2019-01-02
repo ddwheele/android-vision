@@ -8,8 +8,8 @@ public class TestPayerDebt {
 
     @Test
     public void testLabelSubtotalTaxAndTotal_normal() {
-        AssignedPrice ap1 = new AssignedPrice(100, 20);
-        AssignedPrice ap2 = new AssignedPrice(200, 80);
+        AssignedPrice ap20 = new AssignedPrice(100, 20);
+        AssignedPrice ap80 = new AssignedPrice(200, 80);
 
         PayerDebt frederick = new PayerDebt("Freddie");
         PayerDebt gillian = new PayerDebt("Gilly");
@@ -22,10 +22,10 @@ public class TestPayerDebt {
         gillian.setPhoneNumber("7162288472");
         Assert.assertEquals("7162288472", gillian.getPhoneNumber());
 
-        gillian.addItem(ap1);
-        ap1.addPayer(gillian);
-        gillian.addItem(ap2);
-        ap2.addPayer(gillian);
+        gillian.addItem(ap20);
+        ap20.addPayer(gillian);
+        gillian.addItem(ap80);
+        ap80.addPayer(gillian);
 
         Assert.assertEquals(100, gillian.getSubtotal(), epsilon);
         gillian.setTipPercent(0.20f);
@@ -37,18 +37,11 @@ public class TestPayerDebt {
         Assert.assertEquals("109.25", gillian.getSecondColumnString());
         Assert.assertEquals("129.25", gillian.getThirdColumnString());
 
-        gillian.removeItem(ap2);
+        gillian.removeItem(ap80);
 
         Assert.assertEquals(20, gillian.getSubtotal(), epsilon);
         Assert.assertEquals(4, gillian.getTip(), epsilon);
         Assert.assertEquals(21.85, gillian.getTotal(), epsilon);
         Assert.assertEquals(25.85, gillian.getTotalAndTip(), epsilon);
-
-        frederick.addItem(ap1);
-
-        Assert.assertEquals(10, gillian.getSubtotal(), epsilon);
-        Assert.assertEquals(2, gillian.getTip(), epsilon);
-        Assert.assertEquals(10.925, gillian.getTotal(), epsilon);
-        Assert.assertEquals(12.925, gillian.getTotalAndTip(), epsilon);
     }
 }

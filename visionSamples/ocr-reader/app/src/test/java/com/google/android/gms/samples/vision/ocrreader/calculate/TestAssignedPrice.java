@@ -33,10 +33,10 @@ public class TestAssignedPrice {
         ap.addPayer(elmo);
 
         Assert.assertEquals(12, ap.getPricePerPayer(), epsilon);
-        Assert.assertEquals(elmo, ap.removePayer());
+        Assert.assertEquals("Elmer Elephant", ap.removePayer());
         Assert.assertEquals(15, ap.getPricePerPayer(),  epsilon);
-        Assert.assertEquals(donny, ap.removePayer());
-        Assert.assertEquals(chess, ap.removePayer());
+        Assert.assertEquals("Donald Duck", ap.removePayer());
+        Assert.assertEquals("Cheshire Cat", ap.removePayer());
 
         Assert.assertEquals("60.00", ap.getSecondColumnString());
         Assert.assertEquals("Arthur Aardvark, Bobby Bobolink", ap.getThirdColumnString() );

@@ -21,4 +21,15 @@ public class PayerDebtTotals extends PayerDebt {
         // never select this
     }
 
+    // add to get subtotal, and add tax for total
+    @Override
+    protected void calculate() {
+        subtotal = 0;
+        for(AssignedPrice ap : items) {
+            subtotal += ap.getPrice();
+        }
+        total = subtotal * (1 + CalcUtils.taxRate);
+        calculated = true;
+    }
+
 }
