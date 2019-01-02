@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.google.android.gms.samples.vision.ocrreader.Utils;
+
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -130,9 +132,23 @@ public class PayerDebt implements Parcelable, Serializable {
 
     // add to get subtotal, and add tax for total
     protected void calculate() {
+        // apparently Android doesn't do polymorphism. Very annoying.
+        if(name.equals(Utils.TOTAL)) {
+            calculateForTotal();
+            return;
+        }
         subtotal = 0;
         for(AssignedPrice ap : items) {
             subtotal += ap.getPricePerPayer();
+        }
+        total = subtotal * (1 + CalcUtils.taxRate);
+        calculated = true;
+    }
+
+    protected void calculateForTotal() {
+        subtotal = 0;
+        for(AssignedPrice ap : items) {
+            subtotal += ap.getPrice();
         }
         total = subtotal * (1 + CalcUtils.taxRate);
         calculated = true;

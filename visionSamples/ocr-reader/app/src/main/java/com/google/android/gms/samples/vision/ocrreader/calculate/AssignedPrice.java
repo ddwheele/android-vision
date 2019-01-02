@@ -120,7 +120,7 @@ public class AssignedPrice implements Parcelable, Comparable {
 
     public void addPayer(PayerDebt payer) {
         // don't add somebody twice
-        if(!isItem() || payers.contains(payer)) {
+        if(!isItem() || payers.contains(payer.name)) {
             return;
         }
         //payer.addItem(this);

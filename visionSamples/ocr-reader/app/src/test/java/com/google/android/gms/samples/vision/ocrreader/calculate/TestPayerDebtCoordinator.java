@@ -75,4 +75,31 @@ public class TestPayerDebtCoordinator {
         Assert.assertEquals( 0, henny.getSubtotal(), epsilon);
         Assert.assertEquals(12, total.getSubtotal(), epsilon);
     }
+
+    @Test
+    public void test_removeFromTotal() {
+        AssignedPrice ap60 = new AssignedPrice(200, 60);
+
+        PayerDebt letty = new PayerDebt("Leticia");
+        PayerDebt marc = new PayerDebt("Marcus");
+
+        ArrayList<PayerDebt> pdList = new ArrayList<>();
+        pdList.add(letty);
+        pdList.add(marc);
+
+        PayerDebtCoordinator pdc = new PayerDebtCoordinator(pdList);
+        PayerDebt total = pdc.getTotals();
+        Assert.assertEquals(0, letty.getSubtotal(), epsilon);
+        Assert.assertEquals(0, total.getSubtotal(), epsilon);
+        Assert.assertTrue(total.isTotal());
+
+        pdc.addPayerToItem(letty, ap60);
+        Assert.assertEquals(60, letty.getSubtotal(), epsilon);
+        Assert.assertEquals(60, total.getSubtotal(), epsilon);
+
+        pdc.addPayerToItem(marc, ap60);
+        Assert.assertEquals(30, marc.getSubtotal(), epsilon);
+        Assert.assertEquals(30, letty.getSubtotal(), epsilon);
+        Assert.assertEquals(60, total.getSubtotal(), epsilon);
+    }
 }
