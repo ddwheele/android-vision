@@ -1,5 +1,7 @@
 package com.google.android.gms.samples.vision.ocrreader.calculate;
 
+import android.view.PixelCopy;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -21,17 +23,20 @@ public class TestAssignedPrice {
         Assert.assertEquals(Category.ITEM.toString(), ap.getFirstColumnString());
 
         ap.updatePrice(60);
-        ap.addPayer("Arthur Aardvark");
-        ap.addPayer("Bobby Bobolink");
-        ap.addPayer("Cheshire Cat");
-        ap.addPayer("Donald Duck");
-        ap.addPayer("Elmer Elephant");
+        ap.addPayer(new PayerDebt("Arthur Aardvark"));
+        ap.addPayer(new PayerDebt("Bobby Bobolink"));
+        PayerDebt chess = new PayerDebt("Cheshire Cat");
+        PayerDebt donny = new PayerDebt("Donald Duck");
+        PayerDebt elmo = new PayerDebt("Elmer Elephant");
+        ap.addPayer(chess);
+        ap.addPayer(donny);
+        ap.addPayer(elmo);
 
         Assert.assertEquals(12, ap.getPricePerPayer(), epsilon);
-        Assert.assertEquals("Elmer Elephant", ap.removePayer());
+        Assert.assertEquals(elmo, ap.removePayer());
         Assert.assertEquals(15, ap.getPricePerPayer(),  epsilon);
-        Assert.assertEquals("Donald Duck", ap.removePayer());
-        Assert.assertEquals("Cheshire Cat", ap.removePayer());
+        Assert.assertEquals(donny, ap.removePayer());
+        Assert.assertEquals(chess, ap.removePayer());
 
         Assert.assertEquals("60.00", ap.getSecondColumnString());
         Assert.assertEquals("Arthur Aardvark, Bobby Bobolink", ap.getThirdColumnString() );

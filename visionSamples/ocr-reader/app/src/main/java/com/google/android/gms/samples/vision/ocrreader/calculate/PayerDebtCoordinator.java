@@ -43,7 +43,7 @@ public class PayerDebtCoordinator implements Parcelable {
         if(payer == null || item == null) {
             return;
         }
-        ArrayList<String> otherPayers = item.getPayers();
+        ArrayList<PayerDebt> otherPayers = item.getPayers();
 
         if(otherPayers.isEmpty()) {
             // this item is getting paid for, for the first time
@@ -52,11 +52,11 @@ public class PayerDebtCoordinator implements Parcelable {
 
         // add the item to the payer
         // (payer adds himself to the item)
-        item.addPayer(payer.name);
+        item.addPayer(payer);
 
         // if anybody else, tell to recalculate bc they're sharing now
-        for(String oldPayer : otherPayers) {
-            findPayerDebt(oldPayer).recalculate();
+        for(PayerDebt oldPayer : otherPayers) {
+            oldPayer.recalculate();
         }
     }
 
@@ -64,8 +64,8 @@ public class PayerDebtCoordinator implements Parcelable {
         if(item == null) {
             return;
         }
-        String payer = item.removePayer();
-        removePayerFromItem(findPayerDebt(payer), item);
+        PayerDebt payer = item.removePayer();
+        removePayerFromItem(payer, item);
     }
 
 
@@ -76,7 +76,7 @@ public class PayerDebtCoordinator implements Parcelable {
         item.removePayer(payer.name);
         payer.removeItem(item);
 
-        ArrayList<String> payersLeft = item.getPayers();
+        ArrayList<PayerDebt> payersLeft = item.getPayers();
 
         if(payersLeft.isEmpty()) {
             // nobody left to pay for it
@@ -84,8 +84,8 @@ public class PayerDebtCoordinator implements Parcelable {
         }
 
         // tell everybody else to recalculate to take over his cost
-        for(String oldPayer : payersLeft) {
-            findPayerDebt(oldPayer).recalculate();
+        for(PayerDebt oldPayer : payersLeft) {
+            oldPayer.recalculate();
         }
     }
 

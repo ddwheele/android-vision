@@ -58,30 +58,17 @@ enum Category implements Parcelable
  * - list of who's paying for it
  */
 public class AssignedPrice implements Parcelable, Comparable {
-    final String TAG = "Assigned Price";
     final private float yValue;
     private float price;
     private Category category;
-    private ArrayList<String> payers;
+    private ArrayList<PayerDebt> payers;
     public static final DecimalFormat df2 = new DecimalFormat( "#.00" );
-
-    @Override
-    public String toString() {
-        return getCategoryString() + ": $" + price + ", "+getPayerString();
-    }
-
-    public AssignedPrice(float yValue, float price) {
-        this.yValue = yValue;
-        this.price = price;
-        category = Category.ITEM; // assume most common category
-        payers = new ArrayList<>();
-    }
 
     protected AssignedPrice(Parcel in) {
         yValue = in.readFloat();
         price = in.readFloat();
         category = in.readParcelable(Category.class.getClassLoader());
-        payers = in.createStringArrayList();
+        payers = in.createTypedArrayList(PayerDebt.CREATOR);
     }
 
     public static final Creator<AssignedPrice> CREATOR = new Creator<AssignedPrice>() {
@@ -95,6 +82,19 @@ public class AssignedPrice implements Parcelable, Comparable {
             return new AssignedPrice[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return getCategoryString() + ": $" + price + ", "+getPayerString();
+    }
+
+    public AssignedPrice(float yValue, float price) {
+        this.yValue = yValue;
+        this.price = price;
+        category = Category.ITEM; // assume most common category
+        payers = new ArrayList<>();
+    }
+
 
     public float getPrice() {
         return price;
@@ -118,18 +118,21 @@ public class AssignedPrice implements Parcelable, Comparable {
         category = Category.TAX;
     }
 
-    public void addPayer(String payer) {
+    public void addPayer(PayerDebt payer) {
         // don't add somebody twice
-        if(isItem() && !payers.contains(payer)) {
-            payers.add(payer);
+        if(!isItem() || payers.contains(payer)) {
+            return;
         }
-        else {
-            Log.v(TAG, "Trying to assign payer to " + category.toString() + "!");
+        payers.add(payer);
+        // tell everybody to recalculate
+        for(PayerDebt pd : payers) {
+            pd.recalculate();
+            // the new guy is recalculating twice, but it shouldn't matter too much
         }
     }
 
     // for now, just assume that the last payer entered was the mistake
-    public String removePayer() {
+    public PayerDebt removePayer() {
         if(payers.size() > 0) {
             return payers.remove(payers.size() - 1);
         }
@@ -149,7 +152,7 @@ public class AssignedPrice implements Parcelable, Comparable {
         return df2.format(price);
     }
 
-    public ArrayList<String> getPayers() {
+    public ArrayList<PayerDebt> getPayers() {
         return payers;
     }
 
@@ -160,8 +163,8 @@ public class AssignedPrice implements Parcelable, Comparable {
             }
             else {
                 StringBuilder sb = new StringBuilder();
-                for(String p : payers) {
-                    sb.append(p + ", ");
+                for(PayerDebt p : payers) {
+                    sb.append(p.name + ", ");
                 }
                 sb.deleteCharAt(sb.length()-1); // remove last space
                 sb.deleteCharAt(sb.length()-1); // remove last comma
@@ -195,19 +198,6 @@ public class AssignedPrice implements Parcelable, Comparable {
         return 0;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeFloat(yValue);
-        dest.writeFloat(price);
-        dest.writeParcelable(category, flags);
-        dest.writeStringList(payers);
-    }
-
     public String getFirstColumnString() {
         return category.toString();
     }
@@ -226,5 +216,18 @@ public class AssignedPrice implements Parcelable, Comparable {
 
     public boolean hasNoPayers() {
         return payers.isEmpty();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeFloat(yValue);
+        dest.writeFloat(price);
+        dest.writeParcelable(category, flags);
+        dest.writeTypedList(payers);
     }
 }
