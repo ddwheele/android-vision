@@ -50,10 +50,9 @@ public class PayerDebtCoordinator implements Parcelable {
             totals.addItem(item);
         }
 
-        // add the new payer to the item, and the item to the payer
+        // add the item to the payer
+        // (payer adds himself to the item)
         item.addPayer(payer.name);
-        payer.addItem(item);
-
 
         // if anybody else, tell to recalculate bc they're sharing now
         for(String oldPayer : otherPayers) {

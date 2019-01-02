@@ -12,14 +12,14 @@ public class PayerDebt implements Parcelable, Serializable {
     private static final String TAG = "PayerDebt";
     private static int count = 0;
     final String name;
-    String phoneNumber;
-    ArrayList<AssignedPrice> items;
-    float subtotal;
-    float total;
-    boolean calculated = false; // have we calculated what he owes
-    boolean selected = false; // is this person selected in the Activity
-    final int numberInList; // Payer's order in list (used for color)
-    float tipPercent = 0.15f;
+    private String phoneNumber;
+    private ArrayList<AssignedPrice> items;
+    private float subtotal;
+    private float total;
+    private boolean calculated = false; // have we calculated what he owes
+    private boolean selected = false; // is this person selected in the Activity
+    private final int numberInList; // Payer's order in list (used for color)
+    private float tipPercent = 0.15f;
 
     DecimalFormat twoDecimalFormat = new DecimalFormat("#.00");
 
@@ -69,6 +69,7 @@ public class PayerDebt implements Parcelable, Serializable {
     public void addItem(AssignedPrice ap) {
         if(!items.contains(ap)) {
             items.add(ap);
+            ap.addPayer(name);
         }
         calculated = false;
     }
@@ -110,6 +111,9 @@ public class PayerDebt implements Parcelable, Serializable {
     }
 
     public void setTipPercent(float tipPercent) {
+        if(tipPercent > 1.0) {
+            throw new IllegalArgumentException("Cannot tip more than 100%");
+        }
         this.tipPercent = tipPercent;
     }
 
@@ -170,6 +174,7 @@ public class PayerDebt implements Parcelable, Serializable {
         return phoneNumber;
     }
 
+    // TODO Add error checking
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
