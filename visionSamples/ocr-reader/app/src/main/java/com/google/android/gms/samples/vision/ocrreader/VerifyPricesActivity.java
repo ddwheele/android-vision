@@ -8,19 +8,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.samples.vision.ocrreader.adapters.VerifyPricesAdapter;
 import com.google.android.gms.samples.vision.ocrreader.calculate.AssignedPrice;
 import com.google.android.gms.samples.vision.ocrreader.calculate.CalcUtils;
+import com.google.android.gms.samples.vision.ocrreader.calculate.Category;
 import com.google.android.gms.samples.vision.ocrreader.ocr.OcrCaptureActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 public class VerifyPricesActivity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = "Verify Prices";
@@ -30,6 +37,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
     Button continueButton, readMoreButton, addButton;
     TextView topMessage;
     boolean pricesVerified = false;
+    Category selectedCategory = Category.ITEM;
 
     private static final int VF_OCR_CAPTURE = 9016;
 
@@ -80,7 +88,6 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
                     public void onClick(DialogInterface dialog, int which) {
                         String newPrice = String.valueOf(taskEditText.getText());
                         selectedPrice.updatePrice(Float.valueOf(newPrice));
-                        parsePrices();
                     }
                 })
                 .setNegativeButton("Cancel", null)
@@ -88,17 +95,62 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
         dialog.show();
     }
 
-    private void showAddItemDialog(Context c) {
+    private void showAddItemDialog(final Context c) {
+
+        LinearLayout layout = new LinearLayout(c);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
         final EditText taskEditText = new EditText(c);
+        taskEditText.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        final Spinner spinner = new Spinner(this);
+        spinner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Category.values());
+        spinner.setAdapter(arrayAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedCategory = Category.values()[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        layout.addView(taskEditText);
+        layout.addView(spinner);
+
         AlertDialog dialog = new AlertDialog.Builder(c)
                 .setTitle("Add Price")
                 .setMessage("Input a price")
-                .setView(taskEditText)
+                .setView(layout)
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String newPrice = String.valueOf(taskEditText.getText());
-                        priceList.add(new AssignedPrice(-1, Float.valueOf(newPrice)));
+                        String newPriceString = String.valueOf(taskEditText.getText());
+                        float newPrice = Float.valueOf(newPriceString);
+                        float yValue = 0, referenceY;
+
+                        switch(selectedCategory) {
+                            case ITEM:
+                                yValue = -1;
+                                break;
+                            case TOTAL: // after last price
+                                referenceY = priceList.get(priceList.size() - 1).getYValue();
+                                yValue = referenceY + 10;
+                                break;
+                            case TAX: // before last price
+                                referenceY = priceList.get(priceList.size() - 1).getYValue();
+                                yValue = referenceY - 1;
+                                break;
+                            case SUBTOTAL: // before second to last price
+                                referenceY = priceList.get(priceList.size() - 2).getYValue();
+                                yValue = referenceY - 1;
+                                break;
+                        }
+                        priceList.add(new AssignedPrice(yValue, newPrice));
                         parsePrices();
                     }
                 })
