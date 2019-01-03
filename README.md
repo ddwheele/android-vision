@@ -20,6 +20,9 @@ Getting Started
 Builds using Gradle in Android Studio.  There is no special
 configuration required.
 
+Privacy Policy
+--------------
+See Privacy Policy [here](Privacy.md)
 
 License
 -------
