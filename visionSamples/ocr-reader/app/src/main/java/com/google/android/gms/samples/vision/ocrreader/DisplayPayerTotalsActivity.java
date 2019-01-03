@@ -69,7 +69,8 @@ public class DisplayPayerTotalsActivity extends Activity {
 
         header1.setText("Name");
         header2.setText("+Tax");
-        tipHeader.setText("+15%");
+        tipPercent = PreferencesStore.getInstance().getLastTipPercent();
+        tipHeader.setText("+" + tipPercent + "%");
         payerListView.addHeaderView(header);
 
         payerListView.setAdapter(payerAdapter);
@@ -101,6 +102,7 @@ public class DisplayPayerTotalsActivity extends Activity {
 
     protected void changeTipPercent() {
         tipHeader.setText("+" + tipPercent + "%" );
+        PreferencesStore.getInstance().setLastTipPercent(tipPercent);
         payerCoordinator.changeTipPercent(tipPercent);
         payerAdapter.notifyDataSetChanged();
     }
