@@ -138,7 +138,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                                 }
                                 phones.close();
                             }
-                            payerList.add(pickedPayer);
+                            payerList.add(0, pickedPayer);
                         }
                     }
                     cur.close();
@@ -165,7 +165,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
             if (newName.isEmpty()) {
                 return; // don't add blanks
             }
-            payerList.add(new PayerDebt(newName));
+            payerList.add(0, new PayerDebt(newName));
             adapter.notifyDataSetChanged();
             inputName.getText().clear();
             continueButton.setEnabled(true);
@@ -204,7 +204,9 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
 
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                addButton.setEnabled(true);
+                if(inputName.getText().toString().trim().length() > 0) {
+                    addButton.setEnabled(true);
+                }
             }
         });
         addButton = findViewById(R.id.select_add_button);

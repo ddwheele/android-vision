@@ -80,7 +80,6 @@ public class AssignedPrice implements Parcelable, Comparable {
         if(!isItem() || payers.contains(payer.name)) {
             return;
         }
-        //payer.addItem(this);
         payers.add(payer.name);
     }
 

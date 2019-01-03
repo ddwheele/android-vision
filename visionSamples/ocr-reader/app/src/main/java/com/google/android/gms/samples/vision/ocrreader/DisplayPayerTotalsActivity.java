@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,8 @@ import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebt;
 import com.google.android.gms.samples.vision.ocrreader.calculate.PayerDebtCoordinator;
 
 import java.text.DecimalFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DisplayPayerTotalsActivity extends Activity {
     final String TAG = "DisplayPayerTotalsActivity";
@@ -40,6 +44,9 @@ public class DisplayPayerTotalsActivity extends Activity {
     String[] permissions;
     int tipPercent = 15;
     TextView tipHeader;
+
+    String phoneRegex = "[-|\\d|.|(|)|+| ]";
+
     /**
      * Called when the activity is first created.
      */
@@ -149,12 +156,9 @@ public class DisplayPayerTotalsActivity extends Activity {
                 .setPositiveButton("Send", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.e(TAG, "inside showSendSmSDialog onClick()");
                         if (Utils.hasPermissions(DisplayPayerTotalsActivity.this, permissions)) {
-                            Log.e(TAG, "inside showSendSmSDialog onClick() - granted");
                             sendSms();
                         } else {
-                            Log.e(TAG, "inside showSendSmSDialog onClick() - not granted");
                             Utils.requestPermissions(DisplayPayerTotalsActivity.this,
                                     MY_PERMISSIONS_REQUEST_SEND_SMS, permissions);
                         }
@@ -167,7 +171,6 @@ public class DisplayPayerTotalsActivity extends Activity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        Log.e(TAG, "got onRequestPermissionsResult callback");
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_SEND_SMS: {
                 if (grantResults.length > 0
@@ -183,16 +186,48 @@ public class DisplayPayerTotalsActivity extends Activity {
     }
 
     protected void showGetPhoneNumberDialog(Context c) {
-        final EditText taskEditText = new EditText(c);
+        final EditText phoneNumberInput = new EditText(c);
+        phoneNumberInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String newPriceString = String.valueOf(phoneNumberInput.getText());
+                Log.e(TAG, "you entered: " + newPriceString);
+                newPriceString = newPriceString.replaceAll(phoneRegex, "");
+
+                int len = newPriceString.length();
+                if(len > 0) {
+                    phoneNumberInput.setError("Enter a valid phone number");
+                } else {
+                    phoneNumberInput.setError(null);
+                }
+            }
+        });
         AlertDialog dialog = new AlertDialog.Builder(c)
                 .setTitle("Enter Phone Number")
                 .setMessage("Enter " + nameToText + "'s phone number.")
-                .setView(taskEditText)
+                .setView(phoneNumberInput)
                 .setPositiveButton("Send", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        phoneNumber = String.valueOf(taskEditText.getText());
-                        sendSms();
+                        String newPriceString = String.valueOf(phoneNumberInput.getText());
+                        newPriceString = newPriceString.replaceAll(phoneRegex, "");
+
+                        int len = newPriceString.length();
+                        if(len > 0) {
+                            phoneNumberInput.setError("Enter a valid phone number");
+                        } else {
+                            phoneNumberInput.setError(null);
+                        }
                     }
                 })
                 .setNegativeButton("Cancel", null)
