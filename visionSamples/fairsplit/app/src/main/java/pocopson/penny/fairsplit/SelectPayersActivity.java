@@ -24,8 +24,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.samples.vision.ocrreader.R;
-
 import pocopson.penny.fairsplit.calculate.PayerDebt;
 import pocopson.penny.fairsplit.calculate.AssignedPrice;
 

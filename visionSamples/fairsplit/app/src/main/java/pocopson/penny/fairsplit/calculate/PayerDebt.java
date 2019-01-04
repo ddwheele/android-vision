@@ -4,14 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.google.android.gms.samples.vision.fairsplit.Utils;
-
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import pocopson.penny.fairsplit.calculate.AssignedPrice;
-import pocopson.penny.fairsplit.calculate.CalcUtils;
+import pocopson.penny.fairsplit.Utils;
 
 public class PayerDebt implements Parcelable, Serializable {
     private static final String TAG = "PayerDebt";

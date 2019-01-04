@@ -8,11 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.google.android.gms.samples.vision.ocrreader.R;
-
 import java.util.ArrayList;
 
 import pocopson.penny.fairsplit.ColorUtils;
+import pocopson.penny.fairsplit.R;
 import pocopson.penny.fairsplit.calculate.AssignedPrice;
 
 // TODO WHY DOESN'T THIS RECOGNIZE POLYMORPHISM AAAAAAHHHHHH

@@ -12,8 +12,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.samples.vision.ocrreader.R;
-
 import java.util.ArrayList;
 
 import pocopson.penny.fairsplit.adapters.AssignPayersAdapter;

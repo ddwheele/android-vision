@@ -20,8 +20,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.android.gms.samples.vision.ocrreader.R;
-
 import pocopson.penny.fairsplit.adapters.VerifyPricesAdapter;
 import pocopson.penny.fairsplit.calculate.AssignedPrice;
 import pocopson.penny.fairsplit.calculate.CalcUtils;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.google.android.gms.samples.vision.ocrreader"
+    package="pocopson.penny.fairsplit"
     android:installLocation="auto">
 
     <uses-feature android:name="android.hardware.camera" />
@@ -27,7 +27,7 @@
             android:value="ocr" />
 
         <activity
-            android:name="com.google.android.gms.samples.vision.fairsplit.ocr.OcrCaptureActivity"
+            android:name=".ocr.OcrCaptureActivity"
             android:label="Fair Split">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,12 +35,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.google.android.gms.samples.vision.fairsplit.VerifyPricesActivity" />
+        <activity android:name=".VerifyPricesActivity" />
         <activity
-            android:name="com.google.android.gms.samples.vision.fairsplit.SelectPayersActivity"
+            android:name=".SelectPayersActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name="com.google.android.gms.samples.vision.fairsplit.AssignPayersActivity" />
-        <activity android:name="com.google.android.gms.samples.vision.fairsplit.DisplayPayerTotalsActivity"></activity>
+        <activity android:name=".AssignPayersActivity" />
+        <activity android:name=".DisplayPayerTotalsActivity"></activity>
     </application>
 
 </manifest>

@@ -23,8 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.telephony.SmsManager;
 
-import com.google.android.gms.samples.vision.ocrreader.R;
-
 import pocopson.penny.fairsplit.adapters.DisplayPayerTotalsAdapter;
 import pocopson.penny.fairsplit.calculate.PayerDebtCoordinator;
 import pocopson.penny.fairsplit.calculate.PayerDebt;
@@ -239,14 +237,17 @@ public class DisplayPayerTotalsActivity extends Activity {
                 .setPositiveButton("Send", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String newPriceString = String.valueOf(phoneNumberInput.getText());
-                        newPriceString = newPriceString.replaceAll(phoneRegex, "");
+                        String phoneNumberString = String.valueOf(phoneNumberInput.getText());
+                        String strippedPhoneNumberString = phoneNumberString.replaceAll(phoneRegex, "");
 
-                        int len = newPriceString.length();
+                        int len = strippedPhoneNumberString.length();
                         if (len > 0) {
                             phoneNumberInput.setError("Enter a valid phone number");
                         } else {
                             phoneNumberInput.setError(null);
+                            phoneNumber = phoneNumberString;
+                            Log.e(TAG, "Good phone number: "+phoneNumber);
+                            sendSms();
                         }
                     }
                 })
@@ -271,6 +272,10 @@ public class DisplayPayerTotalsActivity extends Activity {
             showGetPhoneNumberDialog(DisplayPayerTotalsActivity.this);
             return;
         }
+        sendSmsUnchecked();
+    }
+
+    private void sendSmsUnchecked() {
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(phoneNumber, null, message, null, null);
         Toast.makeText(

@@ -39,6 +39,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+
+import pocopson.penny.fairsplit.R;
 import pocopson.penny.fairsplit.Utils;
 import pocopson.penny.fairsplit.HintsShown;
 import pocopson.penny.fairsplit.VerifyPricesActivity;
@@ -48,7 +50,6 @@ import pocopson.penny.fairsplit.ui.camera.CameraSourcePreview;
 import pocopson.penny.fairsplit.ui.camera.GraphicOverlay;
 import pocopson.penny.fairsplit.ui.camera.IPictureTrigger;
 
-import com.google.android.gms.samples.vision.ocrreader.R;
 import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.IOException;
