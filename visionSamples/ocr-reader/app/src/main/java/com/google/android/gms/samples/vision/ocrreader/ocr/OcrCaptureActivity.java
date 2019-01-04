@@ -146,20 +146,21 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
             return;
         }
 
-        final Activity thisActivity = this;
-
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ActivityCompat.requestPermissions(thisActivity, permissions,
-                        RC_HANDLE_CAMERA_PERM);
-            }
-        };
+//        View.OnClickListener listener = new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                ActivityCompat.requestPermissions(OcrCaptureActivity.this, permissions,
+//                        RC_HANDLE_CAMERA_PERM);
+//            }
+//        };
 
         Snackbar.make(mGraphicOverlay, R.string.permission_camera_rationale,
-                Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.ok, listener)
+                Snackbar.LENGTH_LONG)
+//                .setAction(R.string.ok, listener)
                 .show();
+
+        ActivityCompat.requestPermissions(OcrCaptureActivity.this, permissions,
+                        RC_HANDLE_CAMERA_PERM);
     }
 
     @Override

@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -157,6 +159,19 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                 Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 startActivityForResult(intent, PICK_CONTACT);
             } else {
+//                final Activity thisActivity = this;
+//
+//                View.OnClickListener listener = new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        Utils.requestPermissions(thisActivity, GET_READ_CONTACT_PERMISSION, permissions);
+//                    }
+//                };
+
+                Snackbar.make(listView, R.string.permission_contacts_rationale,
+                        Snackbar.LENGTH_LONG)
+//                        .setAction(R.string.ok, listener)
+                        .show();
                 Utils.requestPermissions(this, GET_READ_CONTACT_PERMISSION, permissions);
             }
         } else if (v.getId() == R.id.select_add_button) {

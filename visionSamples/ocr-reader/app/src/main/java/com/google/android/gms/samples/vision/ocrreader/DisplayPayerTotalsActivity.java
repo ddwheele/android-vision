@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -80,7 +81,7 @@ public class DisplayPayerTotalsActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
-                if(position == 0) {
+                if (position == 0) {
                     // change the tip percentage
                     showTipPercentPicker(DisplayPayerTotalsActivity.this);
                     return;
@@ -101,7 +102,7 @@ public class DisplayPayerTotalsActivity extends Activity {
     }
 
     protected void changeTipPercent() {
-        tipHeader.setText("+" + tipPercent + "%" );
+        tipHeader.setText("+" + tipPercent + "%");
         PreferencesStore.getInstance().setLastTipPercent(tipPercent);
         payerCoordinator.changeTipPercent(tipPercent);
         payerAdapter.notifyDataSetChanged();
@@ -128,7 +129,7 @@ public class DisplayPayerTotalsActivity extends Activity {
         d.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                tipPercent =  numberPicker.getValue();
+                tipPercent = numberPicker.getValue();
                 changeTipPercent();
             }
         });
@@ -161,14 +162,31 @@ public class DisplayPayerTotalsActivity extends Activity {
                         if (Utils.hasPermissions(DisplayPayerTotalsActivity.this, permissions)) {
                             sendSms();
                         } else {
-                            Utils.requestPermissions(DisplayPayerTotalsActivity.this,
-                                    MY_PERMISSIONS_REQUEST_SEND_SMS, permissions);
+                            getPermission();
                         }
                     }
                 })
                 .setNegativeButton("Cancel", null)
                 .create();
         dialog.show();
+    }
+
+    protected void getPermission() {
+//        View.OnClickListener listener = new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Utils.requestPermissions(DisplayPayerTotalsActivity.this,
+//                        MY_PERMISSIONS_REQUEST_SEND_SMS, permissions);
+//            }
+//        };
+
+        Snackbar.make(payerListView, R.string.permission_sms_rationale,
+                Snackbar.LENGTH_LONG)
+//                .setAction(R.string.ok, listener)
+                .show();
+
+        Utils.requestPermissions(DisplayPayerTotalsActivity.this,
+                MY_PERMISSIONS_REQUEST_SEND_SMS, permissions);
     }
 
     @Override
@@ -207,7 +225,7 @@ public class DisplayPayerTotalsActivity extends Activity {
                 newPriceString = newPriceString.replaceAll(phoneRegex, "");
 
                 int len = newPriceString.length();
-                if(len > 0) {
+                if (len > 0) {
                     phoneNumberInput.setError("Enter a valid phone number");
                 } else {
                     phoneNumberInput.setError(null);
@@ -225,7 +243,7 @@ public class DisplayPayerTotalsActivity extends Activity {
                         newPriceString = newPriceString.replaceAll(phoneRegex, "");
 
                         int len = newPriceString.length();
-                        if(len > 0) {
+                        if (len > 0) {
                             phoneNumberInput.setError("Enter a valid phone number");
                         } else {
                             phoneNumberInput.setError(null);
