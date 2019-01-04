@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.text.Editable;
@@ -37,10 +39,8 @@ public class DisplayPayerTotalsActivity extends Activity {
     PayerDebt totals;
 
     DecimalFormat twoDecimalFormat = new DecimalFormat("#.00");
-    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 0;
 
     String phoneNumber, message, nameToText;
-    String[] permissions;
     int tipPercent = 15;
     TextView tipHeader;
 
@@ -88,12 +88,6 @@ public class DisplayPayerTotalsActivity extends Activity {
             }
         });
 
-        if (android.os.Build.VERSION.SDK_INT == 26) {
-            // stupid Android bug that Google refuses to fix in 8.0
-            permissions = new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE};
-        } else {
-            permissions = new String[]{Manifest.permission.SEND_SMS};
-        }
         showToast();
     }
 
@@ -152,54 +146,15 @@ public class DisplayPayerTotalsActivity extends Activity {
                 .setTitle("Send Text Message")
                 .setMessage("Text this message to " + nameToText + "?")
                 .setView(taskEditText)
-                .setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Go to SMS", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (Utils.hasPermissions(DisplayPayerTotalsActivity.this, permissions)) {
                             sendSms();
-                        } else {
-                            getPermission();
-                        }
                     }
                 })
                 .setNegativeButton("Cancel", null)
                 .create();
         dialog.show();
-    }
-
-    protected void getPermission() {
-        // uncomment to require user to click OK
-//        View.OnClickListener listener = new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Utils.requestPermissions(DisplayPayerTotalsActivity.this,
-//                        MY_PERMISSIONS_REQUEST_SEND_SMS, permissions);
-//            }
-//        };
-
-        Snackbar.make(payerListView, R.string.permission_sms_rationale,
-                Snackbar.LENGTH_LONG)
-//                .setAction(R.string.ok, listener)
-                .show();
-
-        Utils.requestPermissions(DisplayPayerTotalsActivity.this,
-                MY_PERMISSIONS_REQUEST_SEND_SMS, permissions);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_SEND_SMS: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    sendSms();
-                } else {
-                    Toast.makeText(getApplicationContext(),
-                            "SMS failed, please try again", Toast.LENGTH_LONG).show();
-                    return;
-                }
-            }
-        }
     }
 
     protected void showGetPhoneNumberDialog(Context c) {
@@ -272,16 +227,17 @@ public class DisplayPayerTotalsActivity extends Activity {
             showGetPhoneNumberDialog(DisplayPayerTotalsActivity.this);
             return;
         }
-        sendSmsUnchecked();
+        composeMmsMessage();
     }
 
-    private void sendSmsUnchecked() {
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(phoneNumber, null, message, null, null);
-        Toast.makeText(
-                getApplicationContext(), "SMS sent",
-                Toast.LENGTH_LONG).
-                show();
+    public void composeMmsMessage() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setType("text/plain");
+        intent.setData(Uri.parse("smsto:" + phoneNumber));
+        intent.putExtra("sms_body", message);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
 
         nameToText = null;
         phoneNumber = null;

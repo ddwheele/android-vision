@@ -10,9 +10,6 @@
     <uses-permission android:name=
         "android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission-sdk-23 android:maxSdkVersion="26"
-        android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
         android:allowBackup="true"
