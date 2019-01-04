@@ -158,12 +158,11 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                 Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 startActivityForResult(intent, PICK_CONTACT);
             } else {
-//                final Activity thisActivity = this;
-//
+                  // uncomment to require user to click OK
 //                View.OnClickListener listener = new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View view) {
-//                        Utils.requestPermissions(thisActivity, GET_READ_CONTACT_PERMISSION, permissions);
+//                        Utils.requestPermissions(this, GET_READ_CONTACT_PERMISSION, permissions);
 //                    }
 //                };
 
@@ -194,7 +193,6 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void showToast() {
-        // Show Toast message: "Long press on name to delete"
         if (!HintsShown.isSelectPayersToast()) {
             Toast toast = Toast.makeText(
                     getApplicationContext(),

@@ -147,6 +147,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
             return;
         }
 
+        // Uncomment to force user to click ok
 //        View.OnClickListener listener = new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {

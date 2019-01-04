@@ -44,8 +44,6 @@ public class DisplayPayerTotalsActivity extends Activity {
     int tipPercent = 15;
     TextView tipHeader;
 
-    String phoneRegex = "[-|\\d|.|(|)|+| ]";
-
     /**
      * Called when the activity is first created.
      */
@@ -170,6 +168,7 @@ public class DisplayPayerTotalsActivity extends Activity {
     }
 
     protected void getPermission() {
+        // uncomment to require user to click OK
 //        View.OnClickListener listener = new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -219,8 +218,8 @@ public class DisplayPayerTotalsActivity extends Activity {
             @Override
             public void afterTextChanged(Editable s) {
                 String newPriceString = String.valueOf(phoneNumberInput.getText());
-                Log.e(TAG, "you entered: " + newPriceString);
-                newPriceString = newPriceString.replaceAll(phoneRegex, "");
+                Log.d(TAG, "you entered: " + newPriceString);
+                newPriceString = newPriceString.replaceAll(Utils.phoneRegex, "");
 
                 int len = newPriceString.length();
                 if (len > 0) {
@@ -238,16 +237,17 @@ public class DisplayPayerTotalsActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String phoneNumberString = String.valueOf(phoneNumberInput.getText());
-                        String strippedPhoneNumberString = phoneNumberString.replaceAll(phoneRegex, "");
 
-                        int len = strippedPhoneNumberString.length();
-                        if (len > 0) {
-                            phoneNumberInput.setError("Enter a valid phone number");
-                        } else {
+                        if (Utils.phoneNumberOkay(phoneNumberString) ) {
                             phoneNumberInput.setError(null);
                             phoneNumber = phoneNumberString;
                             Log.e(TAG, "Good phone number: "+phoneNumber);
                             sendSms();
+                        } else {
+                            Toast.makeText(
+                                    getApplicationContext(), "No SMS sent",
+                                    Toast.LENGTH_LONG).
+                                    show();
                         }
                     }
                 })

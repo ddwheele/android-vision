@@ -79,6 +79,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
 
     private void showCorrectAnItemDialog(Context c, final AssignedPrice selectedPrice) {
         final EditText correctPriceInput = new EditText(c);
+        correctPriceInput.setText(Float.toString(selectedPrice.getPrice()));
         correctPriceInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

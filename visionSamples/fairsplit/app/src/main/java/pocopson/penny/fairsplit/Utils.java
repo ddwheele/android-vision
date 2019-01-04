@@ -33,6 +33,8 @@ public class Utils {
 
     protected static Map<String, File> stringFileMap = new HashMap<>();
 
+    public static String phoneRegex = "[-|\\d|.|(|)|+| ]";
+
     protected static File getFileFromName(String name) {
         File ret = stringFileMap.get(name);
         if (ret == null) {
@@ -114,6 +116,27 @@ public class Utils {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             return true;
+        }
+        return false;
+    }
+
+    public static boolean phoneNumberOkay(String phoneNumberString) {
+        String illegalChars = phoneNumberString.replaceAll(phoneRegex, "");
+        int illegal = illegalChars.length();
+
+        if(illegal > 0) {
+            return false;
+        }
+
+        String digits = phoneNumberString.replaceAll("\\D", "");
+        if(digits.length() == 10) {
+            return true;
+        }
+
+        if(digits.length() == 11) {
+            if(phoneNumberString.startsWith("1") || phoneNumberString.startsWith("+1")) {
+                return true;
+            }
         }
         return false;
     }
