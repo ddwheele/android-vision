@@ -1,15 +1,12 @@
 package pocopson.penny.fairsplit;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,7 +20,6 @@ import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.telephony.SmsManager;
 
 import pocopson.penny.fairsplit.adapters.DisplayPayerTotalsAdapter;
 import pocopson.penny.fairsplit.calculate.PayerDebtCoordinator;
@@ -43,6 +39,9 @@ public class DisplayPayerTotalsActivity extends Activity {
     String phoneNumber, message, nameToText;
     int tipPercent = 15;
     TextView tipHeader;
+
+    String sendString = "Open SMS App";
+    String invalidNumber = "Invalid phone number";
 
     /**
      * Called when the activity is first created.
@@ -73,7 +72,6 @@ public class DisplayPayerTotalsActivity extends Activity {
         payerListView.setAdapter(payerAdapter);
         payerListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
         payerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
@@ -84,7 +82,13 @@ public class DisplayPayerTotalsActivity extends Activity {
                 }
 
                 PayerDebt payerDebt = (PayerDebt) parent.getItemAtPosition(position);
-                showSendSmSDialog(DisplayPayerTotalsActivity.this, payerDebt);
+                nameToText = payerDebt.getName();
+                String withTax = twoDecimalFormat.format(payerDebt.getTotal());
+                String withTip = twoDecimalFormat.format(payerDebt.getTotalAndTip());
+
+                message = "FairSplit:  $" + withTax + " with tax and $" + withTip + " with " + tipPercent + "% tip.";
+                phoneNumber = payerDebt.getPhoneNumber();
+                sendSms();
             }
         });
 
@@ -132,31 +136,6 @@ public class DisplayPayerTotalsActivity extends Activity {
         alertDialog.show();
     }
 
-    protected void showSendSmSDialog(Context c, final PayerDebt payerDebt) {
-        Log.e(TAG, "inside showSendSmSDialog");
-        final EditText taskEditText = new EditText(c);
-        nameToText = payerDebt.getName();
-        String withTax = twoDecimalFormat.format(payerDebt.getTotal());
-        String withTip = twoDecimalFormat.format(payerDebt.getTotalAndTip());
-
-        message = "FairSplit:  $" + withTax + " with tax and $" + withTip + " with " + tipPercent + "% tip.";
-        phoneNumber = payerDebt.getPhoneNumber();
-        taskEditText.setText(message);
-        AlertDialog dialog = new AlertDialog.Builder(c)
-                .setTitle("Send Text Message")
-                .setMessage("Text this message to " + nameToText + "?")
-                .setView(taskEditText)
-                .setPositiveButton("Go to SMS", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                            sendSms();
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .create();
-        dialog.show();
-    }
-
     protected void showGetPhoneNumberDialog(Context c) {
         final EditText phoneNumberInput = new EditText(c);
         phoneNumberInput.addTextChangedListener(new TextWatcher() {
@@ -188,19 +167,19 @@ public class DisplayPayerTotalsActivity extends Activity {
                 .setTitle("Enter Phone Number")
                 .setMessage("Enter " + nameToText + "'s phone number.")
                 .setView(phoneNumberInput)
-                .setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                .setPositiveButton(sendString, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String phoneNumberString = String.valueOf(phoneNumberInput.getText());
 
-                        if (Utils.phoneNumberOkay(phoneNumberString) ) {
+                        if (Utils.phoneNumberOkay(phoneNumberString)) {
                             phoneNumberInput.setError(null);
                             phoneNumber = phoneNumberString;
-                            Log.e(TAG, "Good phone number: "+phoneNumber);
+                            Log.e(TAG, "Good phone number: " + phoneNumber);
                             sendSms();
                         } else {
                             Toast.makeText(
-                                    getApplicationContext(), "No SMS sent",
+                                    getApplicationContext(), invalidNumber,
                                     Toast.LENGTH_LONG).
                                     show();
                         }
