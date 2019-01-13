@@ -87,7 +87,7 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-
+Log.e(TAG, "I'M STARTING!!!!");
         context = getApplicationContext();
         setContentView(R.layout.ocr_capture);
 

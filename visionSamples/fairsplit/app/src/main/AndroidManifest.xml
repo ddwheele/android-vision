@@ -7,8 +7,7 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name=
-        "android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
 
     <application
@@ -26,18 +25,24 @@
         <activity
             android:name=".ocr.OcrCaptureActivity"
             android:label="Fair Split">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".VerifyPricesActivity" />
         <activity
             android:name=".SelectPayersActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".AssignPayersActivity" />
-        <activity android:name=".DisplayPayerTotalsActivity"></activity>
+        <activity android:name=".DisplayPayerTotalsActivity" />
+        <activity android:name=".TutorialActivity" />
+        <activity
+            android:name=".FirstActivity"
+            android:label="@string/title_app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

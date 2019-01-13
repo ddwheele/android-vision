@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.NumberPicker;
@@ -27,7 +28,7 @@ import pocopson.penny.fairsplit.calculate.PayerDebt;
 
 import java.text.DecimalFormat;
 
-public class DisplayPayerTotalsActivity extends Activity {
+public class DisplayPayerTotalsActivity extends Activity implements View.OnClickListener {
     final String TAG = "DisplayPayerTotalsActivity";
     PayerDebtCoordinator payerCoordinator;
     ListView payerListView;
@@ -42,6 +43,8 @@ public class DisplayPayerTotalsActivity extends Activity {
 
     String sendString = "Open SMS App";
     String invalidNumber = "Invalid phone number";
+
+    Button restartButton, closeButton;
 
     /**
      * Called when the activity is first created.
@@ -92,6 +95,10 @@ public class DisplayPayerTotalsActivity extends Activity {
             }
         });
 
+        restartButton = findViewById(R.id.display_restart_button);
+        restartButton.setOnClickListener(this);
+        closeButton = findViewById(R.id.display_close_button);
+        closeButton.setOnClickListener(this);
         showToast();
     }
 
@@ -221,5 +228,15 @@ public class DisplayPayerTotalsActivity extends Activity {
         nameToText = null;
         phoneNumber = null;
         message = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.display_restart_button) {
+            Intent intent = new Intent(this, FirstActivity.class);
+            startActivity(intent);
+        } else if(v.getId() == R.id.display_close_button) {
+            moveTaskToBack(true);
+        }
     }
 }
