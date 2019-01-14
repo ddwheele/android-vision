@@ -93,11 +93,7 @@ public class TutorialActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.tutorial_next_button) {
-           advanceOneImage();
-        } else if(v.getId() == R.id.tutorial_back_button) {
-            goBackOneImage();
-        } else if(v.getId() == R.id.tutorial_close_button) {
+        if(v.getId() == R.id.tutorial_close_button) {
             returnToFirstActivity();
         }
 

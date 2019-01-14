@@ -134,15 +134,8 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
                                     int position, long id) {
                 AssignedPrice item =  (AssignedPrice)parent.getItemAtPosition(position);
                 if(selectedPayer != null) {
-                    payerCoordinator.addPayerToItem(selectedPayer, item);
+                    payerCoordinator.togglePayerOnItem(selectedPayer, item);
                     priceAdapter.notifyDataSetChanged();
-                }
-                else if(!item.getPayerString().isEmpty()){
-                    payerCoordinator.removeLastPayerFromItem(item);
-                    priceAdapter.notifyDataSetChanged();
-                }
-                else {
-                    // TODO give error message and instructions
                 }
             }
         });

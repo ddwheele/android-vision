@@ -41,6 +41,16 @@ public class PayerDebtCoordinator implements Parcelable {
         return payerDebtList;
     }
 
+    public void togglePayerOnItem(PayerDebt payer, AssignedPrice item) {
+        // if payer already on item, remove him
+        if(item.getPayers().contains(payer.name)) {
+            removePayerFromItem(payer.name, item);
+        } else {
+            // otherwise, add him
+            addPayerToItem(payer, item);
+        }
+    }
+
     public void addPayerToItem(PayerDebt payer, AssignedPrice item) {
         if (payer == null || item == null) {
             return;
