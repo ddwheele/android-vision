@@ -18,6 +18,7 @@ package pocopson.penny.fairsplit.ui.camera;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import pocopson.penny.fairsplit.calculate.AssignedPrice;
@@ -76,9 +77,11 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
      * @return true if currently selected text has items that add to subtotal and total
      */
     public boolean isConsistent() {
+        Log.e(TAG, "Checking consistency");
         precomputedPriceList.clear();
 
         if(previousPriceList != null) {
+            Log.e(TAG, "isConsistent(): adding all previousPriceList, size " + previousPriceList +", to precomputedPriceList, size "+precomputedPriceList.size());
             precomputedPriceList.addAll(previousPriceList);
         }
         precomputedPriceList.addAll(flattenPriceList());
@@ -112,6 +115,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     }
 
     public void setPreviousPriceList(ArrayList<AssignedPrice> oldList) {
+        Log.e(TAG, "Giving me an old List, size " + oldList.size());
         previousPriceList = oldList;
     }
 

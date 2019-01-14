@@ -1,5 +1,6 @@
 package pocopson.penny.fairsplit;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.Vector;
 
@@ -15,12 +17,13 @@ import java.util.Vector;
  */
 public class TutorialActivity extends AppCompatActivity implements View.OnClickListener {
     final String TAG = "TutorialActivity";
-    Button backButton, nextButton, closeButton;
+    Button closeButton;
     ImageView imageView;
     Vector<Integer> imageVector;
     int imageIndex = 0;
     final int NUM_TUTORIAL_IMAGES = 6;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,14 +35,24 @@ public class TutorialActivity extends AppCompatActivity implements View.OnClickL
         imageView = findViewById(R.id.tutorial_image_view);
         imageView.setImageResource(imageVector.firstElement());
 
-        backButton = findViewById(R.id.tutorial_back_button);
-        backButton.setOnClickListener(this);
-
-        nextButton = findViewById(R.id.tutorial_next_button);
-        nextButton.setOnClickListener(this);
-
         closeButton = findViewById(R.id.tutorial_close_button);
         closeButton.setOnClickListener(this);
+
+        imageView.setOnTouchListener(new OnSwipeTouchListener(TutorialActivity.this) {
+            public void onSwipeTop() {
+            }
+
+            public void onSwipeRight() {
+                goBackOneImage();
+            }
+
+            public void onSwipeLeft() {
+                advanceOneImage();
+            }
+
+            public void onSwipeBottom() {
+            }
+        });
     }
 
     private void setupImageVector() {
@@ -53,7 +66,6 @@ public class TutorialActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void advanceOneImage() {
-        Log.e(TAG, "Going forward from  " + imageIndex);
         if(imageIndex == (NUM_TUTORIAL_IMAGES-1)) {
             returnToFirstActivity();
             return;
@@ -61,11 +73,9 @@ public class TutorialActivity extends AppCompatActivity implements View.OnClickL
         int nextImage = (imageIndex+1)%NUM_TUTORIAL_IMAGES;
         imageView.setImageResource(imageVector.get(nextImage));
         imageIndex = nextImage;
-
     }
 
     private void goBackOneImage() {
-        Log.e(TAG, "Going back from  " + imageIndex);
         if(imageIndex == 0) {
             returnToFirstActivity();
             return;
@@ -73,7 +83,6 @@ public class TutorialActivity extends AppCompatActivity implements View.OnClickL
         int lastImage = (imageIndex-1)%NUM_TUTORIAL_IMAGES;
         imageView.setImageResource(imageVector.get(lastImage));
         imageIndex = lastImage;
-
     }
 
     private void returnToFirstActivity() {
@@ -81,11 +90,9 @@ public class TutorialActivity extends AppCompatActivity implements View.OnClickL
         startActivity(intent);
     }
 
-
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.tutorial_next_button) {
-
            advanceOneImage();
         } else if(v.getId() == R.id.tutorial_back_button) {
             goBackOneImage();

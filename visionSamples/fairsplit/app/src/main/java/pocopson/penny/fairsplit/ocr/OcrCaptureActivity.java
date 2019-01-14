@@ -87,7 +87,6 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-Log.e(TAG, "I'M STARTING!!!!");
         context = getApplicationContext();
         setContentView(R.layout.ocr_capture);
 
@@ -126,9 +125,16 @@ Log.e(TAG, "I'M STARTING!!!!");
     protected void onStart() {
         super.onStart();
         yOffset = getIntent().getFloatExtra(Utils.OFFSET, 0);
+        Log.e(TAG, "onStart(): yOffset=" + yOffset);
         mGraphicOverlay.setYOffset(yOffset);
         ArrayList<AssignedPrice> priceList = getIntent().getParcelableArrayListExtra(Utils.PRICES);
-        mGraphicOverlay.setPreviousPriceList(priceList);
+        if(priceList != null) {
+            Log.e(TAG, "onStart(): priceList from Intent has size" + priceList.size() + "!!!!");
+            mGraphicOverlay.setPreviousPriceList(priceList);
+        } else {
+            Log.e(TAG, "onStart(): no priceList from Intent" );
+        }
+
     }
 
     /**
@@ -235,6 +241,7 @@ Log.e(TAG, "I'M STARTING!!!!");
     @Override
     protected void onResume() {
         super.onResume();
+        //ljhkjh
         if(mOcrDetectorProcessor != null) {
             mOcrDetectorProcessor.unlock();
             // clear so it won't read the screen from last time
@@ -358,6 +365,10 @@ Log.e(TAG, "I'M STARTING!!!!");
     private boolean onTap(float rawX, float rawY) {
         mOcrDetectorProcessor.lock();
         ArrayList<AssignedPrice> priceList = mGraphicOverlay.getPriceList();
+        Log.e(TAG, "Returning the following from second OcrCapture:");
+        for(AssignedPrice ap : priceList) {
+            Log.e(TAG, "\t" + ap.toString());
+        }
 
         if(priceList.isEmpty()) {
             mOcrDetectorProcessor.unlock();

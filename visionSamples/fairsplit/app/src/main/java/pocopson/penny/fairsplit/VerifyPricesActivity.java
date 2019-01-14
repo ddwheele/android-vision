@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,10 +36,11 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
     ArrayList<AssignedPrice> priceList;
     ListView priceListView;
     VerifyPricesAdapter priceAdapter;
-    Button continueButton, readMoreButton, addButton;
+    Button continueButton, readMoreButton, addButton, restartButton;
     TextView topMessage;
     boolean pricesVerified = false;
     Category selectedCategory = Category.ITEM;
+//    boolean savePrices = false; // erase prices unless "read more prices" is clicked
 
     private static final int VF_OCR_CAPTURE = 9016;
 
@@ -50,6 +52,7 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
         continueButton = findViewById(R.id.verify_continue_button);
         readMoreButton = findViewById(R.id.verify_append_prices_button);
         addButton = findViewById(R.id.verify_add_a_price_button);
+        restartButton = findViewById(R.id.verify_restart_button);
         topMessage = findViewById(R.id.prices_to_verify);
 
         priceList = getIntent().getParcelableArrayListExtra(Utils.PRICES);
@@ -71,37 +74,17 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
-        priceListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                AssignedPrice selectedPrice = (AssignedPrice) parent.getItemAtPosition(position);
-                showDeleteAnItemDialog(VerifyPricesActivity.this, selectedPrice);
-                return true;
-            }
-        });
-
         continueButton.setOnClickListener(this);
         readMoreButton.setOnClickListener(this);
         addButton.setOnClickListener(this);
+        restartButton.setOnClickListener(this);
 
         parsePrices();
     }
 
-    private void showDeleteAnItemDialog(Context c, final AssignedPrice selectedPrice) {
-
-        AlertDialog dialog = new AlertDialog.Builder(c)
-                .setTitle("Delete Price")
-                .setMessage("Delete $"+Float.toString(selectedPrice.getPrice()) + "?")
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        priceList.remove(selectedPrice);
-                        parsePrices();
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .create();
-        dialog.show();
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     private void showCorrectAnItemDialog(Context c, final AssignedPrice selectedPrice) {
@@ -131,8 +114,8 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
         });
 
         AlertDialog dialog = new AlertDialog.Builder(c)
-                .setTitle("Change Price")
-                .setMessage("Input correct price")
+                .setTitle("Correct or Delete Price")
+                .setMessage("Input the correct price, or delete the price from the list.")
                 .setView(correctPriceInput)
                 .setPositiveButton("Change", new DialogInterface.OnClickListener() {
                     @Override
@@ -141,12 +124,20 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
                         try {
                             float newPrice = Float.valueOf(newPriceString);
                             selectedPrice.updatePrice(newPrice);
+                            parsePrices();
                         } catch (Exception e) {
                             // ignore
                         }
                     }
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("Delete",  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        priceList.remove(selectedPrice);
+                        parsePrices();
+                    }
+                })
+                .setNeutralButton("Cancel", null)
                 .create();
         dialog.show();
     }
@@ -242,15 +233,11 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        Log.d(TAG, "I got a result");
         if(requestCode == VF_OCR_CAPTURE) {
-            Log.d(TAG, "with the right request code");
             if (intent != null) {
-                Log.d(TAG, "intent is not null");
+                priceList.clear();
                 ArrayList<AssignedPrice> p2 = intent.getParcelableArrayListExtra(Utils.PRICES);
-                Log.d(TAG, "prices has " + priceList.size() + " and p2 has " + p2.size());
                 priceList.addAll(p2);
-                Log.d(TAG, "NOW prices has " + priceList.size());
                 parsePrices();
             }
         }
@@ -270,6 +257,11 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
         } else if(v.getId() == R.id.verify_add_a_price_button) {
             // add a new price at the top
             showAddItemDialog(VerifyPricesActivity.this);
+        } else if(v.getId() == R.id.verify_restart_button) {
+            Intent intent = new Intent(this, OcrCaptureActivity.class);
+            intent.putExtra(Utils.OFFSET, 0);
+            intent.putParcelableArrayListExtra(Utils.PRICES, new ArrayList<AssignedPrice>());
+            startActivityForResult(intent, VF_OCR_CAPTURE);
         } else if(v.getId() == R.id.verify_append_prices_button) {
             // get Y value of last price
             // TODO is it still guaranteed to be sorted from the last parsing?
