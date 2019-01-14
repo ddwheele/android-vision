@@ -1,4 +1,4 @@
-package pocopson.penny.fairsplit;
+package pocopson.penny.fairsplit.activities;
 
 import android.Manifest;
 import android.app.Activity;
@@ -24,6 +24,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import pocopson.penny.fairsplit.ColorUtils;
+import pocopson.penny.fairsplit.HintsShown;
+import pocopson.penny.fairsplit.PayerTagGraphic;
+import pocopson.penny.fairsplit.R;
+import pocopson.penny.fairsplit.TagLayout;
+import pocopson.penny.fairsplit.Utils;
 import pocopson.penny.fairsplit.calculate.PayerDebt;
 import pocopson.penny.fairsplit.calculate.AssignedPrice;
 

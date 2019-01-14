@@ -1,16 +1,13 @@
-package pocopson.penny.fairsplit;
+package pocopson.penny.fairsplit.activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Parcelable;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,6 +19,9 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import pocopson.penny.fairsplit.ColorUtils;
+import pocopson.penny.fairsplit.R;
+import pocopson.penny.fairsplit.Utils;
 import pocopson.penny.fairsplit.adapters.VerifyPricesAdapter;
 import pocopson.penny.fairsplit.calculate.AssignedPrice;
 import pocopson.penny.fairsplit.calculate.CalcUtils;

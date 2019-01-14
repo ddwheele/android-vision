@@ -27,15 +27,15 @@
             android:label="Fair Split">
 
         </activity>
-        <activity android:name=".VerifyPricesActivity" />
+        <activity android:name=".activities.VerifyPricesActivity" />
         <activity
-            android:name=".SelectPayersActivity"
+            android:name=".activities.SelectPayersActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".AssignPayersActivity" />
-        <activity android:name=".DisplayPayerTotalsActivity" />
-        <activity android:name=".TutorialActivity" />
+        <activity android:name=".activities.AssignPayersActivity" />
+        <activity android:name=".activities.DisplayPayerTotalsActivity" />
+        <activity android:name=".activities.TutorialActivity" />
         <activity
-            android:name=".FirstActivity"
+            android:name=".activities.FirstActivity"
             android:label="@string/title_app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

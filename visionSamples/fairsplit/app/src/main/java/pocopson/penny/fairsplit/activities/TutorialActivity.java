@@ -1,16 +1,17 @@
-package pocopson.penny.fairsplit;
+package pocopson.penny.fairsplit.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.util.Vector;
+
+import pocopson.penny.fairsplit.OnSwipeTouchListener;
+import pocopson.penny.fairsplit.R;
 
 /**
  * Cycle through tutorial pictures.

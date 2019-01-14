@@ -1,4 +1,4 @@
-package pocopson.penny.fairsplit;
+package pocopson.penny.fairsplit.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,6 +22,10 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import pocopson.penny.fairsplit.HintsShown;
+import pocopson.penny.fairsplit.PreferencesStore;
+import pocopson.penny.fairsplit.R;
+import pocopson.penny.fairsplit.Utils;
 import pocopson.penny.fairsplit.adapters.DisplayPayerTotalsAdapter;
 import pocopson.penny.fairsplit.calculate.PayerDebtCoordinator;
 import pocopson.penny.fairsplit.calculate.PayerDebt;

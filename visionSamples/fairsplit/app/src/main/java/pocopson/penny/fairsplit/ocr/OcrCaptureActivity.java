@@ -43,7 +43,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import pocopson.penny.fairsplit.R;
 import pocopson.penny.fairsplit.Utils;
 import pocopson.penny.fairsplit.HintsShown;
-import pocopson.penny.fairsplit.VerifyPricesActivity;
+import pocopson.penny.fairsplit.activities.VerifyPricesActivity;
 import pocopson.penny.fairsplit.calculate.AssignedPrice;
 import pocopson.penny.fairsplit.ui.camera.CameraSource;
 import pocopson.penny.fairsplit.ui.camera.CameraSourcePreview;

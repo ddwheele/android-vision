@@ -5,6 +5,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import pocopson.penny.fairsplit.activities.AssignPayersActivity;
+
 public class TagLayout extends LinearLayout {
     private final String TAG = "TagLayout";
 
