@@ -7,6 +7,16 @@ public class TestPayerDebt {
     double epsilon = 0.001;
 
     @Test
+    public void testEquals() {
+        PayerDebt henri = new PayerDebt("Henri");
+        PayerDebt ivan = new PayerDebt("ivan");
+        PayerDebt henry = new PayerDebt("Henri");
+
+        Assert.assertEquals(henri, henry);
+        Assert.assertNotEquals(ivan, henri);
+    }
+
+    @Test
     public void testLabelSubtotalTaxAndTotal_normal() {
         AssignedPrice ap20 = new AssignedPrice(100, 20);
         AssignedPrice ap80 = new AssignedPrice(200, 80);

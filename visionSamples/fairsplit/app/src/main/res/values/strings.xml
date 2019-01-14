@@ -48,7 +48,7 @@
     <string name="tutorial_4_text">Add payers by selecting them from your contact list, or by typing their names.</string>
     <string name="tutorial_5_text">Assign payers to items by tapping a name, then tapping an item. Items can be shared.</string>
     <string name="first_tutorial">Tutorial</string>
-    <string name="first_camera">Camera: Capture receipt</string>
-    <string name="first_gallery">Gallery: Open receipt image</string>
+    <string name="first_camera">Capture receipt</string>
+    <string name="first_gallery">Open receipt image</string>
     <string name="title_app_name">Fair Split</string>
 </resources>

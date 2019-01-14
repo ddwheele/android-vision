@@ -9,7 +9,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -35,6 +34,9 @@ import pocopson.penny.fairsplit.calculate.PayerDebt;
 import pocopson.penny.fairsplit.calculate.AssignedPrice;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.TreeSet;
 
 /**
  * Select payers from Contact List, type in payer names, or tap on recent payer names
@@ -44,7 +46,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     static final int PICK_CONTACT = 1;
     static final int GET_READ_CONTACT_PERMISSION = 55;
     ArrayList<PayerDebt> payerList = new ArrayList<>();
-    ArrayList<PayerDebt> oldPayerList;
+    TreeSet<PayerDebt> oldPayerSet;
     ListView listView;
     ArrayAdapter<PayerDebt> adapter;
     Button continueButton, addButton;
@@ -80,13 +82,25 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
 
         TagLayout tagLayout = findViewById(R.id.old_payer_cloud);
         LayoutInflater layoutInflater = getLayoutInflater();
-        for (final PayerDebt payerDebt : oldPayerList) {
+        Iterator<PayerDebt> dipd = oldPayerSet.iterator();
+        HashSet<String> seen = new HashSet<>();
+        HashSet<PayerDebt> doubled = new HashSet<>();
+        while(dipd.hasNext()) {
+            final PayerDebt payerDebt = dipd.next();
+            Log.e(TAG, "PROCESSING: " + payerDebt.getName() + " " + payerDebt.getPopularity());
+            if(seen.contains(payerDebt.getName())) {
+                Log.e(TAG, "setupOldPayerTags(): I already saw " + payerDebt.toString());
+                doubled.add(payerDebt);
+                continue;
+            } else {
+                seen.add(payerDebt.getName());
+            }
             View tagView = layoutInflater.inflate(R.layout.tag_layout, null, false);
 
             final TextView tagTextView = tagView.findViewById(R.id.tagTextView);
             final String payerName = payerDebt.getName();
             final int payerColor = ColorUtils.getNumColor(payerDebt.getNumberInList());
-            tagTextView.setText(payerName);
+            tagTextView.setText(payerName + " " + payerDebt.getPopularity());
 
             GradientDrawable drawable = (GradientDrawable) tagTextView.getBackground();
             drawable.setColor(payerColor); // set solid color
@@ -107,6 +121,9 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
 
             payerTags.add(new PayerTagGraphic(payerName, payerColor, tagTextView));
             tagLayout.addView(tagView);
+        }
+        for(PayerDebt dbl : doubled) {
+            oldPayerSet.remove(dbl);
         }
 
         hasPayerCloud = true;
@@ -264,16 +281,39 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onPause() {
         super.onPause();
-        // TODO make this a priority queue
-        Utils.saveData(payersFilename, payerList);
+        PayerDebt lastPd = null;
+        for(PayerDebt pd : payerList) {
+            Log.e(TAG, "onPause, adding " + pd.toString());
+            pd.incrementPopularity();
+            boolean contained = oldPayerSet.contains(pd);
+            Log.e(TAG, "contained = " + contained);
+            boolean wasAdded = oldPayerSet.add(pd);
+            Log.e(TAG, "was added = " + wasAdded);
+            Log.e(TAG, "intermediate oldPayerSet  = " );
+            for(PayerDebt pdq: oldPayerSet) {
+                Log.e(TAG, "\t" + pdq.getPopularity() + ": " + pdq.toString());
+            }
+        }
+        Log.e(TAG, "onPause() oldPayerSet = ");
+        Iterator<PayerDebt> it =  oldPayerSet.descendingIterator();
+        while(it.hasNext()) {
+            PayerDebt pd = it.next();
+            Log.e(TAG, "\t" + pd.getPopularity() + ": " + pd.toString());
+        }
+        Log.e(TAG, "oldPayerSet size = " + oldPayerSet.size());
+        Utils.saveData(payersFilename, oldPayerSet);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        oldPayerList = (ArrayList<PayerDebt>) Utils.loadData(payersFilename);
-        if(oldPayerList == null) {
-            oldPayerList = new ArrayList<>();
+        oldPayerSet = (TreeSet<PayerDebt>) Utils.loadData(payersFilename);
+        if(oldPayerSet == null) {
+            oldPayerSet = new TreeSet<>();
+        }
+        Log.e(TAG, "onResume() oldPayerSet = ");
+        for(PayerDebt pd: oldPayerSet) {
+            Log.e(TAG, "\t" + pd.getPopularity() + ": " + pd.toString());
         }
         setupOldPayerTags();
     }

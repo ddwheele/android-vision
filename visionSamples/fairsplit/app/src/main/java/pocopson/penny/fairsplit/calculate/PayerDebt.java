@@ -10,9 +10,9 @@ import java.util.ArrayList;
 
 import pocopson.penny.fairsplit.Utils;
 
-public class PayerDebt implements Parcelable, Serializable {
+public class PayerDebt implements Parcelable, Serializable, Comparable {
     private static final String TAG = "PayerDebt";
-    private static int count = 0;
+    private static int count = 0; // # of payers created, used for color
     final String name;
     private String phoneNumber;
     protected ArrayList<AssignedPrice> items;
@@ -22,11 +22,13 @@ public class PayerDebt implements Parcelable, Serializable {
     private boolean selected = false; // is this person selected in the Activity
     protected final int numberInList; // Payer's order in list (used for color)
     protected float tipPercent = 0.15f;
+    protected int popularity = 0; // # of times user has selected him, used for Recents list
 
     DecimalFormat twoDecimalFormat = new DecimalFormat("#.00");
 
     /**
      * Keep track of items and prices assigned to payer
+     *
      * @param name Payer's name
      */
     public PayerDebt(String name) {
@@ -45,6 +47,8 @@ public class PayerDebt implements Parcelable, Serializable {
         calculated = in.readByte() != 0;
         selected = in.readByte() != 0;
         numberInList = in.readInt();
+        tipPercent = in.readFloat();
+        popularity = in.readInt();
     }
 
     public static final Creator<PayerDebt> CREATOR = new Creator<PayerDebt>() {
@@ -59,6 +63,19 @@ public class PayerDebt implements Parcelable, Serializable {
         }
     };
 
+    public void incrementPopularity() {
+        popularity++;
+    }
+
+    public void setPopularity(int newPopularity) {
+        popularity = newPopularity;
+    }
+
+    public int getPopularity() {
+        return popularity;
+    }
+
+
     public String getName() {
         return name;
     }
@@ -69,7 +86,7 @@ public class PayerDebt implements Parcelable, Serializable {
 
 
     public void addItem(AssignedPrice ap) {
-        if(!items.contains(ap)) {
+        if (!items.contains(ap)) {
             items.add(ap);
         }
         calculated = false;
@@ -81,8 +98,8 @@ public class PayerDebt implements Parcelable, Serializable {
     }
 
     public float getSubtotal() {
-        if(!calculated) {
-           calculate();
+        if (!calculated) {
+            calculate();
         }
         return subtotal;
     }
@@ -91,7 +108,7 @@ public class PayerDebt implements Parcelable, Serializable {
      * @return total + tax
      */
     public float getTotal() {
-        if(!calculated) {
+        if (!calculated) {
             calculate();
         }
         return total;
@@ -101,7 +118,7 @@ public class PayerDebt implements Parcelable, Serializable {
      * @return total * tipPercent
      */
     public float getTip() {
-        if(!calculated) {
+        if (!calculated) {
             calculate();
         }
         return subtotal * tipPercent;
@@ -112,7 +129,7 @@ public class PayerDebt implements Parcelable, Serializable {
     }
 
     public void setTipPercent(float tipPercent) {
-        if(tipPercent > 1.0) {
+        if (tipPercent > 1.0) {
             throw new IllegalArgumentException("Cannot tip more than 100%");
         }
         this.tipPercent = tipPercent;
@@ -133,12 +150,12 @@ public class PayerDebt implements Parcelable, Serializable {
     // add to get subtotal, and add tax for total
     protected void calculate() {
         // apparently Android doesn't do polymorphism. Very annoying.
-        if(name.equals(Utils.TOTAL)) {
+        if (name.equals(Utils.TOTAL)) {
             calculateForTotal();
             return;
         }
         subtotal = 0;
-        for(AssignedPrice ap : items) {
+        for (AssignedPrice ap : items) {
             subtotal += ap.getPricePerPayer();
         }
         total = subtotal * (1 + CalcUtils.taxRate);
@@ -147,7 +164,7 @@ public class PayerDebt implements Parcelable, Serializable {
 
     protected void calculateForTotal() {
         subtotal = 0;
-        for(AssignedPrice ap : items) {
+        for (AssignedPrice ap : items) {
             subtotal += ap.getPrice();
         }
         total = subtotal * (1 + CalcUtils.taxRate);
@@ -177,10 +194,9 @@ public class PayerDebt implements Parcelable, Serializable {
     }
 
     public void toggleSelected() {
-        if(selected) {
+        if (selected) {
             selected = false;
-        }
-        else {
+        } else {
             selected = true;
         }
     }
@@ -214,5 +230,44 @@ public class PayerDebt implements Parcelable, Serializable {
         dest.writeByte((byte) (calculated ? 1 : 0));
         dest.writeByte((byte) (selected ? 1 : 0));
         dest.writeInt(numberInList);
+        dest.writeFloat(tipPercent);
+        dest.writeInt(popularity);
     }
+
+
+    @Override
+    public int compareTo(Object o) {
+        if (o instanceof PayerDebt) {
+            PayerDebt other = (PayerDebt) o;
+            int level =  other.popularity - popularity;
+            if(level != 0) {
+                return level;
+            }
+            return name.compareTo(((PayerDebt) o).name);
+        }
+        return 0;
+    }
+
+//    @Override
+//    public boolean equals(Object o) {
+//        if (o == this) {
+//            return true;
+//        }
+//        if (!(o instanceof PayerDebt)) {
+//            return false;
+//        }
+//        PayerDebt other = (PayerDebt) o;
+//        if (!name.equals(other.name)) {
+//            return false;
+//        }
+//        return true;
+//
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        int result = 17;
+//        result = 31 * result + name.hashCode();
+//        return result;
+//    }
 }
