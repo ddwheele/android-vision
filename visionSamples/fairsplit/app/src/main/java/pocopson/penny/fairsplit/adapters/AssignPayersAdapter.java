@@ -29,18 +29,16 @@ public class AssignPayersAdapter extends ArrayAdapter<AssignedPrice> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.three_column_view, parent, false);
-        TextView text1 = rowView.findViewById(R.id.first_column);
-        TextView text2 = rowView.findViewById(R.id.second_column);
-        TextView text3 = rowView.findViewById(R.id.third_column);
+        View rowView = inflater.inflate(R.layout.two_column_view_assign, parent, false);
+        TextView text2 = rowView.findViewById(R.id.first_column);
+        text2.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+        TextView text3 = rowView.findViewById(R.id.second_column);
 
         AssignedPrice assignedPrice = values.get(position);
-        text1.setText(assignedPrice.getFirstColumnString());
         text2.setText(assignedPrice.getSecondColumnString());
         text3.setText(assignedPrice.getThirdColumnString());
 
         int rowColor = getColor(assignedPrice);
-        text1.setTextColor(rowColor);
         text2.setTextColor(rowColor);
 
         return rowView;
