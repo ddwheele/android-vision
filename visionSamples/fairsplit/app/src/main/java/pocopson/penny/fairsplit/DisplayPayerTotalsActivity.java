@@ -61,7 +61,7 @@ public class DisplayPayerTotalsActivity extends Activity implements View.OnClick
         payerAdapter = new DisplayPayerTotalsAdapter(this, payerCoordinator.getPayerDebtList());
 
         payerListView = findViewById(R.id.display_payer_totals);
-        View header = getLayoutInflater().inflate(R.layout.column_view, null);
+        View header = getLayoutInflater().inflate(R.layout.three_column_view, null);
         TextView header1 = header.findViewById(R.id.first_column);
         TextView header2 = header.findViewById(R.id.second_column);
         tipHeader = header.findViewById(R.id.third_column);

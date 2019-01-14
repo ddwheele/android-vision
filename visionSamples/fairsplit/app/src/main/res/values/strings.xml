@@ -38,8 +38,8 @@
     <string name="split_continue">Next</string>
     <string name="display_close">Close App</string>
     <string name="display_restart">New Receipt</string>
-    <string name="tutorial_next"> &gt; </string>
-    <string name="tutorial_back"> &lt; </string>
+    <string name="tutorial_next"> Next </string>
+    <string name="tutorial_back"> Back </string>
     <string name="tutorial_close">Exit Tutorial</string>
     <string name="tutorial_text">Pictures describe how to use app.</string>
     <string name="tutorial_1_text">To capture prices, center camera view over price column. Include totals.</string>

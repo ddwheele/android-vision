@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -70,11 +71,37 @@ public class VerifyPricesActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
+        priceListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                AssignedPrice selectedPrice = (AssignedPrice) parent.getItemAtPosition(position);
+                showDeleteAnItemDialog(VerifyPricesActivity.this, selectedPrice);
+                return true;
+            }
+        });
+
         continueButton.setOnClickListener(this);
         readMoreButton.setOnClickListener(this);
         addButton.setOnClickListener(this);
 
         parsePrices();
+    }
+
+    private void showDeleteAnItemDialog(Context c, final AssignedPrice selectedPrice) {
+
+        AlertDialog dialog = new AlertDialog.Builder(c)
+                .setTitle("Delete Price")
+                .setMessage("Delete $"+Float.toString(selectedPrice.getPrice()) + "?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        priceList.remove(selectedPrice);
+                        parsePrices();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.show();
     }
 
     private void showCorrectAnItemDialog(Context c, final AssignedPrice selectedPrice) {

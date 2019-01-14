@@ -29,7 +29,7 @@ public class AssignPayersAdapter extends ArrayAdapter<AssignedPrice> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.column_view, parent, false);
+        View rowView = inflater.inflate(R.layout.three_column_view, parent, false);
         TextView text1 = rowView.findViewById(R.id.first_column);
         TextView text2 = rowView.findViewById(R.id.second_column);
         TextView text3 = rowView.findViewById(R.id.third_column);
