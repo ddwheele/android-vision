@@ -243,31 +243,9 @@ public class PayerDebt implements Parcelable, Serializable, Comparable {
             if(level != 0) {
                 return level;
             }
-            return name.compareTo(((PayerDebt) o).name);
+            int ret = name.compareTo(((PayerDebt) o).name);
+            return ret;
         }
         return 0;
     }
-
-//    @Override
-//    public boolean equals(Object o) {
-//        if (o == this) {
-//            return true;
-//        }
-//        if (!(o instanceof PayerDebt)) {
-//            return false;
-//        }
-//        PayerDebt other = (PayerDebt) o;
-//        if (!name.equals(other.name)) {
-//            return false;
-//        }
-//        return true;
-//
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        int result = 17;
-//        result = 31 * result + name.hashCode();
-//        return result;
-//    }
 }

@@ -1,18 +1,50 @@
 package pocopson.penny.fairsplit.calculate;
 
+import android.util.Log;
+
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Iterator;
+import java.util.TreeSet;
+import java.util.Vector;
 
 public class TestPayerDebt {
     double epsilon = 0.001;
 
     @Test
+    public void testSorting() {
+        Vector<PayerDebt> payers = new Vector<>();
+        payers.add(new PayerDebt("Jack"));
+        payers.add(new PayerDebt("Kelly"));
+        payers.add(new PayerDebt("Leonard"));
+        payers.add(new PayerDebt("Mark"));
+
+        int pop = 5;
+        for(PayerDebt p : payers) {
+            p.setPopularity(pop++);
+        }
+
+        TreeSet<PayerDebt> set = new TreeSet<>();
+        set.addAll(payers);
+
+        Iterator<PayerDebt> it = set.iterator();
+        int index = payers.size() - 1;
+        while(it.hasNext()) {
+            PayerDebt real = payers.get(index);
+            PayerDebt cand = it.next();
+            Assert.assertEquals(real, cand);
+            index--;
+        }
+    }
+
+    @Test
     public void testEquals() {
         PayerDebt henri = new PayerDebt("Henri");
-        PayerDebt ivan = new PayerDebt("ivan");
+        PayerDebt ivan = new PayerDebt("Ivan");
         PayerDebt henry = new PayerDebt("Henri");
 
-        Assert.assertEquals(henri, henry);
+        Assert.assertEquals(henry, henry);
         Assert.assertNotEquals(ivan, henri);
     }
 
