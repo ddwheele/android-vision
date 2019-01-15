@@ -1,21 +1,28 @@
 package pocopson.penny.fairsplit.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import pocopson.penny.fairsplit.R;
 import pocopson.penny.fairsplit.ocr.OcrCaptureActivity;
 
 public class FirstActivity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = "FirstActivity";
-    Button tutorialButton, cameraButton, galleryButton;
+    Button tutorialButton, cameraButton;
+//    Button galleryButton;
     static final int GET_WRITE_EXTERNAL_PERMISSION = 24;
     String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
@@ -28,9 +35,9 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         tutorialButton.setOnClickListener(this);
         cameraButton = findViewById(R.id.camera_button);
         cameraButton.setOnClickListener(this);
-        galleryButton = findViewById(R.id.gallery_button);
-        galleryButton.setOnClickListener(this);
-        galleryButton.setEnabled(false);
+//        galleryButton = findViewById(R.id.gallery_button);
+//        galleryButton.setOnClickListener(this);
+//        galleryButton.setEnabled(false);
 
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (rc != PackageManager.PERMISSION_GRANTED) {
@@ -46,8 +53,8 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         } else if(v.getId() == R.id.camera_button) {
             Intent intent = new Intent(this, OcrCaptureActivity.class);
             startActivity(intent);
-        } else if(v.getId() == R.id.gallery_button) {
-            // select from gallery
+//        } else if(v.getId() == R.id.gallery_button) {
+//            // select from gallery
         }
     }
 
