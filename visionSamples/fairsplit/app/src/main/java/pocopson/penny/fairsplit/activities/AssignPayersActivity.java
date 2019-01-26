@@ -83,10 +83,6 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
             final TextView tagTextView = tagView.findViewById(R.id.tagTextView);
             final String payerName = payerDebt.getName();
             final int payerColor = ColorUtils.getNumColor(payerDebt.getNumberInList());
-            tagTextView.setText(payerName);
-
-            GradientDrawable drawable = (GradientDrawable)tagTextView.getBackground();
-            drawable.setColor(payerColor); // set solid color
 
             tagTextView.setOnClickListener(new View.OnClickListener() {
                 @Override

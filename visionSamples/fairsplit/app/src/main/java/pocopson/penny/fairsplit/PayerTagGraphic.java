@@ -20,6 +20,11 @@ public class PayerTagGraphic {
         this.name = name;
         this.color = color;
         this.textView = textView;
+
+        textView.setText(name);
+        GradientDrawable drawable = (GradientDrawable) textView.getBackground();
+        drawable.setColor(color);
+        drawable.setStroke(1, Color.WHITE);
     }
 
     public String getName() {
@@ -28,6 +33,7 @@ public class PayerTagGraphic {
 
     public void togglePayerTag() {
         GradientDrawable drawable = (GradientDrawable) textView.getBackground();
+
         if (selected) {
             Log.d(TAG, "Returning to normal: " + name);
             // change back to normal colors

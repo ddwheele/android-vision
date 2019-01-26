@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.TreeSet;
+import android.graphics.Color;
 
 /**
  * Select payers from Contact List, type in payer names, or tap on recent payer names
@@ -100,10 +101,6 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
             final TextView tagTextView = tagView.findViewById(R.id.tagTextView);
             final String payerName = payerDebt.getName();
             final int payerColor = ColorUtils.getNumColor(payerDebt.getNumberInList());
-            tagTextView.setText(payerName);
-
-            GradientDrawable drawable = (GradientDrawable) tagTextView.getBackground();
-            drawable.setColor(payerColor); // set solid color
 
             tagTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
