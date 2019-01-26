@@ -15,7 +15,7 @@
         android:fullBackupContent="false"
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
-        android:label="Fair Split"
+        android:label="@string/title_app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light">
         <meta-data
@@ -24,7 +24,7 @@
 
         <activity
             android:name=".ocr.OcrCaptureActivity"
-            android:label="Fair Split">
+            android:label="@string/title_app_name">
 
         </activity>
         <activity android:name=".activities.VerifyPricesActivity" />
