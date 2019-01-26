@@ -29,6 +29,7 @@ import pocopson.penny.fairsplit.Utils;
 import pocopson.penny.fairsplit.adapters.DisplayPayerTotalsAdapter;
 import pocopson.penny.fairsplit.calculate.PayerDebtCoordinator;
 import pocopson.penny.fairsplit.calculate.PayerDebt;
+import pocopson.penny.fairsplit.ocr.OcrCaptureActivity;
 
 import java.text.DecimalFormat;
 
@@ -237,7 +238,7 @@ public class DisplayPayerTotalsActivity extends Activity implements View.OnClick
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.display_restart_button) {
-            Intent intent = new Intent(this, FirstActivity.class);
+            Intent intent = new Intent(this, OcrCaptureActivity.class);
             startActivity(intent);
         } else if(v.getId() == R.id.display_close_button) {
             moveTaskToBack(true);

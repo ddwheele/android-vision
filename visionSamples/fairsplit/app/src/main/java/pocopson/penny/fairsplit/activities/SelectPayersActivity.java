@@ -100,7 +100,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
             final TextView tagTextView = tagView.findViewById(R.id.tagTextView);
             final String payerName = payerDebt.getName();
             final int payerColor = ColorUtils.getNumColor(payerDebt.getNumberInList());
-            tagTextView.setText(payerName + " " + payerDebt.getPopularity());
+            tagTextView.setText(payerName);
 
             GradientDrawable drawable = (GradientDrawable) tagTextView.getBackground();
             drawable.setColor(payerColor); // set solid color
@@ -112,6 +112,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                     if (payerList.contains(payerDebt)) {
                         return;
                     }
+                    payerDebt.incrementPopularity();
                     payerList.add(0, payerDebt);
                     adapter.notifyDataSetChanged();
                     continueButton.setEnabled(true);
@@ -281,10 +282,8 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onPause() {
         super.onPause();
-        PayerDebt lastPd = null;
         for(PayerDebt pd : payerList) {
             Log.e(TAG, "onPause, adding " + pd.toString());
-            pd.incrementPopularity();
             boolean contained = oldPayerSet.contains(pd);
             Log.e(TAG, "contained = " + contained);
             boolean wasAdded = oldPayerSet.add(pd);

@@ -33,7 +33,6 @@ public class PayerDebt implements Parcelable, Serializable, Comparable {
      */
     public PayerDebt(String name) {
         numberInList = count++;
-        Log.d(TAG, "$$$$$$$$$$$ number in list = " + numberInList);
         this.name = name;
         items = new ArrayList<>();
     }
@@ -176,12 +175,12 @@ public class PayerDebt implements Parcelable, Serializable, Comparable {
     }
 
     public String getSecondColumnString() {
-        Log.d("PayerDebt", "total = " + twoDecimalFormat.format(getTotal()));
+        Log.d(TAG, "total = " + twoDecimalFormat.format(getTotal()));
         return twoDecimalFormat.format(getTotal());
     }
 
     public String getThirdColumnString() {
-        Log.d("PayerDebt", "Tip = " + twoDecimalFormat.format(getTotalAndTip()));
+        Log.d(TAG, "Tip = " + twoDecimalFormat.format(getTotalAndTip()));
         return twoDecimalFormat.format(getTotalAndTip());
     }
 
