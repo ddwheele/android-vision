@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
     defaultConfig {
-        applicationId "pocopson.penny.fairsplit"
+        applicationId "pocopson.penny.easyfairsplit"
         minSdkVersion 26
         targetSdkVersion 26
         versionCode 5
