@@ -131,6 +131,11 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
                 if(selectedPayer != null) {
                     payerCoordinator.togglePayerOnItem(selectedPayer, item);
                     priceAdapter.notifyDataSetChanged();
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            getString(R.string.split_hint_two),
+                            Toast.LENGTH_SHORT);
+                    toast.show();
                 }
             }
         });
@@ -139,7 +144,7 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
     private void showInfoToast() {
         if(!HintsShown.isAssignPayersToast()) {
             Toast toast = Toast.makeText(getApplicationContext(),
-                    "Tap payer and item to assign payer to item.",
+                    getString(R.string.split_hint_one),
                     Toast.LENGTH_LONG);
             toast.show();
             HintsShown.setAssignPayersToast(true);

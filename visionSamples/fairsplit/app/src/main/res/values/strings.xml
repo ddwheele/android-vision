@@ -36,6 +36,8 @@
     <string name="select_manual_type">Type Payer Name</string>
     <string name="select_continue">Split Check</string>
     <string name="split_continue">Next</string>
+    <string name="split_hint_one">Tap payer and item to assign payer to item.</string>
+    <string name="split_hint_two">Tap payer first."</string>
     <string name="display_close">Close App</string>
     <string name="display_restart">New Receipt</string>
     <string name="tutorial_next"> Next </string>
