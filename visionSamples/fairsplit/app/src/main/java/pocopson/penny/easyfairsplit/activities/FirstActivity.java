@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import pocopson.penny.fairsplit.R;
+import pocopson.penny.easyfairsplit.R;
 import pocopson.penny.easyfairsplit.ocr.OcrCaptureActivity;
 
 public class FirstActivity extends AppCompatActivity implements View.OnClickListener {

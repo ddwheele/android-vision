@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import java.util.Vector;
 
 import pocopson.penny.easyfairsplit.OnSwipeTouchListener;
-import pocopson.penny.fairsplit.R;
+import pocopson.penny.easyfairsplit.R;
 
 /**
  * Cycle through tutorial pictures.
