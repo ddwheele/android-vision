@@ -5,6 +5,10 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
+import pocopson.penny.easyfairsplit.calculate.CalcUtils;
+import pocopson.penny.easyfairsplit.calculate.Category;
+
 public class TestCalcUtils {
 
     @Test

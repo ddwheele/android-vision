@@ -23,19 +23,19 @@
             android:value="ocr" />
 
         <activity
-            android:name=".ocr.OcrCaptureActivity"
+            android:name="pocopson.penny.easyfairsplit.ocr.OcrCaptureActivity"
             android:label="@string/title_app_name">
 
         </activity>
-        <activity android:name=".activities.VerifyPricesActivity" />
+        <activity android:name="pocopson.penny.easyfairsplit.activities.VerifyPricesActivity" />
         <activity
-            android:name=".activities.SelectPayersActivity"
+            android:name="pocopson.penny.easyfairsplit.activities.SelectPayersActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".activities.AssignPayersActivity" />
-        <activity android:name=".activities.DisplayPayerTotalsActivity" />
-        <activity android:name=".activities.TutorialActivity" />
+        <activity android:name="pocopson.penny.easyfairsplit.activities.AssignPayersActivity" />
+        <activity android:name="pocopson.penny.easyfairsplit.activities.DisplayPayerTotalsActivity" />
+        <activity android:name="pocopson.penny.easyfairsplit.activities.TutorialActivity" />
         <activity
-            android:name=".activities.FirstActivity"
+            android:name="pocopson.penny.easyfairsplit.activities.FirstActivity"
             android:label="@string/title_app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

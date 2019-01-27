@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pocopson.penny.fairsplit.activities.SelectPayersActivity">
+    tools:context="pocopson.penny.fairsplit.pocopson.penny.easyfairsplit.activities.SelectPayersActivity">
 
     <Button
         android:id="@+id/select_contact_button"
@@ -74,7 +74,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider">
 
-        <pocopson.penny.fairsplit.TagLayout
+        <pocopson.penny.easyfairsplit.TagLayout
             android:id="@+id/old_payer_cloud"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

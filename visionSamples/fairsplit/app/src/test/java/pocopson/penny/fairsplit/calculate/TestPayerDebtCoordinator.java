@@ -5,6 +5,10 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
+import pocopson.penny.easyfairsplit.calculate.PayerDebt;
+import pocopson.penny.easyfairsplit.calculate.PayerDebtCoordinator;
+
 public class TestPayerDebtCoordinator {
 
     double epsilon = 0.001;

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pocopson.penny.fairsplit.activities.AssignPayersActivity">
+    tools:context="pocopson.penny.fairsplit.pocopson.penny.easyfairsplit.activities.AssignPayersActivity">
 
     <ScrollView
         android:id="@+id/scrollView3"
@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <pocopson.penny.fairsplit.TagLayout
+        <pocopson.penny.easyfairsplit.TagLayout
             android:id="@+id/split_payer_cloud"
             android:layout_width="match_parent"
             android:layout_height="0dp"
