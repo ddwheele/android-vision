@@ -1,13 +1,9 @@
-package pocopson.penny.fairsplit.calculate;
+package pocopson.penny.easyfairsplit.calculate;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
-
-import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
-import pocopson.penny.easyfairsplit.calculate.CalcUtils;
-import pocopson.penny.easyfairsplit.calculate.Category;
 
 public class TestCalcUtils {
 

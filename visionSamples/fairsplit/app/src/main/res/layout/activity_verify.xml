@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pocopson.penny.fairsplit.pocopson.penny.easyfairsplit.activities.VerifyPricesActivity">
+    tools:context="pocopson.penny.easyfairsplit.activities.VerifyPricesActivity">
 
     <TextView
         android:id="@+id/prices_to_verify"
