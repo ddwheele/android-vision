@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
 import pocopson.penny.easyfairsplit.ColorUtils;
 import pocopson.penny.easyfairsplit.R;
+import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
 
 // TODO WHY DOESN'T THIS RECOGNIZE POLYMORPHISM AAAAAAHHHHHH
 public class AssignPayersAdapter extends ArrayAdapter<AssignedPrice> {

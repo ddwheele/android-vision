@@ -22,16 +22,16 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+
 import pocopson.penny.easyfairsplit.HintsShown;
 import pocopson.penny.easyfairsplit.PreferencesStore;
 import pocopson.penny.easyfairsplit.R;
 import pocopson.penny.easyfairsplit.Utils;
 import pocopson.penny.easyfairsplit.adapters.DisplayPayerTotalsAdapter;
-import pocopson.penny.easyfairsplit.calculate.PayerDebtCoordinator;
 import pocopson.penny.easyfairsplit.calculate.PayerDebt;
+import pocopson.penny.easyfairsplit.calculate.PayerDebtCoordinator;
 import pocopson.penny.easyfairsplit.ocr.OcrCaptureActivity;
-
-import java.text.DecimalFormat;
 
 public class DisplayPayerTotalsActivity extends Activity implements View.OnClickListener {
     final String TAG = "DisplayPayerTotalsActivity";

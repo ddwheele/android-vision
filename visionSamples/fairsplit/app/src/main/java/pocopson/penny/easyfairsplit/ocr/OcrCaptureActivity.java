@@ -39,21 +39,20 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-
-import pocopson.penny.easyfairsplit.activities.VerifyPricesActivity;
-import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
-import pocopson.penny.easyfairsplit.R;
-import pocopson.penny.easyfairsplit.Utils;
-import pocopson.penny.easyfairsplit.HintsShown;
-import pocopson.penny.easyfairsplit.ui.camera.CameraSource;
-import pocopson.penny.easyfairsplit.ui.camera.CameraSourcePreview;
-import pocopson.penny.easyfairsplit.ui.camera.GraphicOverlay;
-import pocopson.penny.easyfairsplit.ui.camera.IPictureTrigger;
-
 import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import pocopson.penny.easyfairsplit.HintsShown;
+import pocopson.penny.easyfairsplit.R;
+import pocopson.penny.easyfairsplit.Utils;
+import pocopson.penny.easyfairsplit.activities.VerifyPricesActivity;
+import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
+import pocopson.penny.easyfairsplit.ui.camera.CameraSource;
+import pocopson.penny.easyfairsplit.ui.camera.CameraSourcePreview;
+import pocopson.penny.easyfairsplit.ui.camera.GraphicOverlay;
+import pocopson.penny.easyfairsplit.ui.camera.IPictureTrigger;
 
 /**
  * Main activity. Detects text with the rear facing camera. During detection overlay graphics

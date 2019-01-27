@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,19 +23,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.TreeSet;
+
 import pocopson.penny.easyfairsplit.ColorUtils;
 import pocopson.penny.easyfairsplit.HintsShown;
 import pocopson.penny.easyfairsplit.PayerTagGraphic;
 import pocopson.penny.easyfairsplit.R;
 import pocopson.penny.easyfairsplit.TagLayout;
 import pocopson.penny.easyfairsplit.Utils;
-import pocopson.penny.easyfairsplit.calculate.PayerDebt;
 import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.TreeSet;
+import pocopson.penny.easyfairsplit.calculate.PayerDebt;
 
 /**
  * Select payers from Contact List, type in payer names, or tap on recent payer names

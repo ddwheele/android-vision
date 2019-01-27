@@ -4,8 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -19,6 +19,9 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import pocopson.penny.easyfairsplit.ColorUtils;
 import pocopson.penny.easyfairsplit.R;
 import pocopson.penny.easyfairsplit.Utils;
@@ -27,9 +30,6 @@ import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
 import pocopson.penny.easyfairsplit.calculate.CalcUtils;
 import pocopson.penny.easyfairsplit.calculate.Category;
 import pocopson.penny.easyfairsplit.ocr.OcrCaptureActivity;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class VerifyPricesActivity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = "Verify Prices";
