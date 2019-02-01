@@ -1,9 +1,7 @@
-package pocopson.penny.fairsplit;
+package pocopson.penny.easyfairsplit;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import pocopson.penny.easyfairsplit.Utils;
 
 
 public class TestUtils {

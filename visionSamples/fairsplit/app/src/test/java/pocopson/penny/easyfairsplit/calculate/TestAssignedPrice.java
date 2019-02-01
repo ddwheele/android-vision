@@ -1,11 +1,7 @@
-package pocopson.penny.fairsplit.calculate;
+package pocopson.penny.easyfairsplit.calculate;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
-import pocopson.penny.easyfairsplit.calculate.Category;
-import pocopson.penny.easyfairsplit.calculate.PayerDebt;
 
 public class TestAssignedPrice {
     double epsilon = 0.001;

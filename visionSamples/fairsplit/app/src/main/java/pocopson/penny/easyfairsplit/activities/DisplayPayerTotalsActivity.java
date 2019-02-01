@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import pocopson.penny.easyfairsplit.HintsShown;
 import pocopson.penny.easyfairsplit.PreferencesStore;
-import pocopson.penny.fairsplit.R;
+import pocopson.penny.easyfairsplit.R;
 import pocopson.penny.easyfairsplit.Utils;
 import pocopson.penny.easyfairsplit.adapters.DisplayPayerTotalsAdapter;
 import pocopson.penny.easyfairsplit.calculate.PayerDebtCoordinator;

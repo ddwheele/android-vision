@@ -26,7 +26,7 @@ import android.widget.Toast;
 import pocopson.penny.easyfairsplit.ColorUtils;
 import pocopson.penny.easyfairsplit.HintsShown;
 import pocopson.penny.easyfairsplit.PayerTagGraphic;
-import pocopson.penny.fairsplit.R;
+import pocopson.penny.easyfairsplit.R;
 import pocopson.penny.easyfairsplit.TagLayout;
 import pocopson.penny.easyfairsplit.Utils;
 import pocopson.penny.easyfairsplit.calculate.PayerDebt;

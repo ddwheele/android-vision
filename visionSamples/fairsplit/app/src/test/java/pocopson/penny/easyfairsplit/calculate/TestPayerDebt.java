@@ -1,4 +1,4 @@
-package pocopson.penny.fairsplit.calculate;
+package pocopson.penny.easyfairsplit.calculate;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -6,9 +6,6 @@ import org.junit.Test;
 import java.util.Iterator;
 import java.util.TreeSet;
 import java.util.Vector;
-
-import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
-import pocopson.penny.easyfairsplit.calculate.PayerDebt;
 
 public class TestPayerDebt {
     double epsilon = 0.001;

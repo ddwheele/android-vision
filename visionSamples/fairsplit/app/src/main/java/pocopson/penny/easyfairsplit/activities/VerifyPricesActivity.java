@@ -20,7 +20,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import pocopson.penny.easyfairsplit.ColorUtils;
-import pocopson.penny.fairsplit.R;
+import pocopson.penny.easyfairsplit.R;
 import pocopson.penny.easyfairsplit.Utils;
 import pocopson.penny.easyfairsplit.adapters.VerifyPricesAdapter;
 import pocopson.penny.easyfairsplit.calculate.AssignedPrice;

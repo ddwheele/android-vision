@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pocopson.penny.fairsplit.pocopson.penny.easyfairsplit.activities.SelectPayersActivity">
+    tools:context="pocopson.penny.easyfairsplit.pocopson.penny.easyfairsplit.activities.SelectPayersActivity">
 
     <Button
         android:id="@+id/select_contact_button"

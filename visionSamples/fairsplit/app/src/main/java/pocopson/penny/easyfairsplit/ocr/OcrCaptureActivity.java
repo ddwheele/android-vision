@@ -42,7 +42,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 import pocopson.penny.easyfairsplit.activities.VerifyPricesActivity;
 import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
-import pocopson.penny.fairsplit.R;
+import pocopson.penny.easyfairsplit.R;
 import pocopson.penny.easyfairsplit.Utils;
 import pocopson.penny.easyfairsplit.HintsShown;
 import pocopson.penny.easyfairsplit.ui.camera.CameraSource;

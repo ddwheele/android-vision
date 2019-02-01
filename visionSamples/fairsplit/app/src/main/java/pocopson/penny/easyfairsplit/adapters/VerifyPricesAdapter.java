@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
-import pocopson.penny.fairsplit.R;
+import pocopson.penny.easyfairsplit.R;
 
 public class VerifyPricesAdapter extends ArrayAdapter {
     private final Context context;
