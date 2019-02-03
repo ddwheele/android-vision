@@ -13,7 +13,8 @@ public class PayerDebtCoordinator implements Parcelable {
     public PayerDebtCoordinator(ArrayList<PayerDebt> payerList) {
         payerDebtList = payerList;
         payerDebtList.add(new PayerDebtTotals());
-        totals = payerDebtList.get(payerDebtList.size() - 1);
+        payerDebtList.add(new PayerDebtEveryone());
+        totals = payerDebtList.get(payerDebtList.size() - 2);
     }
 
     protected PayerDebtCoordinator(Parcel in) {
@@ -42,6 +43,15 @@ public class PayerDebtCoordinator implements Parcelable {
     }
 
     public void togglePayerOnItem(PayerDebt payer, AssignedPrice item) {
+        if(payer.isEveryone()) {
+            if(item.hasNoPayers()) {
+                addEveryoneToItem(item);
+            } else {
+                removeEveryoneFromItem(item);
+            }
+            return;
+        }
+
         // if payer already on item, remove him
         if(item.getPayers().contains(payer.name)) {
             removePayerFromItem(payer.name, item);
@@ -51,22 +61,39 @@ public class PayerDebtCoordinator implements Parcelable {
         }
     }
 
+    protected void addEveryoneToItem(AssignedPrice item) {
+        for(PayerDebt payer : payerDebtList) {
+            if(!payer.isEveryone() && !payer.isTotal()) {
+                addPayerToItem(payer, item);
+            }
+        }
+    }
+
     public void addPayerToItem(PayerDebt payer, AssignedPrice item) {
         if (payer == null || item == null) {
             return;
         }
+
         ArrayList<String> otherPayers = item.getPayers();
+
+        if(otherPayers.contains(payer)) {
+            return;
+        }
 
         if (otherPayers.isEmpty()) {
             // this item is getting paid for, for the first time
             totals.addItem(item);
         }
 
-        // add the item to the payer and vice versa
-        payer.addItem(item);
-        item.addPayer(payer);
+        if(payer.isEveryone()) {
+            addEveryoneToItem(item);
+        } else {
+            // add the item to the payer and vice versa
+            payer.addItem(item);
+            item.addPayer(payer);
+        }
 
-        // if anybody else, tell to recalculate bc they're sharing now
+        // if other payers, tell them to recalculate bc they're sharing now
         for (String oldPayer : otherPayers) {
             findPayerDebt(oldPayer).recalculate();
         }
@@ -80,11 +107,30 @@ public class PayerDebtCoordinator implements Parcelable {
         removePayerFromItem(payer, item);
     }
 
+    protected void removeEveryoneFromItem(AssignedPrice item) {
+        for(PayerDebt payer : payerDebtList) {
+            if(!payer.isEveryone() && !payer.isTotal()) {
+                removePayerFromItem(payer, item);
+            }
+        }
+    }
+
     public void removePayerFromItem(String payerName, AssignedPrice item) {
         if (payerName == null || item == null) {
             return;
         }
+
         PayerDebt payer = findPayerDebt(payerName);
+        removePayerFromItem(payer, item);
+    }
+
+    public void removePayerFromItem(PayerDebt payer, AssignedPrice item) {
+        if (payer == null || item == null) {
+            return;
+        }
+        if(payer.isEveryone()) {
+            removeEveryoneFromItem(item);
+        }
         item.removePayer(payer);
         payer.removeItem(item);
 

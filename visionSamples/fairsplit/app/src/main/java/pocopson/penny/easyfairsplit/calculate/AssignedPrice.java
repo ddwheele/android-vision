@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * This class holds
  * - a Y value (distance from top of screen)
  * - dollar value for each price found
- * - if it is subtotal, tax, and total
+ * - if it is subtotal, tax, or total
  * - list of who's paying for it
  */
 public class AssignedPrice implements Parcelable, Comparable {

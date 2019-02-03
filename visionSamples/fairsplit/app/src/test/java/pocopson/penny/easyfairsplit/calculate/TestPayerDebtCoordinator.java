@@ -5,9 +5,99 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+import pocopson.penny.easyfairsplit.Utils;
+
 public class TestPayerDebtCoordinator {
 
     double epsilon = 0.001;
+
+    @Test
+    public void test_everyone() {
+        AssignedPrice ap60 = new AssignedPrice(200, 60);
+
+        PayerDebt nana = new PayerDebt("Nana");
+        PayerDebt ophelia = new PayerDebt("Ophelia");
+        PayerDebt penny = new PayerDebt("Penelope");
+        PayerDebt quast = new PayerDebt("Quast");
+
+        ArrayList<PayerDebt> pdList = new ArrayList<>();
+        pdList.add(nana);
+        pdList.add(ophelia);
+        pdList.add(penny);
+        pdList.add(quast);
+
+        PayerDebtCoordinator pdc = new PayerDebtCoordinator(pdList);
+        PayerDebt total = pdc.getTotals();
+        Assert.assertEquals(0, nana.getSubtotal(), epsilon);
+        Assert.assertEquals(0, ophelia.getSubtotal(), epsilon);
+        Assert.assertEquals(0, penny.getSubtotal(), epsilon);
+        Assert.assertEquals(0, quast.getSubtotal(), epsilon);
+        Assert.assertEquals(0, total.getSubtotal(), epsilon);
+        Assert.assertTrue(total.isTotal());
+
+        pdc.addEveryoneToItem(ap60);
+        Assert.assertEquals(15, nana.getSubtotal(), epsilon);
+        Assert.assertEquals(15, ophelia.getSubtotal(), epsilon);
+        Assert.assertEquals(15, penny.getSubtotal(), epsilon);
+        Assert.assertEquals(15, quast.getSubtotal(), epsilon);
+        Assert.assertEquals(60, total.getSubtotal(), epsilon);
+
+        pdc.removeEveryoneFromItem(ap60);
+        Assert.assertEquals(0, nana.getSubtotal(), epsilon);
+        Assert.assertEquals(0, ophelia.getSubtotal(), epsilon);
+        Assert.assertEquals(0, penny.getSubtotal(), epsilon);
+        Assert.assertEquals(0, quast.getSubtotal(), epsilon);
+        Assert.assertEquals(0, total.getSubtotal(), epsilon);
+
+        pdc.addPayerToItem(new PayerDebtEveryone(), ap60);
+        Assert.assertEquals(15, nana.getSubtotal(), epsilon);
+        Assert.assertEquals(15, ophelia.getSubtotal(), epsilon);
+        Assert.assertEquals(15, penny.getSubtotal(), epsilon);
+        Assert.assertEquals(15, quast.getSubtotal(), epsilon);
+        Assert.assertEquals(60, total.getSubtotal(), epsilon);
+
+        pdc.removePayerFromItem(ophelia, ap60);
+        Assert.assertEquals(20, nana.getSubtotal(), epsilon);
+        Assert.assertEquals(0, ophelia.getSubtotal(), epsilon);
+        Assert.assertEquals(20, penny.getSubtotal(), epsilon);
+        Assert.assertEquals(20, quast.getSubtotal(), epsilon);
+        Assert.assertEquals(60, total.getSubtotal(), epsilon);
+
+        pdc.removePayerFromItem(penny, ap60);
+        Assert.assertEquals(30, nana.getSubtotal(), epsilon);
+        Assert.assertEquals(0, ophelia.getSubtotal(), epsilon);
+        Assert.assertEquals(0, penny.getSubtotal(), epsilon);
+        Assert.assertEquals(30, quast.getSubtotal(), epsilon);
+        Assert.assertEquals(60, total.getSubtotal(), epsilon);
+
+        pdc.addEveryoneToItem(ap60);
+        Assert.assertEquals(15, nana.getSubtotal(), epsilon);
+        Assert.assertEquals(15, ophelia.getSubtotal(), epsilon);
+        Assert.assertEquals(15, penny.getSubtotal(), epsilon);
+        Assert.assertEquals(15, quast.getSubtotal(), epsilon);
+        Assert.assertEquals(60, total.getSubtotal(), epsilon);
+
+        pdc.removePayerFromItem(Utils.EVERYONE, ap60);
+        Assert.assertEquals(0, nana.getSubtotal(), epsilon);
+        Assert.assertEquals(0, ophelia.getSubtotal(), epsilon);
+        Assert.assertEquals(0, penny.getSubtotal(), epsilon);
+        Assert.assertEquals(0, quast.getSubtotal(), epsilon);
+        Assert.assertEquals(0, total.getSubtotal(), epsilon);
+
+        pdc.togglePayerOnItem(new PayerDebtEveryone(), ap60);
+        Assert.assertEquals(15, nana.getSubtotal(), epsilon);
+        Assert.assertEquals(15, ophelia.getSubtotal(), epsilon);
+        Assert.assertEquals(15, penny.getSubtotal(), epsilon);
+        Assert.assertEquals(15, quast.getSubtotal(), epsilon);
+        Assert.assertEquals(60, total.getSubtotal(), epsilon);
+
+        pdc.togglePayerOnItem(new PayerDebtEveryone(), ap60);
+        Assert.assertEquals(0, nana.getSubtotal(), epsilon);
+        Assert.assertEquals(0, ophelia.getSubtotal(), epsilon);
+        Assert.assertEquals(0, penny.getSubtotal(), epsilon);
+        Assert.assertEquals(0, quast.getSubtotal(), epsilon);
+        Assert.assertEquals(0, total.getSubtotal(), epsilon);
+    }
 
     @Test
     public void test_normal() {

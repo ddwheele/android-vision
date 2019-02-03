@@ -80,8 +80,10 @@ public class PayerDebt implements Parcelable, Serializable, Comparable {
     }
 
     public boolean isTotal() {
-        return false;
+        return name.equals(Utils.TOTAL);
     }
+
+    public boolean isEveryone() { return name.equals(Utils.EVERYONE); }
 
 
     public void addItem(AssignedPrice ap) {

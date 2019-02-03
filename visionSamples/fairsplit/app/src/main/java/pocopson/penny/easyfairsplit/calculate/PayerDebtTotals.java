@@ -12,11 +12,6 @@ public class PayerDebtTotals extends PayerDebt {
     }
 
     @Override
-    public boolean isTotal() {
-        return true;
-    }
-
-    @Override
     public void toggleSelected() {
         // never select this
     }

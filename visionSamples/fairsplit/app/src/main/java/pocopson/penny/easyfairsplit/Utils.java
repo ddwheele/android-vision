@@ -7,8 +7,6 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
-import pocopson.penny.easyfairsplit.ocr.OcrCaptureActivity;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -18,10 +16,13 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import pocopson.penny.easyfairsplit.ocr.OcrCaptureActivity;
+
 public class Utils {
     private static final String TAG = "Utils";
 
     public static final String TOTAL = "Total";
+    public static final String EVERYONE = "Everyone";
 
     public static final String PRICES = "prices";
     public static final String PAYERS = "payers";
