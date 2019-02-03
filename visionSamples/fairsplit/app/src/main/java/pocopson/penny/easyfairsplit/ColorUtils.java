@@ -19,6 +19,8 @@ public class ColorUtils {
     private static void setupColorList() {
         colorList = new ArrayList<>();
 
+        colorList.add(Color.BLACK);
+
         colorList.add(rgb(33,97,140)); // dark blue
         colorList.add(rgb(206, 97, 85)); // salmon
         colorList.add(rgb(212, 172, 13)); // dark yellow
@@ -32,7 +34,7 @@ public class ColorUtils {
         colorList.add(rgb(93,173, 226)); // cyan
         colorList.add(rgb(133, 146, 158)); //gray
 
-        colorList.add(Color.BLACK);
+
 
     }
 

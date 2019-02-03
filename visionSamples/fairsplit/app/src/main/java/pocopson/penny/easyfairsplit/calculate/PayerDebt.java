@@ -12,7 +12,7 @@ import pocopson.penny.easyfairsplit.Utils;
 
 public class PayerDebt implements Parcelable, Serializable, Comparable {
     private static final String TAG = "PayerDebt";
-    private static int count = 0; // # of payers created, used for color
+    private static int count = 1; // # of payers created, used for color
     final String name;
     private String phoneNumber;
     protected ArrayList<AssignedPrice> items;
@@ -32,7 +32,11 @@ public class PayerDebt implements Parcelable, Serializable, Comparable {
      * @param name Payer's name
      */
     public PayerDebt(String name) {
-        numberInList = count++;
+        if(name.equals(Utils.EVERYONE)) {
+            numberInList = 0;
+        } else {
+            numberInList = count++;
+        }
         this.name = name;
         items = new ArrayList<>();
     }
@@ -173,15 +177,24 @@ public class PayerDebt implements Parcelable, Serializable, Comparable {
     }
 
     public String getFirstColumnString() {
+        if(isEveryone()) {
+            return "";
+        }
         return name;
     }
 
     public String getSecondColumnString() {
+        if(isEveryone()) {
+            return "";
+        }
         Log.d(TAG, "total = " + twoDecimalFormat.format(getTotal()));
         return twoDecimalFormat.format(getTotal());
     }
 
     public String getThirdColumnString() {
+        if(isEveryone()) {
+            return "";
+        }
         Log.d(TAG, "Tip = " + twoDecimalFormat.format(getTotalAndTip()));
         return twoDecimalFormat.format(getTotalAndTip());
     }
