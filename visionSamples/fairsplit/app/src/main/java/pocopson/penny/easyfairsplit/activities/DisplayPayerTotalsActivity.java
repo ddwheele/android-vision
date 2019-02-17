@@ -117,7 +117,7 @@ public class DisplayPayerTotalsActivity extends Activity implements View.OnClick
     protected void showTipPercentPicker(Context context) {
         final AlertDialog.Builder d = new AlertDialog.Builder(context);
         LayoutInflater inflater = this.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.number_picker_dialog, null);
+        View dialogView = inflater.inflate(R.layout.layout_number_picker_dialog, null);
         d.setTitle("Tip Percent");
         d.setMessage("Select Tip Percent");
         d.setView(dialogView);

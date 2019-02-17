@@ -1,8 +1,10 @@
 package pocopson.penny.easyfairsplit.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,17 +15,20 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import pocopson.penny.easyfairsplit.AdjustPayerMultiplesDialog;
 import pocopson.penny.easyfairsplit.ColorUtils;
 import pocopson.penny.easyfairsplit.HintsShown;
 import pocopson.penny.easyfairsplit.PayerTagGraphic;
 import pocopson.penny.easyfairsplit.R;
-import pocopson.penny.easyfairsplit.TagLayout;
+import pocopson.penny.easyfairsplit.TagCloudLayout;
 import pocopson.penny.easyfairsplit.Utils;
 import pocopson.penny.easyfairsplit.adapters.AssignPayersAdapter;
 import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
 import pocopson.penny.easyfairsplit.calculate.PayerDebt;
 import pocopson.penny.easyfairsplit.calculate.PayerDebtCoordinator;
 import pocopson.penny.easyfairsplit.calculate.PayerDebtTotals;
+
+//import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
 public class AssignPayersActivity extends AppCompatActivity implements View.OnClickListener {
     final String TAG = "AssignPayersActivity";
@@ -69,15 +74,15 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
         totals = payerCoordinator.getTotals();
         payerTags = new ArrayList<>();
 
-        TagLayout tagLayout = findViewById(R.id.split_payer_cloud);
-        tagLayout.setAssignPayersActivity(this);
+        TagCloudLayout tagCloudLayout = findViewById(R.id.split_payer_cloud);
+        tagCloudLayout.setAssignPayersActivity(this);
         LayoutInflater layoutInflater = getLayoutInflater();
         for (PayerDebt payerDebt : payerDebtList) {
             if(payerDebt instanceof PayerDebtTotals) {
                 // don't make a tag for "Total"
                 continue;
             }
-            View tagView = layoutInflater.inflate(R.layout.tag_layout, null, false);
+            View tagView = layoutInflater.inflate(R.layout.layout_tag, null, false);
 
             final TextView tagTextView = tagView.findViewById(R.id.tagTextView);
             final String payerName = payerDebt.getName();
@@ -111,7 +116,7 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
             });
 
             payerTags.add(new PayerTagGraphic(payerName, payerColor, tagTextView));
-            tagLayout.addView(tagView);
+            tagCloudLayout.addView(tagView);
         }
     }
 
@@ -139,6 +144,26 @@ public class AssignPayersActivity extends AppCompatActivity implements View.OnCl
                 }
             }
         });
+
+        priceListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, final View view,
+                                    int position, long id) {
+                AssignedPrice item = (AssignedPrice) parent.getItemAtPosition(position);
+                if(item == null) {
+                    return false;
+                }
+                Log.e(TAG, "about to showAdjustPayerMultiplesDialog");
+                showAdjustPayerMultiplesDialog(AssignPayersActivity.this, item);
+                return true;
+            }
+        });
+    }
+
+    private void showAdjustPayerMultiplesDialog(Context context, final AssignedPrice selectedPrice) {
+        AdjustPayerMultiplesDialog dialog=new AdjustPayerMultiplesDialog(context, selectedPrice);
+        dialog.show();
     }
 
     private void showInfoToast() {

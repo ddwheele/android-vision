@@ -21,15 +21,15 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
-import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
-import pocopson.penny.easyfairsplit.calculate.CalcUtils;
-import pocopson.penny.easyfairsplit.ocr.OcrGraphic;
-
 import com.google.android.gms.vision.CameraSource;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
+import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
+import pocopson.penny.easyfairsplit.calculate.CalcUtils;
+import pocopson.penny.easyfairsplit.ocr.OcrGraphic;
 
 /**
  * A view which renders a series of custom graphics to be overlaid on top of an associated preview
@@ -78,7 +78,7 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
      * @return true if currently selected text has items that add to subtotal and total
      */
     public boolean isConsistent() {
-        Log.e(TAG, "Checking consistency");
+        Log.d(TAG, "Checking consistency");
         precomputedPriceList.clear();
 
         if(previousPriceList != null) {

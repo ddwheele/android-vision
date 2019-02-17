@@ -12,7 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,7 +31,7 @@ import pocopson.penny.easyfairsplit.ColorUtils;
 import pocopson.penny.easyfairsplit.HintsShown;
 import pocopson.penny.easyfairsplit.PayerTagGraphic;
 import pocopson.penny.easyfairsplit.R;
-import pocopson.penny.easyfairsplit.TagLayout;
+import pocopson.penny.easyfairsplit.TagCloudLayout;
 import pocopson.penny.easyfairsplit.Utils;
 import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
 import pocopson.penny.easyfairsplit.calculate.PayerDebt;
@@ -79,22 +78,20 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
         }
         payerTags = new ArrayList<>();
 
-        TagLayout tagLayout = findViewById(R.id.old_payer_cloud);
+        TagCloudLayout tagCloudLayout = findViewById(R.id.old_payer_cloud);
         LayoutInflater layoutInflater = getLayoutInflater();
         Iterator<PayerDebt> dipd = oldPayerSet.iterator();
         HashSet<String> seen = new HashSet<>();
         HashSet<PayerDebt> doubled = new HashSet<>();
         while(dipd.hasNext()) {
             final PayerDebt payerDebt = dipd.next();
-            Log.e(TAG, "PROCESSING: " + payerDebt.getName() + " " + payerDebt.getPopularity());
             if(seen.contains(payerDebt.getName())) {
-                Log.e(TAG, "setupOldPayerTags(): I already saw " + payerDebt.toString());
                 doubled.add(payerDebt);
                 continue;
             } else {
                 seen.add(payerDebt.getName());
             }
-            View tagView = layoutInflater.inflate(R.layout.tag_layout, null, false);
+            View tagView = layoutInflater.inflate(R.layout.layout_tag, null, false);
 
             final TextView tagTextView = tagView.findViewById(R.id.tagTextView);
             final String payerName = payerDebt.getName();
@@ -116,7 +113,7 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
             });
 
             payerTags.add(new PayerTagGraphic(payerName, payerColor, tagTextView));
-            tagLayout.addView(tagView);
+            tagCloudLayout.addView(tagView);
         }
         for(PayerDebt dbl : doubled) {
             oldPayerSet.remove(dbl);
@@ -137,7 +134,6 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                             String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
                             String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                             PayerDebt pickedPayer = new PayerDebt(name);
-                            Log.d(TAG, "Names: " + name);
 
                             if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
 
@@ -153,7 +149,6 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
                                         case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
                                             String number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                                             pickedPayer.setPhoneNumber(number);
-                                            Log.d(TAG, "MOBILE Number: " + number);
                                             break;
                                     }
                                 }
@@ -278,23 +273,13 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
     protected void onPause() {
         super.onPause();
         for(PayerDebt pd : payerList) {
-            Log.e(TAG, "onPause, adding " + pd.toString());
             boolean contained = oldPayerSet.contains(pd);
-            Log.e(TAG, "contained = " + contained);
             boolean wasAdded = oldPayerSet.add(pd);
-            Log.e(TAG, "was added = " + wasAdded);
-            Log.e(TAG, "intermediate oldPayerSet  = " );
-            for(PayerDebt pdq: oldPayerSet) {
-                Log.e(TAG, "\t" + pdq.getPopularity() + ": " + pdq.toString());
-            }
         }
-        Log.e(TAG, "onPause() oldPayerSet = ");
         Iterator<PayerDebt> it =  oldPayerSet.descendingIterator();
         while(it.hasNext()) {
             PayerDebt pd = it.next();
-            Log.e(TAG, "\t" + pd.getPopularity() + ": " + pd.toString());
         }
-        Log.e(TAG, "oldPayerSet size = " + oldPayerSet.size());
         Utils.saveData(payersFilename, oldPayerSet);
     }
 
@@ -304,10 +289,6 @@ public class SelectPayersActivity extends AppCompatActivity implements View.OnCl
         oldPayerSet = (TreeSet<PayerDebt>) Utils.loadData(payersFilename);
         if(oldPayerSet == null) {
             oldPayerSet = new TreeSet<>();
-        }
-        Log.e(TAG, "onResume() oldPayerSet = ");
-        for(PayerDebt pd: oldPayerSet) {
-            Log.e(TAG, "\t" + pd.getPopularity() + ": " + pd.toString());
         }
         setupOldPayerTags();
     }

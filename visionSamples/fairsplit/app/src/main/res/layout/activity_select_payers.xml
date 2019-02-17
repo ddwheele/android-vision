@@ -74,7 +74,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider">
 
-        <pocopson.penny.easyfairsplit.TagLayout
+        <pocopson.penny.easyfairsplit.TagCloudLayout
             android:id="@+id/old_payer_cloud"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

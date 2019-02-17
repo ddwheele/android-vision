@@ -124,14 +124,10 @@ public final class OcrCaptureActivity extends AppCompatActivity implements IPict
     protected void onStart() {
         super.onStart();
         yOffset = getIntent().getFloatExtra(Utils.OFFSET, 0);
-        Log.e(TAG, "onStart(): yOffset=" + yOffset);
         mGraphicOverlay.setYOffset(yOffset);
         ArrayList<AssignedPrice> priceList = getIntent().getParcelableArrayListExtra(Utils.PRICES);
         if(priceList != null) {
-            Log.e(TAG, "onStart(): priceList from Intent has size" + priceList.size() + "!!!!");
             mGraphicOverlay.setPreviousPriceList(priceList);
-        } else {
-            Log.e(TAG, "onStart(): no priceList from Intent" );
         }
 
     }

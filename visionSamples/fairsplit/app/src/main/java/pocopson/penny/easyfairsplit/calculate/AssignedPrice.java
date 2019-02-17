@@ -75,22 +75,19 @@ public class AssignedPrice implements Parcelable, Comparable {
     }
 
     public void addPayer(PayerDebt payer) {
-        // don't add somebody twice
-        if(!isItem() || payers.contains(payer.name)) {
+        if(!isItem()) {
             return;
         }
         payers.add(payer.name);
     }
 
-    // for now, just assume that the last payer entered was the mistake
-    public String removePayer() {
+    public String removeLastPayer() {
         if(payers.size() > 0) {
             return payers.remove(payers.size() - 1);
         }
         return null;
     }
 
-    // for later ...
     public void removePayer(PayerDebt payer) {
         payers.remove(payer.name);
     }

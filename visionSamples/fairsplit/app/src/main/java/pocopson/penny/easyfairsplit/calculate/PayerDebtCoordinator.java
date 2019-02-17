@@ -76,18 +76,15 @@ public class PayerDebtCoordinator implements Parcelable {
 
         ArrayList<String> otherPayers = item.getPayers();
 
-        if(otherPayers.contains(payer)) {
-            return;
-        }
-
-        if (otherPayers.isEmpty()) {
-            // this item is getting paid for, for the first time
-            totals.addItem(item);
-        }
-
         if(payer.isEveryone()) {
             addEveryoneToItem(item);
         } else {
+            // do not do this twice if you are adding everyone!
+            if (otherPayers.isEmpty()) {
+                // this item is getting paid for, for the first time
+                totals.addItem(item);
+            }
+
             // add the item to the payer and vice versa
             payer.addItem(item);
             item.addPayer(payer);
@@ -103,7 +100,7 @@ public class PayerDebtCoordinator implements Parcelable {
         if (item == null) {
             return;
         }
-        String payer = item.removePayer();
+        String payer = item.removeLastPayer();
         removePayerFromItem(payer, item);
     }
 

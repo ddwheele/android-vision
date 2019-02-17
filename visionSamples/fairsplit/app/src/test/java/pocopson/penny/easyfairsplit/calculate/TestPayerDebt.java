@@ -56,8 +56,8 @@ public class TestPayerDebt {
 
         Assert.assertEquals(0, gillian.getTotal(), epsilon);
         Assert.assertEquals(0, gillian.getTotalAndTip(), epsilon);
-        Assert.assertEquals(0, frederick.getNumberInList());
-        Assert.assertEquals(1, gillian.getNumberInList());
+        Assert.assertEquals(1, frederick.getNumberInList());
+        Assert.assertEquals(2, gillian.getNumberInList());
         Assert.assertFalse(gillian.isTotal());
         gillian.setPhoneNumber("7162288472");
         Assert.assertEquals("7162288472", gillian.getPhoneNumber());

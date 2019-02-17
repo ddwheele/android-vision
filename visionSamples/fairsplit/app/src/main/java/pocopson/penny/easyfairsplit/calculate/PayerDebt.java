@@ -91,7 +91,7 @@ public class PayerDebt implements Parcelable, Serializable, Comparable {
 
 
     public void addItem(AssignedPrice ap) {
-        if (!items.contains(ap)) {
+        if (ap != null) {
             items.add(ap);
         }
         calculated = false;
