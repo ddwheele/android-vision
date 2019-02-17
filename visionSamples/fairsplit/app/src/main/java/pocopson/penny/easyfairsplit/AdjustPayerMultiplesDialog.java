@@ -4,20 +4,18 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
-
 import pocopson.penny.easyfairsplit.calculate.AssignedPrice;
 
-public class AdjustPayerMultiplesDialog extends Dialog implements View.OnClickListener {
+public class AdjustPayerMultiplesDialog extends Dialog {
     private String TAG = "AdjustPayerMultiplesDialog";
-    public Button yes, no;
+    public Button doneButton, cancelButton;
+    final String doneString = "Done", cancelString = "Cancel";
     Context context;
     AssignedPrice assignedPrice;
 
@@ -34,42 +32,78 @@ public class AdjustPayerMultiplesDialog extends Dialog implements View.OnClickLi
         setContentView(R.layout.layout_increment_number_dialog);
 
         LinearLayout incrementNumberListLayout = findViewById(R.id.increment_number_list);
-        LayoutInflater layoutInflater = getLayoutInflater();
 
         for (final String payerName : assignedPrice.getPayers()) {
-            View incrementNumberView = layoutInflater.inflate(R.layout.layout_increment_number, null, false);
+            LinearLayout inner = new LinearLayout(context);
+            inner.setOrientation(LinearLayout.HORIZONTAL);
 
-            TextView nameTextView = incrementNumberView.findViewById(R.id.incrementNumberName);
-            nameTextView.setText(payerName);
 
-            final ElegantNumberButton numberButton = incrementNumberView.findViewById(R.id.incrementNumberButton);
-            numberButton.setOnClickListener(new ElegantNumberButton.OnClickListener() {
+
+            Button minusButton = new Button(context);
+            minusButton.setText("-");
+            minusButton.setLayoutParams(
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT));
+            minusButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    String num = numberButton.getNumber();
-                    Log.e(TAG, payerName + " is at " + num);
+                public void onClick(View v) {
+                    Log.e(TAG, payerName + " minus");
                 }
             });
-            incrementNumberListLayout.addView(incrementNumberView);
-        }
-        yes = findViewById(R.id.btn_yes);
-        no = findViewById(R.id.btn_no);
-        yes.setOnClickListener(this);
-        no.setOnClickListener(this);
-    }
+            TextView countTextView = new TextView(context);
+            countTextView.setText(" 0 ");
+            Button plusButton = new Button(context);
+            plusButton.setText("+");
+            plusButton.setLayoutParams(
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT));
+            plusButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.e(TAG, payerName + " plus");
+                }
+            });
+            inner.addView(minusButton);
+            inner.addView(countTextView);
+            inner.addView(plusButton);
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_yes:
-                //context.finish();
-                break;
-            case R.id.btn_no:
-                dismiss();
-                break;
-            default:
-                break;
+
+            TextView nameTextView = new TextView(context);
+            nameTextView.setText(payerName);
+            nameTextView.setLayoutParams(
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT));
+            inner.addView(nameTextView);
+
+
+            incrementNumberListLayout.addView(inner);
         }
-        dismiss();
+
+        LinearLayout lastInner = new LinearLayout(context);
+        lastInner.setOrientation(LinearLayout.HORIZONTAL);
+        cancelButton = new Button(context);
+        cancelButton.setText(cancelString);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
+        doneButton = new Button(context);
+        doneButton.setText(doneString);
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //context.finish();
+            }
+        });
+
+        lastInner.addView(cancelButton);
+        lastInner.addView(doneButton);
+        incrementNumberListLayout.addView(lastInner);
     }
 }
